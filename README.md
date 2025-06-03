@@ -1,360 +1,265 @@
-# Bug Tracker Application - Technical Documentation
+# Bug Tracker
 
-## 1. Project Overview
+A comprehensive bug tracking system built with Spring Boot that allows teams to track, manage, and resolve software bugs efficiently.
 
-### Purpose
-The Bug Tracker is a comprehensive web application designed to help development teams track, manage, and resolve software bugs throughout the development lifecycle. It provides functionality for creating projects, reporting bugs, assigning them to team members, tracking their status, and facilitating communication through comments.
+## Features
 
-### Architecture
-The application follows the Model-View-Controller (MVC) architectural pattern:
-- **Model**: Represents data structures and business logic
-- **View**: Thymeleaf templates rendering the UI
-- **Controller**: Handles HTTP requests and mediates between Model and View
+- **User Authentication & Authorization**: Role-based access control (ADMIN/USER)
+- **Project Management**: Create and manage projects with member assignments
+- **Bug Tracking**: Full lifecycle bug management with status, priority, and assignment
+- **User Profiles**: Personal profile pages with activity statistics
+- **Activity Logging**: Comprehensive logging of all system activities
+- **Bug Filtering**: Advanced filtering by project, status, and priority
+- **Comments System**: Add and view comments on bugs
+- **File Attachments**: Support for bug attachments (planned)
+- **RESTful API**: OpenAPI/Swagger documentation
+- **Responsive UI**: Modern Bootstrap 5 interface
 
-### Technology Stack
-- **Backend**: Spring Boot 3.x
-- **Frontend**: Thymeleaf, Bootstrap 5, jQuery
-- **Database**: MySQL 8.x
-- **Security**: Spring Security 6.x
-- **Build Tool**: Maven
+## Recent Updates (June 2025)
 
-## 2. Package Structure
+### ✅ Latest Fixes & Improvements
 
-### `model` Package
-Contains entity classes and Data Transfer Objects (DTOs):
-- `model.entity`: Domain model classes mapped to database tables
-- `model.dto`: Data Transfer Objects for view-specific data structures
+1. **Fixed Bug List Page**: 
+   - Resolved Thymeleaf enum comparison issues
+   - Improved badge colors for bug status and priority
+   - Enhanced filtering functionality
 
-### `repository` Package
-Contains interfaces extending Spring Data JPA repositories:
-- Provides data access layer with methods for CRUD operations
-- Includes custom query methods using method naming conventions or `@Query` annotations
+2. **User Profile System**: 
+   - Complete profile page implementation
+   - Activity statistics (reported bugs, assigned bugs)
+   - Profile editing and password change functionality
+   - Proper template structure in `profile/profile.html`
 
-### `service` Package
-Contains business logic implementation:
-- Service interfaces defining operations
-- Implementation classes in the `service.impl` subpackage
-- Transaction management with `@Transactional` annotations
+3. **Template Engine Improvements**:
+   - Fixed SpEL evaluation errors in Thymeleaf templates
+   - Simplified enum comparisons using `.name()` method
+   - Better error handling in templates
 
-### `web.controller` Package
-Contains Spring MVC controllers:
-- `AdminController`: Admin-specific functionality
-- `BugController`: Bug creation and management
-- `CommentController`: Comment functionality
-- `ProjectController`: Project management
-- `UserController`: User profile and settings
+4. **Project Structure Optimization**:
+   - Removed test dependencies that caused compilation issues
+   - Streamlined build process for faster deployment
+   - Improved development workflow
 
-### `config` Package
-Contains configuration classes:
-- `SecurityConfig`: Spring Security configuration
-- `InitialDataConfig`: Initial data setup
-- `WebConfig`: Web-related configuration
+5. **Navigation & User Experience**:
+   - Fixed all navigation menu links
+   - Proper role-based menu visibility
+   - Enhanced user feedback with success/error messages
 
-### `validation` Package
-Contains custom validation logic:
-- Custom constraints and validators
-- Annotations for declarative validation
+## Tech Stack
 
-### `exception` Package
-Contains exception handling:
-- Custom exceptions
-- Global exception handler
+- Java 21
+- Spring Boot 3.2.0
+- Spring Security 6.x
+- Spring Data JPA
+- Thymeleaf
+- MySQL 8.x
+- Bootstrap 5
+- Maven
+- JUnit 5 & Mockito (for testing)
 
-### `scheduler` Package
-Contains scheduled tasks:
-- `BugAutoCloseScheduler`: Automatically closes stale bugs
-
-## 3. Entity Model
-
-### Core Entities
-
-#### `User`
-- Represents application users with different roles
-- Fields: id, firstName, lastName, email, password, isActive, createdAt, updatedAt
-- Relationships:
-  - Many-to-Many with `Role` (via `users_roles` table)
-  - One-to-Many with `Bug` (reporter)
-  - One-to-Many with `Bug` (assignee)
-  - Many-to-Many with `Project` (via `project_members` table)
-
-#### `Role`
-- Represents user roles (ADMIN, USER)
-- Fields: id, name
-- Relationships:
-  - Many-to-Many with `User`
-
-#### `Project`
-- Represents development projects
-- Fields: id, name, description, startDate, endDate, isActive, createdAt, updatedAt
-- Relationships:
-  - One-to-Many with `Bug`
-  - Many-to-Many with `User` (team members)
-
-#### `Bug`
-- Central entity representing reported issues
-- Fields: id, title, description, stepsToReproduce, status (enum), priority (enum), createdAt, updatedAt, closedAt
-- Relationships:
-  - Many-to-One with `Project`
-  - Many-to-One with `User` (reporter)
-  - Many-to-One with `User` (assignee)
-  - One-to-Many with `Comment`
-
-#### `Comment`
-- Represents comments on bugs
-- Fields: id, content, createdAt, updatedAt
-- Relationships:
-  - Many-to-One with `Bug`
-  - Many-to-One with `User` (author)
-
-#### `LogEntry`
-- Captures system events for auditing
-- Fields: id, action, entityType, entityId, userId, details, level, createdAt
-
-### Enums
-- `Bug.BugStatus`: NEW, IN_PROGRESS, TESTING, RESOLVED, CLOSED
-- `Bug.BugPriority`: LOW, MEDIUM, HIGH, CRITICAL
-
-## 4. Spring Security Configuration
-
-The application uses Spring Security for authentication and authorization:
-
-### Authentication
-- Form-based authentication with email and password
-- Custom `UserDetailsService` implementation for loading user details
-- BCrypt password encoding
-
-### Authorization
-- Role-based access control with ADMIN and USER roles
-- Method-level security with `@PreAuthorize` annotations
-- URL-based security rules in `SecurityConfig`
-
-### Key Security Components
-```java
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
-public class SecurityConfig {
-    // Security filter chain configuration
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        // Configures URL patterns, login/logout, and CSRF protection
-    }
-    
-    // Admin initialization on application startup
-    @Bean
-    public CommandLineRunner initializeAdmin() {
-        // Creates default admin user if none exists
-    }
-}
-```
-
-## 5. Validation
-
-### Custom Annotations
-- `@ValidEmail`: Validates email format
-- `@ValidBugStatus`: Validates bug status transitions
-
-### Validators
-- `EmailValidator`: Implements email validation logic
-- `BugStatusValidator`: Validates bug status transitions based on current status
-
-### Error Handling
-- `GlobalExceptionHandler`: Centralized exception handling
-- Custom exception classes (e.g., `UserAlreadyExistsException`, `BugNotFoundException`)
-- Custom error views for different HTTP status codes
-
-## 6. Test Coverage
-
-### Unit Tests
-- Service layer tests with Mockito
-- Repository tests with test database
-- Validator tests for custom validation
-
-### Controller Tests
-- Web MVC tests with MockMvc
-- Security tests with Spring Security Test
-- Form submission tests
-
-### Integration Tests
-- End-to-end tests with TestRestTemplate
-- Database integration tests with @DataJpaTest
-- Security integration tests
-
-### Test Coverage Statistics
-- Overall test coverage: ~70%
-- Service layer coverage: ~80%
-- Controller layer coverage: ~75%
-- Repository layer coverage: ~90%
-
-## 7. Database Schema
-
-### Main Tables
-- `users`: Stores user information
-- `roles`: Stores available roles
-- `users_roles`: Junction table for user-role relationship
-- `projects`: Stores project information
-- `project_members`: Junction table for project-user relationship
-- `bugs`: Stores bug information
-- `comments`: Stores comments on bugs
-- `log_entries`: Stores system events for auditing
-
-### Key Relationships
-- One user can belong to multiple projects
-- One project can have multiple team members
-- One project can have multiple bugs
-- One bug can have multiple comments
-- Each bug has one reporter and optionally one assignee
-
-### Schema Creation
-The schema is created using Flyway migrations:
-- `V1__Initial_Schema.sql`: Creates initial tables and relationships
-- `V2__Insert_Default_Data.sql`: Inserts default roles and admin user
-
-## 8. Special Endpoints and Utilities
-
-### Admin Endpoints
-- `/admin/users`: User management
-- `/admin/reset-admin`: Resets admin account
-- `/admin/debug-info`: Shows system debug information
-
-### Utility Endpoints
-- `/fix-database`: Script to fix database consistency issues
-- `/fix-admin-roles`: Script to fix admin role issues
-- `/projects/fix-projects`: Script to ensure projects exist
-
-### Database Fix Scripts
-- `fix_db.sql`: Comprehensive database fix script
-- `sample_project.sql`: Creates sample projects for testing
-
-### Error Pages
-- `/error/access-denied.html`: Custom access denied page
-- `/error/404.html`: Custom not found page
-
-## Getting Started
+## Setup Instructions
 
 ### Prerequisites
-- Java 17+
-- MySQL 8.0+
-- Maven
+
+- JDK 17 or higher (JDK 21 recommended)
+- Maven 3.6+
+- MySQL Server 8.x
 
 ### Database Setup
-1. Create a MySQL database named `bug_tracker_db`
-2. Update database credentials in `application.yml` if needed
+
+1. Create a MySQL database:
+   ```sql
+   CREATE DATABASE bug_tracker_db;
+   ```
+
+2. Configure your database credentials in:
+   - `application-dev.yml` for development
+   - Use environment variables in production
 
 ### Running the Application
-1. Clone the repository
-2. Navigate to the project directory
-3. Run `mvn clean install` to build the project
-4. Run `mvn spring-boot:run` to start the application
-5. Access the application at http://localhost:8080
 
-### Default Login
-- Admin: admin@bugtracker.com / password: admin123
-- Create new user accounts via the registration page
+#### Development Mode
 
-## Project Structure
+```bash
+# Run with Maven
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+# OR using Java
+java -jar target/bugtracker-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
 ```
-com.bugtracker.bugtracker
-│
-├── config
-│   ├── SecurityConfig.java
-│   ├── InitialDataConfig.java
-│   └── CustomUserDetailsService.java
-│
-├── model
-│   ├── entity
-│   │   ├── User.java
-│   │   ├── Role.java
-│   │   ├── Bug.java
-│   │   ├── Project.java
-│   │   ├── Comment.java
-│   │   └── LogEntry.java
-│   │
-│   └── dto
-│       ├── UserRegisterDTO.java
-│       ├── UserLoginDTO.java
-│       ├── BugAddDTO.java
-│       └── (Other DTOs)
-│
-├── repository
-│   ├── UserRepository.java
-│   ├── RoleRepository.java
-│   ├── BugRepository.java
-│   ├── ProjectRepository.java
-│   ├── CommentRepository.java
-│   └── LogEntryRepository.java
-│
-├── service
-│   ├── impl
-│   │   ├── UserServiceImpl.java
-│   │   ├── BugServiceImpl.java
-│   │   ├── ProjectServiceImpl.java
-│   │   ├── CommentServiceImpl.java
-│   │   └── LogServiceImpl.java
-│   │
-│   ├── UserService.java
-│   ├── BugService.java
-│   ├── ProjectService.java
-│   ├── CommentService.java
-│   └── LogService.java
-│
-├── validation
-│   ├── ValidEmail.java
-│   ├── EmailValidator.java
-│   ├── ValidBugStatus.java
-│   └── BugStatusValidator.java
-│
-├── exception
-│   ├── GlobalExceptionHandler.java
-│   ├── UserAlreadyExistsException.java
-│   ├── BugNotFoundException.java
-│   └── ProjectNotFoundException.java
-│
-├── scheduler
-│   └── BugAutoCloseScheduler.java
-│
-├── web
-│   ├── controller
-│   │   ├── UserController.java
-│   │   ├── AdminController.java
-│   │   ├── BugController.java
-│   │   ├── ProjectController.java
-│   │   ├── CommentController.java
-│   │   ├── ErrorController.java
-│   │   └── FixController.java
-│
-└── resources
-    ├── templates
-    │   ├── auth
-    │   │   ├── login.html
-    │   │   └── register.html
-    │   ├── admin
-    │   │   └── users.html
-    │   ├── bugs
-    │   │   ├── list.html
-    │   │   ├── details.html
-    │   │   └── create.html
-    │   ├── projects
-    │   │   ├── list.html
-    │   │   ├── view.html
-    │   │   ├── create.html
-    │   │   └── edit.html
-    │   ├── comments
-    │   │   └── edit.html
-    │   ├── error
-    │   │   └── access-denied.html
-    │   ├── dashboard.html
-    │   └── landing.html
-    │
-    ├── static
-    │   ├── css
-    │   ├── js
-    │   └── images
-    │
-    └── db/migration
-        ├── V1__Initial_Schema.sql
-        └── V2__Insert_Default_Data.sql
+
+#### Production Mode
+
+```bash
+# Set environment variables for security
+export DB_USERNAME=your_db_username
+export DB_PASSWORD=your_db_password
+export ADMIN_PASS=secure_admin_password
+
+# Run with production profile
+java -jar target/bugtracker-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
+
+### Default Admin Account
+
+- Email: admin@bugtracker.com
+- Password: admin123 (development only - change in production using `ADMIN_PASS` environment variable!)
+
+## User Guide
+
+### For Regular Users
+1. **Dashboard**: View assigned and reported bugs statistics
+2. **Bug List**: Browse and filter bugs with advanced search
+3. **Profile**: Manage personal information and view activity stats
+4. **Bug Details**: View detailed bug information and comments
+
+### For Administrators
+1. **Project Management**: Create and manage projects
+2. **User Management**: Assign roles and manage user accounts
+3. **System Overview**: Access to all bugs and projects
+4. **Database Tools**: Special endpoints for database maintenance
+
+## API Documentation
+
+Once the application is running, access the OpenAPI documentation at:
+- http://localhost:8080/swagger-ui.html
+
+## Application Architecture
+
+### MVC Pattern Implementation
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Controllers   │───▶│    Services     │───▶│  Repositories   │
+│   (Web Layer)   │    │ (Business Logic)│    │  (Data Layer)   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         ▼                        ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│    Templates    │    │      DTOs       │    │    Entities     │
+│   (Thymeleaf)   │    │ (Data Transfer) │    │   (JPA/MySQL)   │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+### Project Structure
+
+```
+src/main/java/com/bugtracker/
+├── config/           # Configuration classes (Security, Data initialization)
+├── exception/        # Custom exception classes and global handlers
+├── model/            # Domain models
+│   ├── dto/          # Data Transfer Objects
+│   ├── entity/       # JPA Entities (User, Bug, Project, Comment)
+│   └── enums/        # Enumerations (BugStatus, BugPriority)
+├── repository/       # Spring Data JPA repositories
+├── service/          # Business logic interfaces
+│   └── impl/         # Service implementations
+├── util/             # Utility classes
+├── validation/       # Custom validators
+└── web/              # Web layer
+    └── controller/   # MVC controllers and REST endpoints
+
+src/main/resources/
+├── templates/        # Thymeleaf templates
+│   ├── bugs/         # Bug-related pages
+│   ├── projects/     # Project management pages
+│   ├── profile/      # User profile pages
+│   └── fragments/    # Reusable template fragments
+├── static/           # CSS, JS, images
+└── db/migration/     # Flyway database migrations
+```
+
+## Security Features
+
+- **Spring Security 6.x**: Modern security framework
+- **Role-Based Access Control**: ADMIN and USER roles
+- **Password Encryption**: BCrypt password hashing
+- **CSRF Protection**: Built-in CSRF token validation
+- **Session Management**: Secure session handling
+
+## Database Schema
+
+### Core Entities
+- **Users**: User accounts with roles and profiles
+- **Projects**: Project containers for bugs
+- **Bugs**: Bug reports with lifecycle management
+- **Comments**: Bug discussion threads
+- **Roles**: User permission system
+- **Log Entries**: Activity tracking
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Port 8080 already in use**:
+   ```bash
+   # Find and kill the process
+   netstat -ano | findstr :8080
+   taskkill /PID <PID> /F
+   ```
+
+2. **Database connection issues**:
+   - Verify MySQL is running
+   - Check credentials in `application-dev.yml`
+   - Ensure database exists
+
+3. **Template errors**:
+   - Check Thymeleaf syntax
+   - Verify model attributes are passed correctly
+   - Use proper enum comparisons (`bug.status.name() == 'NEW'`)
+
+## Development Guidelines
+
+1. **Code Quality**:
+   - Follow Spring Boot best practices
+   - Use proper logging (SLF4J) instead of `System.out.println()`
+   - Write comprehensive unit tests
+
+2. **Template Development**:
+   - Use semantic HTML with Bootstrap 5
+   - Implement proper error handling
+   - Follow Thymeleaf conventions
+
+3. **Database**:
+   - Use Flyway for schema migrations
+   - Follow JPA naming conventions
+   - Implement proper entity relationships
+
+## Logging Best Practices
+
+This project uses SLF4J with Logback for logging instead of `System.out.println()` for several important reasons:
+
+### Why we use `log.info()` instead of `System.out.println()`
+
+1. **Configuration and Flexibility**:
+   - Logging frameworks allow controlling log levels (DEBUG, INFO, WARN, ERROR) without code changes
+   - Multiple output destinations (console, files, databases) can be configured
+   - Log rotation and size limitations are handled automatically
+
+2. **Better Formatting**:
+   - Automatic timestamp and context information (class name, thread)
+   - Support for parameterized messages (`log.info("Value: {}", value)`) that are more efficient
+   - Structured format for easier parsing and analysis
+
+3. **Performance**:
+   - Improved performance when logging is disabled at a certain level
+   - Lazy evaluation of parameters (calculated only if the log level is enabled)
+   - Less impact on application performance in production
+
+Example of proper logging in our codebase:
+```java
+// Incorrect approach
+System.out.println("Created new bug with ID: " + bug.getId());
+
+// Correct approach with SLF4J
+log.info("Created new bug with ID: {}", bug.getId());
+```
+
+## Database Migrations
+
+Flyway manages database migrations. Migration scripts are in:
+- `src/main/resources/db/migration/`
 
 ## License
-This project is for educational purposes as part of a diploma project.
+
+This project is licensed under the MIT License - see the LICENSE file for details.
