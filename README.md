@@ -15,7 +15,7 @@ A comprehensive bug tracking system built with Spring Boot that allows teams to 
 - **RESTful API**: OpenAPI/Swagger documentation
 - **Responsive UI**: Modern Bootstrap 5 interface
 
-## Current Status (December 2024)
+## Current Status
 
 ### ✅ Fully Working Features
 
