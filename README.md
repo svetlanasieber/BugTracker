@@ -10,52 +10,46 @@ A comprehensive bug tracking system built with Spring Boot that allows teams to 
 - **User Profiles**: Personal profile pages with activity statistics
 - **Activity Logging**: Comprehensive logging of all system activities
 - **Bug Filtering**: Advanced filtering by project, status, and priority
-- **Comments System**: Add and view comments on bugs
+- **Comments System**: Add and view comments on bugs with full CRUD operations
 - **File Attachments**: Support for bug attachments (planned)
 - **RESTful API**: OpenAPI/Swagger documentation
 - **Responsive UI**: Modern Bootstrap 5 interface
 
-## Recent Updates (June 2025)
+## Current Status (December 2024)
 
-### ✅ Latest Fixes & Improvements
+### ✅ Fully Working Features
 
-1. **Fixed Bug List Page**: 
-   - Resolved Thymeleaf enum comparison issues
-   - Improved badge colors for bug status and priority
-   - Enhanced filtering functionality
+**Core Functionality:**
+- ✅ User registration and authentication system
+- ✅ Role-based access control (ADMIN/USER permissions)
+- ✅ Project management (admin-only creation and management)
+- ✅ Complete bug lifecycle management (create, update, assign, status tracking)
+- ✅ User profile system with activity statistics
+- ✅ Comment system with create, edit, and delete functionality
 
-2. **User Profile System**: 
-   - Complete profile page implementation
-   - Activity statistics (reported bugs, assigned bugs)
-   - Profile editing and password change functionality
-   - Proper template structure in `profile/profile.html`
+**Fixed Issues:**
+1. **Template Engine**: All Thymeleaf enum comparison errors resolved
+2. **Navigation**: All menu links and routes working properly
+3. **Authorization**: Proper role-based access throughout the application
+4. **Profile System**: Complete implementation with bug statistics
+5. **Comment System**: Full CRUD operations with proper authorization
+6. **Database**: All initialization and connection issues resolved
+7. **Build System**: Removed test dependencies for streamlined compilation
 
-3. **Template Engine Improvements**:
-   - Fixed SpEL evaluation errors in Thymeleaf templates
-   - Simplified enum comparisons using `.name()` method
-   - Better error handling in templates
-
-4. **Project Structure Optimization**:
-   - Removed test dependencies that caused compilation issues
-   - Streamlined build process for faster deployment
-   - Improved development workflow
-
-5. **Navigation & User Experience**:
-   - Fixed all navigation menu links
-   - Proper role-based menu visibility
-   - Enhanced user feedback with success/error messages
+**Application Architecture:**
+- ✅ Clean MVC pattern implementation
+- ✅ Proper service layer separation
+- ✅ JPA entity relationships working correctly
+- ✅ Spring Security 6.x integration complete
+- ✅ Bootstrap 5 responsive UI implementation
 
 ## Tech Stack
 
-- Java 21
-- Spring Boot 3.2.0
-- Spring Security 6.x
-- Spring Data JPA
-- Thymeleaf
-- MySQL 8.x
-- Bootstrap 5
-- Maven
-- JUnit 5 & Mockito (for testing)
+- **Backend**: Java 21, Spring Boot 3.2.0, Spring Security 6.x, Spring Data JPA
+- **Frontend**: Thymeleaf, Bootstrap 5, HTML5, CSS3
+- **Database**: MySQL 8.x with Hibernate ORM
+- **Build Tool**: Maven
+- **Server**: Embedded Tomcat
 
 ## Setup Instructions
 
@@ -100,23 +94,24 @@ export ADMIN_PASS=secure_admin_password
 java -jar target/bugtracker-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
-### Default Admin Account
+### Access the Application
 
-- Email: admin@bugtracker.com
-- Password: admin123 (development only - change in production using `ADMIN_PASS` environment variable!)
+Once running, the application is available at:
+- **URL**: http://localhost:8080
+- **Admin Account**: admin@bugtracker.com / admin123 (change password in production!)
 
 ## User Guide
 
 ### For Regular Users
 1. **Dashboard**: View assigned and reported bugs statistics
 2. **Bug List**: Browse and filter bugs with advanced search
-3. **Profile**: Manage personal information and view activity stats
-4. **Bug Details**: View detailed bug information and comments
+3. **Bug Management**: Create, edit, and comment on bugs
+4. **Profile**: Manage personal information and view activity statistics
 
 ### For Administrators
-1. **Project Management**: Create and manage projects
-2. **User Management**: Assign roles and manage user accounts
-3. **System Overview**: Access to all bugs and projects
+1. **Project Management**: Create and manage projects with member assignments
+2. **User Management**: Full access to all users and projects
+3. **System Overview**: Access to all bugs and projects across the system
 4. **Database Tools**: Special endpoints for database maintenance
 
 ## API Documentation
@@ -166,26 +161,27 @@ src/main/resources/
 │   ├── profile/      # User profile pages
 │   └── fragments/    # Reusable template fragments
 ├── static/           # CSS, JS, images
-└── db/migration/     # Flyway database migrations
+└── application*.yml  # Configuration files
 ```
 
 ## Security Features
 
 - **Spring Security 6.x**: Modern security framework
-- **Role-Based Access Control**: ADMIN and USER roles
+- **Role-Based Access Control**: ADMIN and USER roles with proper authorization
 - **Password Encryption**: BCrypt password hashing
 - **CSRF Protection**: Built-in CSRF token validation
 - **Session Management**: Secure session handling
+- **Method-Level Security**: Controller endpoint protection
 
 ## Database Schema
 
 ### Core Entities
 - **Users**: User accounts with roles and profiles
-- **Projects**: Project containers for bugs
-- **Bugs**: Bug reports with lifecycle management
-- **Comments**: Bug discussion threads
-- **Roles**: User permission system
-- **Log Entries**: Activity tracking
+- **Projects**: Project containers for bugs with member assignments
+- **Bugs**: Bug reports with complete lifecycle management
+- **Comments**: Bug discussion threads with CRUD operations
+- **Roles**: User permission system (ROLE_ADMIN, ROLE_USER)
+- **Activity Logging**: System activity tracking
 
 ## Troubleshooting
 
@@ -193,37 +189,45 @@ src/main/resources/
 
 1. **Port 8080 already in use**:
    ```bash
-   # Find and kill the process
+   # Windows
    netstat -ano | findstr :8080
    taskkill /PID <PID> /F
+   
+   # Linux/Mac
+   lsof -ti:8080 | xargs kill -9
    ```
 
 2. **Database connection issues**:
    - Verify MySQL is running
    - Check credentials in `application-dev.yml`
-   - Ensure database exists
+   - Ensure database `bug_tracker_db` exists
 
 3. **Template errors**:
    - Check Thymeleaf syntax
    - Verify model attributes are passed correctly
    - Use proper enum comparisons (`bug.status.name() == 'NEW'`)
 
+4. **Build issues**:
+   - Run `mvn clean compile` to rebuild
+   - Ensure Java 21 is properly configured
+   - Check Maven configuration
+
 ## Development Guidelines
 
 1. **Code Quality**:
    - Follow Spring Boot best practices
    - Use proper logging (SLF4J) instead of `System.out.println()`
-   - Write comprehensive unit tests
+   - Implement proper error handling
 
 2. **Template Development**:
    - Use semantic HTML with Bootstrap 5
-   - Implement proper error handling
+   - Implement proper form validation
    - Follow Thymeleaf conventions
 
 3. **Database**:
-   - Use Flyway for schema migrations
-   - Follow JPA naming conventions
-   - Implement proper entity relationships
+   - Use JPA annotations for entity relationships
+   - Follow proper naming conventions
+   - Implement cascade operations carefully
 
 ## Logging Best Practices
 
@@ -242,7 +246,7 @@ This project uses SLF4J with Logback for logging instead of `System.out.println(
    - Structured format for easier parsing and analysis
 
 3. **Performance**:
-   - Improved performance when logging is disabled at a certain level
+   - Improved performance when logging is disabled at certain levels
    - Lazy evaluation of parameters (calculated only if the log level is enabled)
    - Less impact on application performance in production
 
@@ -255,10 +259,25 @@ System.out.println("Created new bug with ID: " + bug.getId());
 log.info("Created new bug with ID: {}", bug.getId());
 ```
 
-## Database Migrations
+## Environment Variables
 
-Flyway manages database migrations. Migration scripts are in:
-- `src/main/resources/db/migration/`
+For production deployment, set these environment variables:
+
+```bash
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=bug_tracker_db
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+# Admin Account
+ADMIN_PASS=secure_admin_password
+
+# Application Configuration
+SPRING_PROFILES_ACTIVE=prod
+SERVER_PORT=8080
+```
 
 ## License
 
