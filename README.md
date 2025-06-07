@@ -1,95 +1,95 @@
-# Bug Tracker - Система за проследяване на софтуерни проблеми
+# Bug Tracker - Software Issue Tracking System
 
-## Общо описание
+## Overview
 
-Bug Tracker е уеб базирана система за проследяване и управление на софтуерни проблеми (бъгове). Системата позволява на екипите да докладват, проследяват и разрешават проблеми в софтуерни проекти по организиран и ефективен начин.
+Bug Tracker is a web-based system for tracking and managing software issues (bugs). The system enables teams to report, track, and resolve software issues in an organized and efficient manner.
 
-## Имплементирани функционалности
+## Implemented Features
 
-### 1. Управление на потребители
-- Регистрация на нови потребители с email и парола
-- Вход в системата със Spring Security автентикация
-- Роли: Администратор и Потребител с различни права
-- Профилни страници с основна информация
-- Промяна на лична информация и парола
+### 1. User Management
+- User registration with email and password
+- Authentication using Spring Security
+- Roles: Administrator and User with different permissions
+- Profile pages with basic information
+- Personal information and password modification
 
-### 2. Управление на проекти
-- Създаване на нови проекти (само за администратори)
-- Добавяне и премахване на участници в проект
-- Преглед на всички достъпни проекти
-- Детайлна информация за всеки проект
+### 2. Project Management
+- Project creation (admin only)
+- Adding and removing project members
+- Viewing all accessible projects
+- Detailed project information
 
-### 3. Управление на бъгове
-- Създаване и редактиране на бъгове
-- Категоризация по приоритет и статус
-- Назначаване на бъгове към разработчици
-- Коментари по бъговете
-- Автоматично затваряне на неактивни бъгове след 30 дни
+### 3. Bug Management
+- Bug creation and editing
+- Priority and status categorization
+- Bug assignment to developers
+- Bug commenting
+- Automatic closure of inactive bugs after 30 days
 
-## Техническа реализация
+## Technical Implementation
 
-### 1. Backend технологии
+### 1. Backend Technologies
 - Java 17
 - Spring Boot 3.2.0
 - Spring Security
 - Spring Data JPA
-- MySQL база данни
-- Flyway миграции
+- MySQL Database
+- Flyway Migrations
 - Maven
 
-### 2. Frontend технологии
+### 2. Frontend Technologies
 - Thymeleaf templates
 - Bootstrap 5.3.2
-- Responsive дизайн
+- Responsive design
 
-### 3. База данни
+### 3. Database
 - MySQL 8.0
-- Flyway миграции за версиониране
-- Релационен модел с референциална цялост
+- Flyway version control
+- Relational model with referential integrity
 
-### 4. Архитектура
-- MVC архитектурен модел
-- Разделение на отговорностите
-- Repository и Service слоеве
+### 4. Architecture
+- MVC architectural pattern
+- Separation of concerns
+- Repository and Service layers
 - Dependency Injection
 
-## Сигурност
+## Security
 
-### Имплементирани мерки
-- BCrypt хеширане на пароли
-- Spring Security интеграция
-- CSRF защита
-- Валидация на входни данни
-- Роли и права за достъп
+### Implemented Measures
+- BCrypt password hashing
+- Spring Security integration
+- CSRF protection
+- Input validation
+- Role-based access control
 
-## Автоматизация
+## Automation
 
-### Процеси
-- Автоматично затваряне на неактивни бъгове
-- Системно логване на действия
-- Автоматични миграции на базата данни
+### Processes
+- Automatic closure of inactive bugs
+- System action logging
+- Automatic database migrations
 
-## Планирани бъдещи подобрения
+## Planned Future Improvements
 
-### Краткосрочни
-1. Имплементация на email известия
-2. Разширена статистика и отчети
-3. REST API с JWT автентикация
+### Short-term
+1. Email notification implementation
+2. Enhanced statistics and reporting
+3. REST API with JWT authentication
 
-### Дългосрочни
-1. Интеграция с външни системи
-2. Мобилно приложение
-3. Разширени възможности за къстъмизация
+### Long-term
+1. External system integration
+2. Mobile application
+3. Extended customization options
 
-## Системни изисквания
+## System Requirements
 
-### Сървър
+### Server
 - Java 17+
 - MySQL 8.0+
-- 2GB RAM минимум
-- 10GB дисково пространство
+- 2GB RAM minimum
+- 10GB disk space
 
-### Клиент
-- Съвременен уеб браузър
+### Client
+- Modern web browser
 - JavaScript enabled
-- Минимална резолюция: 1024x768 
+- Minimum resolution: 1024x768 
