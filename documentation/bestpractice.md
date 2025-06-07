@@ -1,276 +1,184 @@
 # Best Practices and References
 
-## Books and Publications
+## Core Practices Used in This Project
 
-### 1. Clean Code by Robert C. Martin
-- **Principles Applied**:
-  - Single Responsibility Principle (SRP)
-  - Don't Repeat Yourself (DRY)
-  - SOLID principles
-  - Meaningful naming conventions
-  - Small, focused methods
-  - Clean class organization
+### 1. Spring MVC Architecture
+- Controllers handle HTTP requests
+- Services contain business logic
+- Repositories manage data access
+- DTOs for data transfer
+- Entities for database mapping
 
-### 2. Spring Boot in Practice by Somnath Musib
-- **Concepts Implemented**:
-  - Spring Boot application structure
-  - Configuration management
-  - Profile-based configurations
-  - Security best practices
-  - Testing strategies
+### 2. Security Implementation
+- Spring Security for authentication
+- BCrypt password encoding
+- Role-based authorization
+- CSRF protection
+- Secure session management
 
-### 3. Effective Java by Joshua Bloch
-- **Practices Used**:
-  - Builder pattern implementation
-  - Proper exception handling
-  - Immutable objects
-  - Enum types
-  - Generics usage
+### 3. Database Management
+- MySQL for data storage
+- Flyway for migrations
+- JPA/Hibernate for ORM
+- Proper entity relationships
+- Transaction management
 
-### 4. Domain-Driven Design by Eric Evans
-- **Patterns Applied**:
-  - Entity design
-  - Value objects
-  - Repository pattern
-  - Service layer architecture
-  - Domain events
+### 4. Testing Approach
+- JUnit for unit tests
+- Mockito for mocking
+- Integration tests
+- Repository tests
+- Security tests
 
-### 5. Spring in Action by Craig Walls
-- **Core Concepts**:
-  - Spring Core principles
-  - MVC architecture
-  - Security implementation
-  - Testing strategies
-  - Cloud deployment
+## Main Documentation Sources
 
-### 6. Clean Architecture by Robert C. Martin
-- **Architectural Principles**:
-  - Layer separation
-  - Dependency rules
-  - Interface segregation
-  - Component cohesion
-  - System boundaries
-
-## Official Documentation
-
-### 1. Spring Framework Documentation
-- **URL**: https://docs.spring.io/spring-framework/reference/
-- **Areas Covered**:
-  - Dependency Injection
-  - AOP concepts
-  - Transaction management
-  - MVC architecture
-  - Security configuration
-- **Key Recommendations**:
-  > "Controllers should be thin and delegate to the service layer for business logic"
-  - Separation of Concerns
-  - Service Layer Pattern
-  - DTO Pattern for forms
-  - Clean controller design
-
-### 2. Spring Boot Documentation
+### 1. Spring Boot Documentation
 - **URL**: https://docs.spring.io/spring-boot/docs/current/reference/
-- **Features Used**:
-  - Auto-configuration
-  - Externalized configuration
-  - Production-ready features
-  - Embedded servers
-  - Spring Boot actuator
-- **Best Practices**:
-  - @Valid and BindingResult for validation
-  - Service-based SecurityContextHolder access
-  - Helper methods for code reuse
-  - DTO usage for user input
+- **Used For**:
+  - Basic project setup
+  - Application properties
+  - Security configuration
+  - Database configuration
 
-### 3. Spring Security Reference
+### 2. Spring Security Guide
 - **URL**: https://docs.spring.io/spring-security/reference/
-- **Security Measures**:
-  - Authentication
-  - Authorization
+- **Used For**:
+  - Authentication setup
+  - Authorization rules
   - Password encoding
-  - CSRF protection
-  - Session management
-- **Key Guidelines**:
-  > "Authentication information should be retrieved through service abstractions rather than directly accessing SecurityContextHolder"
-  - Service-based security logic
-  - Proper authentication flow
-  - Security context management
+  - Security configuration
 
-### 4. Spring.io Guides
-- **URL**: https://spring.io/guides
-- **Essential Guides**:
-  - Building RESTful Web Services
-  - Handling Form Submission
-  - Securing Web Applications
-  - Testing Spring Boot Applications
+### 3. Thymeleaf Documentation
+- **URL**: https://www.thymeleaf.org/documentation.html
+- **Used For**:
+  - Template creation
+  - Form handling
+  - Security integration
+  - Layout management
 
-### 5. Baeldung Spring Tutorials
-- **URL**: https://www.baeldung.com
-- **Key Resources**:
-  - Spring MVC Tutorial
-  - Spring Boot Security Auto-configuration
-  - Testing in Spring Boot
-  - Best Practices Guide
-
-### 6. Hibernate Documentation
-- **URL**: https://hibernate.org/orm/documentation/
-- **Concepts Applied**:
-  - Entity mapping
-  - Relationship management
-  - Query optimization
-  - Caching strategies
-  - Transaction handling
-
-## Industry Standards
-
-### 1. OWASP Security Guidelines
-- **URL**: https://owasp.org/www-project-top-ten/
-- **Security Practices**:
-  - Input validation
-  - Output encoding
-  - Authentication controls
-  - Session management
-  - Error handling
-
-### 2. REST API Design Guidelines
-- **URL**: https://restfulapi.net/
-- **API Best Practices**:
-  - Resource naming
-  - HTTP methods usage
-  - Status codes
-  - Versioning
-  - Error handling
-
-### 3. Microservices Best Practices
-- **Source**: https://microservices.io/
-- **Patterns Used**:
-  - Service decomposition
-  - Database per service
-  - API gateway
-  - Service discovery
-  - Circuit breaker
-
-## Code Quality Standards
-
-### 1. SonarQube Guidelines
-- **URL**: https://docs.sonarqube.org/latest/
-- **Quality Gates**:
-  - Code coverage
-  - Duplicate code
-  - Code smells
-  - Security vulnerabilities
-  - Technical debt
-
-### 2. Java Code Conventions
-- **Source**: Oracle's Code Conventions for Java
-- **Standards Applied**:
-  - File organization
-  - Indentation
-  - Comments
-  - Declarations
-  - Statements
-
-## Testing Frameworks and Practices
-
-### 1. JUnit 5 User Guide
-- **URL**: https://junit.org/junit5/docs/current/user-guide/
-- **Testing Patterns**:
-  - Unit testing
-  - Integration testing
-  - Parameterized tests
-  - Test lifecycle
-
-### 2. Mockito Documentation
-- **URL**: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html
-- **Mocking Practices**:
-  - Mock objects
-  - Verify interactions
-  - Argument matchers
-  - Mock annotations
-
-## Database Best Practices
-
-### 1. MySQL Documentation
-- **URL**: https://dev.mysql.com/doc/
-- **Database Design**:
-  - Schema design
-  - Indexing strategy
-  - Query optimization
-  - Transaction management
-
-### 2. Flyway Documentation
-- **URL**: https://flywaydb.org/documentation/
-- **Migration Practices**:
-  - Version control
-  - Migration naming
-  - Baseline migrations
-  - Undo migrations
+### 4. Bootstrap Documentation
+- **URL**: https://getbootstrap.com/docs/
+- **Used For**:
+  - Responsive design
+  - UI components
+  - Forms styling
+  - Layout system
 
 ## Development Tools
 
-### 1. Maven Documentation
-- **URL**: https://maven.apache.org/guides/
-- **Build Practices**:
-  - Dependency management
-  - Plugin configuration
-  - Build lifecycle
-  - Profiles
+### 1. Version Control
+- Git for source control
+- Feature branch workflow
+- Regular commits
+- Clear commit messages
 
-### 2. Git Best Practices
-- **Source**: https://git-scm.com/book/
-- **Version Control**:
-  - Branching strategy
-  - Commit messages
-  - Code review process
-  - Release management
+### 2. Build Tools
+- Maven for dependency management
+- Project structure
+- Build lifecycle
+- Resource management
 
-## Additional Resources
+### 3. IDE
+- IntelliJ IDEA features
+- Debugging tools
+- Code completion
+- Refactoring tools
 
-### 1. Blogs and Articles
-- Baeldung (https://www.baeldung.com/)
-- DZone (https://dzone.com/)
-- Medium's Spring Boot publications
-- InfoQ Java articles
+## Project Structure
 
-### 2. Video Courses
-- Spring Framework Guru
-- Pluralsight Spring courses
-- Udemy Java/Spring Boot courses
+### 1. Package Organization
+```
+src/
+├── main/
+│   ├── java/
+│   │   └── com/bugtracker/
+│   │       ├── config/
+│   │       ├── controller/
+│   │       ├── model/
+│   │       ├── repository/
+│   │       └── service/
+│   └── resources/
+│       ├── static/
+│       ├── templates/
+│       └── application.yml
+└── test/
+    └── java/
+        └── com/bugtracker/
+```
 
-### 3. Community Resources
-- Stack Overflow
-- Spring Community Forums
-- GitHub Discussions
-- Java User Groups
+### 2. Key Components
+- Configuration classes
+- Controllers for web endpoints
+- Service implementations
+- Repository interfaces
+- Entity classes
+- DTO classes
 
-## Implementation Notes
+## Implemented Features
 
-### Architecture
-- Layered architecture (Controller, Service, Repository)
-- Separation of concerns
-- Loose coupling
-- High cohesion
+### 1. User Management
+- Registration
+- Authentication
+- Profile management
+- Role-based access
 
-### Code Organization
-- Package by feature
-- Consistent naming conventions
-- Clear separation of responsibilities
-- Proper exception handling
+### 2. Bug Tracking
+- Bug creation
+- Status management
+- Assignment
+- Comments
+- History tracking
 
-### Security Implementation
-- Authentication and authorization
-- Data encryption
-- Secure communication
-- Audit logging
+### 3. Project Management
+- Project creation
+- Team management
+- Member assignment
+- Project overview
 
-### Testing Strategy
-- Unit tests for business logic
-- Integration tests for workflows
-- Security tests
-- Performance tests
+### 4. Automated Tasks
+- Scheduled jobs
+- Email notifications
+- Status updates
+- System maintenance
 
-### Documentation
-- API documentation
-- Code comments
-- Technical documentation
-- User guides 
+## Testing Strategy
+
+### 1. Unit Tests
+- Service layer testing
+- Repository testing
+- Utility class testing
+- Mock dependencies
+
+### 2. Integration Tests
+- Controller endpoints
+- Database operations
+- Security rules
+- Full workflows
+
+## Deployment Considerations
+
+### 1. Environment Configuration
+- Development settings
+- Production settings
+- Test configuration
+- Security parameters
+
+### 2. Database Setup
+- Schema management
+- Migration strategy
+- Backup procedures
+- Data seeding
+
+## Maintenance
+
+### 1. Logging
+- Error tracking
+- User actions
+- System events
+- Performance metrics
+
+### 2. Monitoring
+- Health checks
+- Resource usage
+- Error rates
+- User activity 
