@@ -89,7 +89,3 @@ Bug Tracker is a web-based system for tracking and managing software issues (bug
 - 2GB RAM minimum
 - 10GB disk space
 
-### Client
-- Modern web browser
-- JavaScript enabled
-- Minimum resolution: 1024x768 
