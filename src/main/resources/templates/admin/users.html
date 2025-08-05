@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Bug Tracker</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .admin-hero {
+            background: var(--primary-gradient);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .admin-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+            animation: rotate 20s linear infinite;
+        }
+        
+        .admin-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .admin-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .admin-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+        
+        .user-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--border-radius-lg);
+            border: none;
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hard);
+        }
+        
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .user-info h5 {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-email {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .role-badge {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--border-radius-md);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            display: inline-block;
+        }
+        
+        .role-badge.admin {
+            background: var(--warning-gradient);
+            color: #333;
+        }
+        
+        .status-active {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .status-inactive {
+            background: var(--danger-gradient);
+            color: white;
+        }
+        
+        .admin-btn {
+            border-radius: var(--border-radius-md);
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: var(--transition-bounce);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .admin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition-smooth);
+        }
+        
+        .admin-btn:hover::before {
+            left: 100%;
+        }
+        
+        .admin-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-add-admin {
+            background: var(--success-gradient);
+            color: white;
+        }
+        
+        .btn-add-admin:hover {
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+        }
+        
+        .btn-remove-admin {
+            background: var(--danger-gradient);
+            color: white;
+        }
+        
+        .btn-remove-admin:hover {
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.4);
+        }
+        
+        .stats-overview {
+            margin-bottom: 2rem;
+        }
+        
+        .user-grid {
+            display: grid;
+            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">Bug Tracker</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">
+                            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/projects}">
+                            <i class="bi bi-folder me-1"></i>Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/bugs}">
+                            <i class="bi bi-bug me-1"></i>Bugs
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a class="nav-link active" th:href="@{/admin/users}">
+                            <i class="bi bi-people me-1"></i>User Management
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span sec:authentication="name">Username</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="z-index: 1050;">
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item" type="submit">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Hero Section -->
+    <section class="admin-hero">
+        <div class="container text-center">
+            <i class="bi bi-people-fill" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.9;"></i>
+            <h1 class="admin-title fade-in">User Management</h1>
+            <p class="admin-subtitle slide-up">Manage user accounts, roles, and permissions</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container pb-4">
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-overview">
+            <div class="row fade-in">
+                <div class="col-md-3">
+                    <div class="stats-card hover-lift">
+                        <div class="card-body text-center p-3">
+                            <i class="bi bi-people-fill" style="font-size: 2.5rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                            <div style="font-size: 2rem; font-weight: 700; color: #333; margin: 0.5rem 0;" th:text="${users.size()}">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Total Users</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card hover-lift">
+                        <div class="card-body text-center p-3">
+                            <i class="bi bi-shield-check" style="font-size: 2.5rem; background: var(--warning-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                            <div style="font-size: 2rem; font-weight: 700; color: #333; margin: 0.5rem 0;" th:text="${#lists.size(users.?[roles.?[name == 'ROLE_ADMIN'].size() > 0])}">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Administrators</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card hover-lift">
+                        <div class="card-body text-center p-3">
+                            <i class="bi bi-check-circle-fill" style="font-size: 2.5rem; background: var(--success-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                            <div style="font-size: 2rem; font-weight: 700; color: #333; margin: 0.5rem 0;" th:text="${#lists.size(users.?[active])}">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Active Users</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card hover-lift">
+                        <div class="card-body text-center p-3">
+                            <i class="bi bi-x-circle-fill" style="font-size: 2.5rem; background: var(--danger-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                            <div style="font-size: 2rem; font-weight: 700; color: #333; margin: 0.5rem 0;" th:text="${#lists.size(users.?[!active])}">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Inactive Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">
+                <i class="bi bi-people me-2"></i>System Users
+            </h3>
+            <a th:href="@{/admin/users/create}" class="btn admin-btn btn-add-admin">
+                <i class="bi bi-person-plus me-2"></i>Create New User
+            </a>
+        </div>
+
+        <!-- Users Grid -->
+        <div th:if="${users.empty}" class="text-center py-5">
+            <i class="bi bi-people text-muted" style="font-size: 5rem;"></i>
+            <h3 class="mt-3">No users found</h3>
+            <p class="text-muted">There are currently no users in the system.</p>
+        </div>
+
+        <div th:if="${!users.empty}" class="user-grid fade-in">
+            <div th:each="user : ${users}" class="user-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-start">
+                        <img class="user-avatar me-3" 
+                             th:src="${user.profileImage != null ? user.profileImage : 'https://via.placeholder.com/60?text=' + user.firstName.charAt(0) + user.lastName.charAt(0)}" 
+                             alt="User Avatar">
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="user-info">
+                                    <h5 th:text="${user.firstName + ' ' + user.lastName}">John Doe</h5>
+                                    <div class="user-email" th:text="${user.email}">john@example.com</div>
+                                </div>
+                                <span class="badge fs-6 px-2 py-1" 
+                                      th:classappend="${user.active ? 'status-active' : 'status-inactive'}" 
+                                      th:text="${user.active ? 'Active' : 'Inactive'}">Active</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <span th:each="role : ${user.roles}" 
+                                      class="role-badge" 
+                                      th:classappend="${role.name == 'ROLE_ADMIN' ? 'admin' : ''}"
+                                      th:text="${role.name}">USER</span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Joined: <span th:text="${#temporals.format(user.createdAt, 'MMM dd, yyyy')}">Jan 01, 2023</span>
+                                </small>
+                                
+                                <form th:action="@{/admin/users/{id}/role(id=${user.id})}" method="post" class="d-inline">
+                                    <input type="hidden" name="roleName" value="ROLE_ADMIN">
+                                    <button type="submit" 
+                                            class="admin-btn" 
+                                            th:classappend="${user.roles.?[name == 'ROLE_ADMIN'].size() > 0 ? 'btn-remove-admin' : 'btn-add-admin'}"
+                                            th:title="${user.roles.?[name == 'ROLE_ADMIN'].size() > 0 ? 'Remove Admin Role' : 'Grant Admin Role'}">
+                                        <i class="bi me-1" th:classappend="${user.roles.?[name == 'ROLE_ADMIN'].size() > 0 ? 'bi-person-dash' : 'bi-person-plus'}"></i>
+                                        <span th:text="${user.roles.?[name == 'ROLE_ADMIN'].size() > 0 ? 'Remove Admin' : 'Make Admin'}">Action</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2025 Bug Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html> 
