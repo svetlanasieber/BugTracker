@@ -1,0 +1,132 @@
+package com.bugtracker.bugtracker.comment.service;
+
+import com.bugtracker.bugtracker.bug.model.Bug;
+import com.bugtracker.bugtracker.comment.model.Comment;
+import com.bugtracker.bugtracker.user.model.User;
+import com.bugtracker.bugtracker.bug.repository.BugRepository;
+import com.bugtracker.bugtracker.comment.repository.CommentRepository;
+import com.bugtracker.bugtracker.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class CommentServiceImpl implements CommentService {
+
+    private final CommentRepository commentRepository;
+    private final BugRepository bugRepository;
+    private final UserRepository userRepository;
+
+    @Override
+    @Transactional
+    public Comment createComment(Long bugId, Long authorId, String content) {
+        Bug bug = bugRepository.findById(bugId)
+                .orElseThrow(() -> new IllegalArgumentException("Bug not found with id: " + bugId));
+        
+        User author = userRepository.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + authorId));
+        
+        Comment comment = new Comment();
+        comment.setBug(bug);
+        comment.setAuthor(author);
+        comment.setContent(content);
+        comment.setCreatedAt(LocalDateTime.now());
+        
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public Comment getComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
+    }
+
+    @Override
+    public List<Comment> getCommentsByBugId(Long bugId) {
+        return commentRepository.findByBugId(bugId);
+    }
+
+    @Override
+    public Page<Comment> getCommentsByBugId(Long bugId, Pageable pageable) {
+        return commentRepository.findByBugId(bugId, pageable);
+    }
+
+    @Override
+    @Transactional
+    public Comment updateComment(Long commentId, String content) {
+        Comment comment = getComment(commentId);
+        comment.setContent(content);
+        comment.setUpdatedAt(LocalDateTime.now());
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId) {
+        Comment comment = getComment(commentId);
+        commentRepository.delete(comment);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllCommentsForBug(Long bugId) {
+        commentRepository.deleteAllByBugId(bugId);
+    }
+    
+    // ============= NEW BUSINESS LOGIC METHODS IMPLEMENTATIONS =============
+    
+    @Override
+    @Transactional
+    public Comment createCommentWithCurrentUser(Long bugId, String content, String username) {
+        User currentUser = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
+        
+        Comment comment = createComment(bugId, currentUser.getId(), content);
+        log.info("Comment created by user {} for bug {}", username, bugId);
+        return comment;
+    }
+    
+    @Override
+    @Transactional
+    public Comment updateCommentWithAuthorization(Long commentId, String content, String username) {
+        if (!isUserAuthorizedToModifyComment(commentId, username)) {
+            throw new RuntimeException("You can only edit your own comments!");
+        }
+        
+        Comment updatedComment = updateComment(commentId, content);
+        log.info("Comment {} updated by user {}", commentId, username);
+        return updatedComment;
+    }
+    
+    @Override
+    @Transactional
+    public void deleteCommentWithAuthorization(Long commentId, String username) {
+        if (!isUserAuthorizedToModifyComment(commentId, username)) {
+            throw new RuntimeException("You can only delete your own comments!");
+        }
+        
+        deleteComment(commentId);
+        log.info("Comment {} deleted by user {}", commentId, username);
+    }
+    
+    @Override
+    public boolean isUserAuthorizedToModifyComment(Long commentId, String username) {
+        User currentUser = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
+        
+        Comment comment = getComment(commentId);
+        
+        // Check if user is author or admin
+        return comment.getAuthor().getId().equals(currentUser.getId()) || 
+               currentUser.getRoles().stream().anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+    }
+} 
