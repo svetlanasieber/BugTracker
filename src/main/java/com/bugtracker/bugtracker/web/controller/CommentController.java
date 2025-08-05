@@ -11,10 +11,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
-/**
- * Clean controller following Smart Wallet architecture.
- * No try-catch blocks - exceptions are handled by @ControllerAdvice.
- */
 
 @Controller
 @RequestMapping("/comments")
