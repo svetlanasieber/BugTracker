@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteAllByBugId(bugId);
     }
     
-    // ============= NEW BUSINESS LOGIC METHODS IMPLEMENTATIONS =============
+
     
     @Override
     @Transactional
@@ -125,7 +125,7 @@ public class CommentServiceImpl implements CommentService {
         
         Comment comment = getComment(commentId);
         
-        // Check if user is author or admin
+       
         return comment.getAuthor().getId().equals(currentUser.getId()) || 
                currentUser.getRoles().stream().anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
     }
