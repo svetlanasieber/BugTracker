@@ -22,28 +22,14 @@ public interface CommentService {
     
     void deleteAllCommentsForBug(Long bugId);
     
-    // ============= NEW BUSINESS LOGIC METHODS =============
-    
-    /**
-     * Creates a comment with the current authenticated user as author.
-     */
+
     Comment createCommentWithCurrentUser(Long bugId, String content, String username);
     
-    /**
-     * Updates a comment with authorization check.
-     * Only the author or admin can update comments.
-     */
+
     Comment updateCommentWithAuthorization(Long commentId, String content, String username);
     
-    /**
-     * Deletes a comment with authorization check.
-     * Only the author or admin can delete comments.
-     */
+ 
     void deleteCommentWithAuthorization(Long commentId, String username);
-    
-    /**
-     * Checks if a user is authorized to modify a comment.
-     * Returns true if the user is the author or an admin.
-     */
+
     boolean isUserAuthorizedToModifyComment(Long commentId, String username);
 } 
