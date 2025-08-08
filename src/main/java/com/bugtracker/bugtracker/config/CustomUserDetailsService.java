@@ -41,8 +41,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
         return roles.stream()
                 .map(role -> {
-                    // If the role name already starts with ROLE_, use it as is
-                    // Otherwise, add the ROLE_ prefix for Spring Security
+             
                     String roleName = role.getName();
                     if (!roleName.startsWith("ROLE_")) {
                         roleName = "ROLE_" + roleName;
