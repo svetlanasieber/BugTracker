@@ -360,7 +360,6 @@ public class BugServiceImpl implements BugService {
                 .priority(bugUpdate.getPriority())
                 .project(project)
                 .assignedTo(assignedTo)
-                // Preserve original fields
                 .reporter(existingBug.getReporter())
                 .createdAt(existingBug.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
