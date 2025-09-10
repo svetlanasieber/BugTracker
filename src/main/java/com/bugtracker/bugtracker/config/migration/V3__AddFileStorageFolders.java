@@ -15,26 +15,26 @@ public class V3__AddFileStorageFolders extends BaseJavaMigration {
 
     @Override
     public void migrate(Context context) throws Exception {
-        // Get the user's home directory
+    
         String userHome = System.getProperty("user.home");
         
-        // Create the main upload directory
+     
         Path uploadDir = Paths.get(userHome, "bugtracker", "uploads");
         createDirectoryIfNotExists(uploadDir);
         
-        // Create profile pictures directory
+       
         Path profilesDir = Paths.get(userHome, "bugtracker", "uploads", "profiles");
         createDirectoryIfNotExists(profilesDir);
         
-        // Create bug attachments directory
+        
         Path attachmentsDir = Paths.get(userHome, "bugtracker", "uploads", "attachments");
         createDirectoryIfNotExists(attachmentsDir);
         
-        // Create temporary files directory
+        
         Path tempDir = Paths.get(userHome, "bugtracker", "uploads", "temp");
         createDirectoryIfNotExists(tempDir);
         
-        System.out.println("✅ File storage directories created successfully");
+        System.out.println("File storage directories created successfully");
     }
     
     private void createDirectoryIfNotExists(Path dir) throws IOException {
