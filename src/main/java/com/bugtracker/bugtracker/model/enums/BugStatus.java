@@ -8,8 +8,6 @@ import java.util.Set;
 public enum BugStatus {
 
     NEW,
-
-
     IN_PROGRESS,
     TESTING,
     RESOLVED,
