@@ -94,8 +94,9 @@ public class InitialDataSeeder implements CommandLineRunner {
     private void seedDevelopmentUsers() {
         log.info("👥 Seeding development users...");
         
-       
-        createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
+
+        //test
+        /*createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
         createUserIfNotExists("qa@bugtracker.com", "QA123!", "Jane", "Tester", "QA");
         createUserIfNotExists("pm@bugtracker.com", "PM123!", "Bob", "Manager", "PROJECT_MANAGER");
         createUserIfNotExists("user@bugtracker.com", "User123!", "Alice", "User", "USER");
@@ -105,7 +106,7 @@ public class InitialDataSeeder implements CommandLineRunner {
         log.info("Developer: developer@bugtracker.com / Dev123!");
         log.info("QA Engineer: qa@bugtracker.com / QA123!");
         log.info("Project Manager: pm@bugtracker.com / PM123!");
-        log.info("Basic User: user@bugtracker.com / User123!");
+        log.info("Basic User: user@bugtracker.com / User123!");*/
     }
     
     private void createUserIfNotExists(String email, String password, String firstName, String lastName, String roleName) {
