@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Data Transfer Object for notification responses.
- * Used to return notification information to the main Bug Tracker application.
- */
 @Data
 @Builder
 @NoArgsConstructor
