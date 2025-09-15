@@ -40,18 +40,18 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Project createProject(Project project) {
-        // Set initial values
+ 
         project.setCreatedAt(LocalDateTime.now());
         project.setUpdatedAt(LocalDateTime.now());
         
-        // Default to active if not specified
+
         if (project.isActive() == false) {
             project.setActive(true);
         }
         
         Project savedProject = projectRepository.save(project);
         
-        // Log the project creation
+    
         logService.createLogEntry(
                 "CREATE",
                 "Project",
@@ -97,15 +97,15 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Project updateProject(Project project) {
-        // Ensure the project exists
+    
         Project existingProject = projectRepository.findById(project.getId())
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + project.getId()));
         
-        // Update timestamp
+    
         project.setUpdatedAt(LocalDateTime.now());
         Project updatedProject = projectRepository.save(project);
         
-        // Log the update
+     
         logService.createLogEntry(
                 "UPDATE",
                 "Project",
@@ -139,8 +139,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
         
         projectRepository.delete(project);
-        
-        // Log the deletion
+ 
         logService.createLogEntry(
                 "DELETE",
                 "Project",
@@ -165,7 +164,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.getMembers().add(user);
         projectRepository.save(project);
         
-        // Log the user addition
+   
         logService.createLogEntry(
                 "ADD_MEMBER",
                 "Project",
@@ -190,7 +189,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.getMembers().remove(user);
         projectRepository.save(project);
         
-        // Log the user removal
+   
         logService.createLogEntry(
                 "REMOVE_MEMBER",
                 "Project",
@@ -208,7 +207,7 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRepository.countByMemberId(userId);
     }
     
-    // Additional utility methods
+
     
     @Override
     @Transactional
@@ -221,7 +220,7 @@ public class ProjectServiceImpl implements ProjectService {
         
         Project updatedProject = projectRepository.save(project);
         
-        // Log the status change
+    
         logService.createLogEntry(
                 "STATUS_CHANGE",
                 "Project",
@@ -239,8 +238,6 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> searchProjects(String keyword) {
         return projectRepository.searchByKeyword(keyword);
     }
-    
-    // Implementation of additional methods
     
     @Override
     public List<Project> getAllProjects() {
@@ -282,22 +279,22 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("Removed all users from project with ID: {}", projectId);
     }
     
-    // ============= NEW BUSINESS LOGIC METHODS IMPLEMENTATIONS =============
+
     
     @Override
     public List<Project> getProjectsForUser(String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
         
-        // Check if user is admin
+      
         boolean isAdmin = user.getRoles().stream()
                 .anyMatch(role -> "ADMIN".equals(role.getName()));
         
         if (isAdmin) {
-            // Admin sees all projects
+         
             return getAllProjects();
         } else {
-            // Regular users only see projects they're assigned to
+           
             return getProjectsByUserId(user.getId());
         }
     }
@@ -307,12 +304,12 @@ public class ProjectServiceImpl implements ProjectService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
         
-        // Admin has access to all projects
+     
         if (user.getRoles().stream().anyMatch(role -> "ADMIN".equals(role.getName()))) {
             return true;
         }
         
-        // Check if user is assigned to this project
+      
         Project project = getProjectById(projectId);
         return project.getMembers().stream()
                 .anyMatch(projectUser -> projectUser.getId().equals(user.getId()));
@@ -321,10 +318,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public Project createProjectWithUsers(String name, String description, List<Long> userIds) {
-        // Create the project first
+       
         Project project = createProject(name, description);
         
-        // Add users to the project if provided
+       
         if (userIds != null && !userIds.isEmpty()) {
             for (Long userId : userIds) {
                 try {
@@ -335,19 +332,19 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
         
-        return getProjectById(project.getId()); // Return updated project with members
+        return getProjectById(project.getId()); 
     }
     
     @Override
     @Transactional
     public Project updateProjectWithUsers(Long projectId, String name, String description, List<Long> userIds) {
-        // Update the project
+      
         Project project = updateProject(projectId, name, description);
         
-        // Remove all existing users
+     
         removeAllUsersFromProject(projectId);
         
-        // Add new users if provided
+   
         if (userIds != null && !userIds.isEmpty()) {
             for (Long userId : userIds) {
                 try {
@@ -358,42 +355,42 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
         
-        return getProjectById(projectId); // Return updated project with members
+        return getProjectById(projectId); 
     }
     
     @Override
     @Transactional
     public String performProjectDatabaseFix() {
         try {
-            // Execute SQL directly
+           
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(false);
                 
                 try (Statement statement = connection.createStatement()) {
-                    // Insert admin user if not exists
+                   
                     statement.execute("INSERT IGNORE INTO users (first_name, last_name, email, password, created_at, updated_at, is_active) " +
                                      "VALUES ('Admin', 'User', 'admin@bugtracker.com', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', NOW(), NOW(), TRUE)");
                     
-                    // Insert roles if not exist
+                   
                     statement.execute("INSERT IGNORE INTO roles (name) VALUES ('ROLE_USER')");
                     statement.execute("INSERT IGNORE INTO roles (name) VALUES ('ROLE_ADMIN')");
                     
-                    // Link admin to roles
+                  
                     statement.execute("INSERT IGNORE INTO users_roles (user_id, role_id) " +
                                      "SELECT (SELECT id FROM users WHERE email = 'admin@bugtracker.com'), (SELECT id FROM roles WHERE name = 'ROLE_ADMIN')");
                     
-                    // Create a project if none exists
+                  
                     statement.execute("INSERT INTO projects (name, description, is_active, created_at, updated_at) " +
                                      "SELECT 'Bug Tracker Development', 'Internal project for developing the bug tracking application', TRUE, NOW(), NOW() " +
                                      "WHERE NOT EXISTS (SELECT 1 FROM projects LIMIT 1)");
                     
-                    // Add admin to project
+                  
                     statement.execute("INSERT IGNORE INTO project_members (project_id, user_id) " +
                                      "SELECT (SELECT MAX(id) FROM projects), (SELECT id FROM users WHERE email = 'admin@bugtracker.com')");
                     
                     connection.commit();
                     
-                    // Log the fix operation
+                 
                     logService.createLogEntry(
                             "DATABASE_FIX",
                             "Project",
@@ -416,7 +413,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
     
-    // ============= DTO-BASED METHODS IMPLEMENTATIONS =============
+
     
     @Override
     @Transactional
