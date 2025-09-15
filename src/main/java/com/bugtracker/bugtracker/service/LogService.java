@@ -10,7 +10,7 @@ import java.util.List;
 public interface LogService {
     LogEntry createLogEntry(String action, String entityType, Long entityId, Long userId, String details, LogLevel level);
     
-    // Alternative version with fewer parameters, suitable for REST API
+   
     LogEntry createLogEntry(String action, String entityType, Long entityId, String username, String details);
     
     List<LogEntry> findLogsByEntityTypeAndId(String entityType, Long entityId);
