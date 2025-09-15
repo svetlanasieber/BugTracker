@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * REST Controller for managing notifications.
- * Provides endpoints for sending and retrieving notifications.
- */
 @RestController
 @RequestMapping("/api/notifications")
 @RequiredArgsConstructor
@@ -32,13 +28,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    /**
-     * POST endpoint: Send a new notification.
-     * This is one of the mandatory endpoints required by the course.
-     * 
-     * @param request the notification request
-     * @return the created notification response
-     */
+
     @PostMapping
     @Operation(summary = "Send a new notification", 
                description = "Creates and sends a notification of the specified type")
@@ -61,14 +51,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * GET endpoint: Retrieve all notifications with pagination.
-     * This is one of the mandatory endpoints required by the course.
-     * 
-     * @param page page number (default 0)
-     * @param size page size (default 10)
-     * @return paginated list of notifications
-     */
+
     @GetMapping
     @Operation(summary = "Get all notifications", 
                description = "Retrieves all notifications with pagination support")
@@ -86,13 +69,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    /**
-     * GET endpoint: Retrieve notifications by status.
-     * Additional useful endpoint beyond the mandatory requirements.
-     * 
-     * @param status the notification status
-     * @return list of notifications with the specified status
-     */
+ 
     @GetMapping("/status/{status}")
     @Operation(summary = "Get notifications by status", 
                description = "Retrieves notifications filtered by their status")
@@ -110,13 +87,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    /**
-     * GET endpoint: Retrieve notifications for a specific user.
-     * Useful for the main application to get user's notification history.
-     * 
-     * @param userId the user ID
-     * @return list of notifications for the user
-     */
+ 
     @GetMapping("/user/{userId}")
     @Operation(summary = "Get notifications for a user", 
                description = "Retrieves all notifications for a specific user")
@@ -134,13 +105,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    /**
-     * GET endpoint: Retrieve notifications for a specific bug.
-     * Useful for tracking all notifications related to a bug.
-     * 
-     * @param bugId the bug ID
-     * @return list of notifications for the bug
-     */
+
     @GetMapping("/bug/{bugId}")
     @Operation(summary = "Get notifications for a bug", 
                description = "Retrieves all notifications related to a specific bug")
@@ -158,12 +123,7 @@ public class NotificationController {
         return ResponseEntity.ok(notifications);
     }
 
-    /**
-     * GET endpoint: Get notification statistics.
-     * Provides useful metrics about notification system performance.
-     * 
-     * @return notification statistics
-     */
+
     @GetMapping("/stats")
     @Operation(summary = "Get notification statistics", 
                description = "Retrieves statistics about notification system performance")
@@ -179,12 +139,7 @@ public class NotificationController {
         return ResponseEntity.ok(stats);
     }
 
-    /**
-     * GET endpoint: Health check for the microservice.
-     * Useful for monitoring and ensuring the service is running.
-     * 
-     * @return simple health status
-     */
+
     @GetMapping("/health")
     @Operation(summary = "Health check", 
                description = "Checks if the notification service is running")
