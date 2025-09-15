@@ -21,10 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Service implementation for notification management.
- * Handles sending various types of notifications and tracking their status.
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -35,17 +32,11 @@ public class NotificationService {
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
-    /**
-     * Send a notification based on the request.
-     * 
-     * @param request the notification request
-     * @return the created notification response
-     */
     @Transactional
     public NotificationResponse sendNotification(NotificationRequest request) {
         log.info("Sending notification of type {} to {}", request.getType(), request.getRecipient());
 
-        // Create notification entity
+     
         Notification notification = Notification.builder()
                 .type(request.getType())
                 .recipient(request.getRecipient())
@@ -57,10 +48,10 @@ public class NotificationService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        // Save to database first
+        
         notification = notificationRepository.save(notification);
 
-        // Attempt to send the notification
+      
         try {
             switch (request.getType()) {
                 case EMAIL:
@@ -76,36 +67,32 @@ public class NotificationService {
                     throw new IllegalArgumentException("Unsupported notification type: " + request.getType());
             }
 
-            // Update status to SENT
+        
             notification.setStatus(NotificationStatus.SENT);
             notification.setSentAt(LocalDateTime.now());
             
         } catch (Exception e) {
             log.error("Failed to send notification {}: {}", notification.getId(), e.getMessage());
             
-            // Update status to FAILED
+          
             notification.setStatus(NotificationStatus.FAILED);
             notification.setErrorMessage(e.getMessage());
         }
 
-        // Save updated notification
+   
         notification = notificationRepository.save(notification);
 
         return convertToResponse(notification);
     }
 
-    /**
-     * Get all notifications with pagination.
-     */
+ 
     public Page<NotificationResponse> getAllNotifications(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Notification> notifications = notificationRepository.findAll(pageable);
         return notifications.map(this::convertToResponse);
     }
 
-    /**
-     * Get notifications by status.
-     */
+
     public List<NotificationResponse> getNotificationsByStatus(NotificationStatus status) {
         List<Notification> notifications = notificationRepository.findByStatus(status);
         return notifications.stream()
@@ -113,9 +100,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get notifications for a specific user.
-     */
+
     public List<NotificationResponse> getNotificationsByUser(Long userId) {
         List<Notification> notifications = notificationRepository.findByUserId(userId);
         return notifications.stream()
@@ -123,9 +108,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get notifications for a specific bug.
-     */
+
     public List<NotificationResponse> getNotificationsByBug(Long bugId) {
         List<Notification> notifications = notificationRepository.findByBugId(bugId);
         return notifications.stream()
@@ -133,9 +116,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Get notification statistics.
-     */
+ 
     public NotificationStats getNotificationStats() {
         long total = notificationRepository.count();
         long sent = notificationRepository.countByStatus(NotificationStatus.SENT);
@@ -150,9 +131,7 @@ public class NotificationService {
                 .build();
     }
 
-    /**
-     * Send email notification.
-     */
+
     private void sendEmailNotification(Notification notification) {
         try {
             if (mailSender == null) {
@@ -177,32 +156,24 @@ public class NotificationService {
         }
     }
 
-    /**
-     * Send SMS notification (simulated).
-     */
+
     private void sendSmsNotification(Notification notification) {
-        // Simulate SMS sending with a simple log
+       
         log.info("SMS notification sent to {}: {}", 
                 notification.getRecipient(), notification.getMessage());
         
-        // Simulate potential failure (10% chance)
         if (Math.random() < 0.1) {
             throw new RuntimeException("SMS service temporarily unavailable");
         }
     }
 
-    /**
-     * Send push notification (simulated).
-     */
+ 
     private void sendPushNotification(Notification notification) {
-        // Simulate push notification sending
+      
         log.info("Push notification sent to device {}: {}", 
                 notification.getRecipient(), notification.getMessage());
     }
 
-    /**
-     * Convert Notification entity to NotificationResponse DTO.
-     */
     private NotificationResponse convertToResponse(Notification notification) {
         return NotificationResponse.builder()
                 .id(notification.getId())
@@ -219,9 +190,7 @@ public class NotificationService {
                 .build();
     }
 
-    /**
-     * Inner class for notification statistics.
-     */
+
     @lombok.Builder
     @lombok.Data
     public static class NotificationStats {
