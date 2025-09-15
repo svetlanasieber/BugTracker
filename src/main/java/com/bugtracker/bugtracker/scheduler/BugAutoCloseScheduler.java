@@ -9,11 +9,7 @@ import com.bugtracker.bugtracker.service.LogService;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Scheduler for automatically closing stale bugs.
- * Note: This class uses Spring's @Component and @Scheduled annotations
- * when the project is properly built with Maven.
- */
+
 public class BugAutoCloseScheduler {
 
     private final BugService bugService;
@@ -23,12 +19,7 @@ public class BugAutoCloseScheduler {
         this.bugService = bugService;
         this.logService = logService;
     }
-    
-    /**
-     * Automatically closes bugs that haven't been updated in 30 days.
-     * Note: This method is scheduled to run daily at midnight using Spring's
-     * @Scheduled annotation when the project is properly built.
-     */
+
     public void autoCloseStaleBugs() {
         System.out.println("Starting scheduled task: Auto-closing stale bugs");
         
