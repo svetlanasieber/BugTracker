@@ -27,21 +27,20 @@ public interface LogEntryRepository extends JpaRepository<LogEntry, Long> {
     
     List<LogEntry> findTop10ByOrderByCreatedAtDesc();
     
-    // Methods for pagination
+
     Page<LogEntry> findByActionAndEntityType(String action, String entityType, Pageable pageable);
     
     Page<LogEntry> findByAction(String action, Pageable pageable);
     
     Page<LogEntry> findByEntityType(String entityType, Pageable pageable);
     
-    // Methods for retrieving unique values
+  
     @Query("SELECT DISTINCT l.action FROM LogEntry l ORDER BY l.action")
     List<String> findDistinctActions();
     
     @Query("SELECT DISTINCT l.entityType FROM LogEntry l ORDER BY l.entityType")
     List<String> findDistinctEntityTypes();
-    
-    // Method for searching by keyword
+
     @Query("SELECT l FROM LogEntry l WHERE " +
            "LOWER(l.action) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(l.entityType) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
