@@ -41,11 +41,9 @@ public class LogServiceImpl implements LogService {
     
     @Override
     public LogEntry createLogEntry(String action, String entityType, Long entityId, String username, String details) {
-        // Convert username to userId if needed, otherwise leave it null
+
         Long userId = null;
-        // Default level - INFO
         LogLevel level = LogLevel.INFO;
-        
         LogEntry logEntry = LogEntry.builder()
                 .action(action)
                 .entityType(entityType)
@@ -73,7 +71,7 @@ public class LogServiceImpl implements LogService {
         ).getContent();
     }
     
-    // Additional utility methods
+
     
     public List<LogEntry> findLogsByUserId(Long userId) {
         return logEntryRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -91,7 +89,7 @@ public class LogServiceImpl implements LogService {
         return logEntryRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(startDate, endDate);
     }
     
-    // Implementation of missing methods
+
     
     @Override
     public Page<LogEntry> findByActionAndEntityType(String action, String entityType, Pageable pageable) {
