@@ -9,10 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-/**
- * Implementation of AuthService that handles authentication and security operations.
- * Centralizes all SecurityContextHolder access and authentication logic.
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
