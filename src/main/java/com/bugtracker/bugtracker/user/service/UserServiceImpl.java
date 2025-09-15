@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User registerUser(UserRegister userRegister) {
-        // Create new user entity
+      
         User newUser = User.builder()
                 .firstName(userRegister.getFirstName())
                 .lastName(userRegister.getLastName())
@@ -56,12 +56,12 @@ public class UserServiceImpl implements UserService {
                 .roles(new HashSet<>())
                 .build();
 
-        // Assign USER role by default
+    
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default USER role not found"));
         newUser.getRoles().add(userRole);
 
-        // Save user
+     
         return userRepository.save(newUser);
     }
 
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        // Ensure roleName has ROLE_ prefix
+       
         final String roleNameWithPrefix;
         if (!roleName.startsWith("ROLE_")) {
             roleNameWithPrefix = "ROLE_" + roleName;
@@ -97,15 +97,15 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(roleNameWithPrefix)
                 .orElseThrow(() -> new RuntimeException("Role not found with name: " + roleNameWithPrefix));
 
-        // Check if user already has the role
+      
         boolean hasRole = user.getRoles().stream()
                 .anyMatch(r -> r.getName().equals(roleNameWithPrefix));
 
         if (hasRole) {
-            // If user has the role, remove it (toggle)
+           
             user.getRoles().removeIf(r -> r.getName().equals(roleNameWithPrefix));
         } else {
-            // Add the role
+           
             user.getRoles().add(role);
         }
 
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsername(String username) {
-        // Since email is used as username in the system
+       
         return findByEmail(username)
             .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
     }
@@ -133,30 +133,30 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(User user) {
-        // Check if user exists
+     
         if (!userRepository.existsById(user.getId())) {
             throw new RuntimeException("User not found with id: " + user.getId());
         }
         
-        // Update last modified date
+      
         user.setUpdatedAt(LocalDateTime.now());
         
-        // Save changes
+       
         return userRepository.save(user);
     }
     
     @Override
     @Transactional
     public User updateUserProfile(String username, ProfileEdit profileEdit) {
-        // Find current user
+       
         User currentUser = findByUsername(username);
         
-        // Update basic information
+       
         currentUser.setFirstName(profileEdit.getFirstName());
         currentUser.setLastName(profileEdit.getLastName());
         currentUser.setUpdatedAt(LocalDateTime.now());
         
-        // Process uploaded profile image if any
+       
         MultipartFile profileImage = profileEdit.getProfileImage();
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         
-        // Save changes
+     
         log.info("Updating profile for user: {}", username);
         return updateUser(currentUser);
     }
@@ -175,20 +175,20 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean changeUserPassword(String username, PasswordChange passwordChange) {
-        // Find current user
+     
         User currentUser = findByUsername(username);
         
-        // Check if current password is correct
+      
         if (!passwordEncoder.matches(passwordChange.getCurrentPassword(), currentUser.getPassword())) {
             log.warn("Password change failed for user {}: incorrect current password", username);
             return false;
         }
         
-        // Update password
+   
         currentUser.setPassword(passwordEncoder.encode(passwordChange.getNewPassword()));
         currentUser.setUpdatedAt(LocalDateTime.now());
         
-        // Save changes
+       
         updateUser(currentUser);
         log.info("Password changed successfully for user: {}", username);
         return true;
@@ -197,43 +197,41 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUserWithStats(String username) {
         User currentUser = findByUsername(username);
-        
-        // The reported and assigned bugs are already loaded via User entity relationships
-        // so we just need to return the user entity
+
         return currentUser;
     }
     
-    // Helper method to save profile image
+  
     private String saveProfileImage(MultipartFile profileImage) throws IOException {
-        // Create profiles directory if it doesn't exist
+       
         Path profilesPath = Paths.get(fileStorageProperties.uploadDir(), "profiles");
         if (!Files.exists(profilesPath)) {
             Files.createDirectories(profilesPath);
         }
         
-        // Validate file extension
+     
         String fileExtension = getFileExtension(profileImage.getOriginalFilename());
         if (!fileStorageProperties.isExtensionAllowed(fileExtension)) {
             throw new FileUploadException("File extension not allowed: " + fileExtension);
         }
         
-        // Validate file size
+    
         if (profileImage.getSize() > fileStorageProperties.maxFileSize()) {
             throw new FileUploadException("File size exceeds maximum allowed size of " + fileStorageProperties.maxFileSize() + " bytes");
         }
         
-        // Generate unique filename
+     
         String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
         Path filePath = profilesPath.resolve(uniqueFileName);
         
-        // Save file
+    
         Files.copy(profileImage.getInputStream(), filePath);
         
-        // Return the relative path to be stored in database
+      
         return "/uploads/profiles/" + uniqueFileName;
     }
     
-    // Helper method to extract file extension
+ 
     private String getFileExtension(String filename) {
         if (filename == null || filename.lastIndexOf(".") == -1) {
             return "";
@@ -241,18 +239,18 @@ public class UserServiceImpl implements UserService {
         return filename.substring(filename.lastIndexOf("."));
     }
     
-    // ============= ADMIN BUSINESS LOGIC METHODS IMPLEMENTATIONS =============
+
     
     @Override
     @Transactional
     public String resetAdminUser() {
         try {
-            // Check if admin exists
+          
             User adminUser = userRepository.findByEmail("admin@example.com")
                     .orElse(null);
             
             if (adminUser == null) {
-                // Create new admin
+               
                 adminUser = User.builder()
                         .firstName("Admin")
                         .lastName("User")
@@ -265,14 +263,14 @@ public class UserServiceImpl implements UserService {
                         .build();
                 log.info("Creating new admin user");
             } else {
-                // Reset password
+               
                 adminUser.setPassword(passwordEncoder.encode("admin"));
                 adminUser.setUpdatedAt(LocalDateTime.now());
                 adminUser.setActive(true);
                 log.info("Resetting existing admin user");
             }
             
-            // Ensure admin has both roles
+          
             Role userRole = roleRepository.findByName("USER")
                     .orElseThrow(() -> new RuntimeException("USER role not found"));
             Role adminRole = roleRepository.findByName("ADMIN")
@@ -295,17 +293,17 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> debugInfo = new HashMap<>();
         
         try {
-            // User information
+        
             debugInfo.put("userCount", userRepository.count());
             
-            // Roles information
+        
             List<Role> roles = roleRepository.findAll();
             List<String> roleNames = roles.stream()
                 .map(Role::getName)
                 .collect(Collectors.toList());
             debugInfo.put("roles", roleNames);
             
-            // Admin users
+         
             List<User> allUsers = userRepository.findAll();
             List<User> adminUsers = allUsers.stream()
                 .filter(u -> u.getRoles().stream()
@@ -347,14 +345,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User createUserWithRoles(String firstName, String lastName, String email, String password, List<String> roleNames) {
-        log.info("👑 Admin creating user: {} with roles: {}", email, roleNames);
+        log.info("Admin creating user: {} with roles: {}", email, roleNames);
         
-        // Проверка дали email-а съществува
+       
         if (existsByEmail(email)) {
             throw new RuntimeException("User with email " + email + " already exists");
         }
         
-        // Създаване на потребителя
+        
         User newUser = User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -366,7 +364,7 @@ public class UserServiceImpl implements UserService {
                 .roles(new HashSet<>())
                 .build();
         
-        // Добавяне на роли
+     
         if (roleNames != null && !roleNames.isEmpty()) {
             for (String roleName : roleNames) {
                 Role role = roleRepository.findByName(roleName)
@@ -374,14 +372,14 @@ public class UserServiceImpl implements UserService {
                 newUser.getRoles().add(role);
             }
         } else {
-            // Ако не са избрани роли, дай поне USER роля
+          
             Role userRole = roleRepository.findByName("USER")
                     .orElseThrow(() -> new RuntimeException("Default USER role not found"));
             newUser.getRoles().add(userRole);
         }
         
         User savedUser = userRepository.save(newUser);
-        log.info("✅ Successfully created user: {} with roles: {}", email, 
+        log.info("Successfully created user: {} with roles: {}", email, 
                 savedUser.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toList()));
         
         return savedUser;
