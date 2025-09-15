@@ -23,13 +23,12 @@ public class BugSchedulingService {
     private final BugRepository bugRepository;
     private final LogService logService;
     
-    // Run every day at midnight
     @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
     public void closeInactiveBugs() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         
-        // Find bugs that haven't been updated in 30 days and aren't already closed
+       
         List<Bug> inactiveBugs = bugRepository.findByUpdatedAtBeforeAndStatusNot(
                 thirtyDaysAgo, 
                 BugStatus.CLOSED
@@ -41,7 +40,7 @@ public class BugSchedulingService {
             bug.setUpdatedAt(LocalDateTime.now());
             bugRepository.save(bug);
             
-            // Log the automatic closure
+       
             logService.createLogEntry(
                     "AUTO_CLOSE",
                     "Bug",
