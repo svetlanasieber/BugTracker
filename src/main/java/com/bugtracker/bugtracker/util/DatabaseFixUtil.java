@@ -25,7 +25,7 @@ public class DatabaseFixUtil {
 
     public void executeSqlScript(String resourcePath) {
         try {
-            // Read SQL file from the classpath
+         
             ClassPathResource resource = new ClassPathResource(resourcePath);
             List<String> sqlStatements = new ArrayList<>();
             
@@ -36,14 +36,13 @@ public class DatabaseFixUtil {
                 String line;
                 
                 while ((line = reader.readLine()) != null) {
-                    // Skip comments and empty lines
+                  
                     if (line.trim().isEmpty() || line.trim().startsWith("--")) {
                         continue;
                     }
                     
                     sqlStatement.append(line).append(" ");
-                    
-                    // If the line ends with a semicolon, we have a complete statement
+            
                     if (line.trim().endsWith(";")) {
                         sqlStatements.add(sqlStatement.toString());
                         sqlStatement = new StringBuilder();
@@ -51,7 +50,7 @@ public class DatabaseFixUtil {
                 }
             }
             
-            // Execute each SQL statement
+           
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(false);
                 
