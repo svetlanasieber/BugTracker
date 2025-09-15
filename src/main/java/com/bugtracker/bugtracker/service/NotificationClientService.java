@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Service for integrating with the Notification Microservice.
- * Provides methods to send notifications via the external notification service.
- */
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,14 +21,6 @@ public class NotificationClientService {
     @Value("${notification.service.url:http://localhost:8081/notification-service}")
     private String notificationServiceUrl;
 
-    /**
-     * Send email notification about bug assignment.
-     * 
-     * @param userEmail recipient email
-     * @param bugId bug ID
-     * @param bugTitle bug title
-     * @param userId user ID
-     */
     public void sendBugAssignmentNotification(String userEmail, Long bugId, String bugTitle, Long userId) {
         log.info("Sending bug assignment notification to {} for bug {}", userEmail, bugId);
         
@@ -47,15 +36,7 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    /**
-     * Send email notification about bug status update.
-     * 
-     * @param userEmail recipient email
-     * @param bugId bug ID
-     * @param bugTitle bug title
-     * @param newStatus new bug status
-     * @param userId user ID
-     */
+
     public void sendBugStatusUpdateNotification(String userEmail, Long bugId, String bugTitle, String newStatus, Long userId) {
         log.info("Sending bug status update notification to {} for bug {}", userEmail, bugId);
         
@@ -71,15 +52,7 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    /**
-     * Send email notification about new comment on bug.
-     * 
-     * @param userEmail recipient email
-     * @param bugId bug ID
-     * @param bugTitle bug title
-     * @param commenterName name of person who commented
-     * @param userId user ID
-     */
+
     public void sendNewCommentNotification(String userEmail, Long bugId, String bugTitle, String commenterName, Long userId) {
         log.info("Sending new comment notification to {} for bug {}", userEmail, bugId);
         
@@ -95,14 +68,7 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    /**
-     * Send SMS notification (for urgent bugs).
-     * 
-     * @param phoneNumber recipient phone
-     * @param bugId bug ID
-     * @param bugTitle bug title
-     * @param userId user ID
-     */
+
     public void sendUrgentBugSmsNotification(String phoneNumber, Long bugId, String bugTitle, Long userId) {
         log.info("Sending urgent bug SMS notification to {} for bug {}", phoneNumber, bugId);
         
@@ -118,11 +84,6 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    /**
-     * Generic method to send notification to the microservice.
-     * 
-     * @param request notification request
-     */
     private void sendNotification(NotificationRequest request) {
         try {
             String url = notificationServiceUrl + "/api/notifications";
@@ -143,13 +104,11 @@ public class NotificationClientService {
             
         } catch (Exception e) {
             log.error("Error sending notification to microservice: {}", e.getMessage(), e);
-            // Don't throw exception - notification failure shouldn't break main functionality
+           
         }
     }
 
-    /**
-     * DTO for notification requests (matching microservice contract).
-     */
+  
     @lombok.Data
     @lombok.Builder
     @lombok.NoArgsConstructor
@@ -163,9 +122,7 @@ public class NotificationClientService {
         private Long userId;
     }
 
-    /**
-     * DTO for notification responses (matching microservice contract).
-     */
+
     @lombok.Data
     @lombok.Builder
     @lombok.NoArgsConstructor
