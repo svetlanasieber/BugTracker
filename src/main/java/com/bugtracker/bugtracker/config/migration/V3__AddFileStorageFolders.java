@@ -8,9 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Java-based Flyway migration to create necessary file storage directories.
- */
+
 public class V3__AddFileStorageFolders extends BaseJavaMigration {
 
     @Override
