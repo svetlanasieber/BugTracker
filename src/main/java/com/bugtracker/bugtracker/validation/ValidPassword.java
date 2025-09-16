@@ -5,10 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-/**
- * Custom validation for strong passwords.
- * Validates that password contains uppercase, lowercase, numbers, and special characters.
- */
+
 @Documented
 @Constraint(validatedBy = PasswordValidator.class)
 @Target({ElementType.FIELD})
