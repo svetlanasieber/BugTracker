@@ -32,7 +32,7 @@ public class ProfileController {
     public String showProfile(Principal principal, Model model) {
         User currentUser = userService.getCurrentUserWithStats(principal.getName());
         
-        // Get bug statistics
+     
         Long reportedBugsCount = bugService.countReportedBugs(currentUser.getId());
         Long assignedBugsCount = bugService.countAssignedBugs(currentUser.getId());
         
@@ -53,7 +53,7 @@ public class ProfileController {
                                Model model) {
         
         if (bindingResult.hasErrors()) {
-            // Re-add user data for display
+           
             User currentUser = userService.getCurrentUserWithStats(principal.getName());
             Long reportedBugsCount = bugService.countReportedBugs(currentUser.getId());
             Long assignedBugsCount = bugService.countAssignedBugs(currentUser.getId());
@@ -78,7 +78,7 @@ public class ProfileController {
                                 Model model) {
         
         if (bindingResult.hasErrors()) {
-            // Re-add user data for display
+          
             User currentUser = userService.getCurrentUserWithStats(principal.getName());
             Long reportedBugsCount = bugService.countReportedBugs(currentUser.getId());
             Long assignedBugsCount = bugService.countAssignedBugs(currentUser.getId());
