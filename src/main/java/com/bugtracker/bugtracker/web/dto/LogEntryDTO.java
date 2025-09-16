@@ -8,11 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Data Transfer Object for LogEntry.
- * Used for JSON serialization in REST endpoints to prevent LazyInitializationException
- * and provide clean API responses.
- */
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -28,9 +24,6 @@ public class LogEntryDTO {
     private LogLevel level;
     private LocalDateTime createdAt;
 
-    /**
-     * Static factory method to create DTO from LogEntry entity.
-     */
     public static LogEntryDTO fromEntity(com.bugtracker.bugtracker.model.entity.LogEntry logEntry) {
         return LogEntryDTO.builder()
                 .id(logEntry.getId())
