@@ -33,6 +33,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/bugs")
 @RequiredArgsConstructor
+    
 public class BugController {
 
     private final BugService bugService;
