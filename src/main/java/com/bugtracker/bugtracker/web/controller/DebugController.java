@@ -31,7 +31,7 @@ public class DebugController {
         
         try {
             if (email == null || email.trim().isEmpty()) {
-                // Show all users
+             
                 List<User> allUsers = userRepository.findAll();
                 result.put("totalUsers", allUsers.size());
                 result.put("users", allUsers.stream().map(u -> {
@@ -45,7 +45,7 @@ public class DebugController {
                     return userInfo;
                 }).toList());
             } else {
-                // Check specific user
+               
                 Optional<User> userOpt = userRepository.findByEmail(email);
                 if (userOpt.isPresent()) {
                     User user = userOpt.get();
@@ -64,7 +64,7 @@ public class DebugController {
                 }
             }
             
-            // Show all roles
+          
             List<Role> allRoles = roleRepository.findAll();
             result.put("availableRoles", allRoles.stream().map(Role::getName).toList());
             
