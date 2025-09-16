@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = FileUploadValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+    
 public @interface ValidFileUpload {
     String message() default "Invalid file upload";
     Class<?>[] groups() default {};
