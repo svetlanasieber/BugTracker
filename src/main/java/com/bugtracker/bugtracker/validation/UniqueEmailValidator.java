@@ -16,13 +16,13 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     
     @Override
     public void initialize(UniqueEmail constraintAnnotation) {
-        // Nothing to initialize
+      
     }
     
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
         if (email == null || email.trim().isEmpty()) {
-            return true; // Let @NotBlank handle empty validation
+            return true; 
         }
         
         return userRepository.findByEmail(email.trim().toLowerCase()).isEmpty();
