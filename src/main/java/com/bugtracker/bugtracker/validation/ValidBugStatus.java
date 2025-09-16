@@ -8,6 +8,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = BugStatusValidator.class)
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+    
 public @interface ValidBugStatus {
     String message() default "Invalid bug status";
     Class<?>[] groups() default {};
