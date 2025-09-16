@@ -15,7 +15,7 @@ public @interface ValidFileUpload {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     
-    long maxSize() default 10485760; // 10MB default
+    long maxSize() default 10485760; 
     String[] allowedTypes() default {"image/jpeg", "image/png", "image/gif"};
     boolean required() default false;
 } 
