@@ -5,10 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-/**
- * Validation annotation to ensure password fields match.
- * Used for password confirmation in registration and password change forms.
- */
+
 @Documented
 @Constraint(validatedBy = PasswordMatchesValidator.class)
 @Target({ElementType.TYPE})
