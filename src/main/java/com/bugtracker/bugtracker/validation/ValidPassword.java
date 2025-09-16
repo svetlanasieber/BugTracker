@@ -10,6 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PasswordValidator.class)
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
+    
 public @interface ValidPassword {
     String message() default "Password must contain at least 8 characters, including uppercase, lowercase, number and special character";
     Class<?>[] groups() default {};
