@@ -28,7 +28,7 @@ public class ProfileEdit {
     private String lastName;
     
     @ValidFileUpload(
-        maxSize = 5242880, // 5MB
+        maxSize = 5242880,
         allowedTypes = {"image/jpeg", "image/png", "image/gif"},
         required = false,
         message = "Profile image must be JPEG, PNG or GIF and under 5MB",
