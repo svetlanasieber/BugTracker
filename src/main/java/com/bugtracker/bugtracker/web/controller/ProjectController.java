@@ -20,10 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
 
-/**
- * Clean controller following Smart Wallet architecture.
- * No try-catch blocks - exceptions are handled by @ControllerAdvice.
- */
+
 @Controller
 @RequestMapping("/projects")
 @RequiredArgsConstructor
@@ -34,7 +31,7 @@ public class ProjectController {
 
     @GetMapping
     public String listProjects(Model model, Principal principal) {
-        // Delegate business logic to service
+    
         List<Project> projects = projectService.getProjectsForUser(principal.getName());
         boolean isAdmin = userService.isUserAdmin(principal.getName());
         
@@ -46,7 +43,7 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     public String viewProject(@PathVariable Long id, Model model, Principal principal) {
-        // Check authorization through service
+     
         if (!projectService.isUserAuthorizedForProject(principal.getName(), id)) {
             return "redirect:/access-denied";
         }
@@ -91,7 +88,7 @@ public class ProjectController {
     public String showEditProjectForm(@PathVariable Long id, Model model) {
         Project project = projectService.getProjectById(id);
         
-        // Convert Project to ProjectUpdate DTO
+      
         ProjectUpdate projectUpdate = ProjectUpdate.builder()
                 .id(project.getId())
                 .name(project.getName())
@@ -106,7 +103,7 @@ public class ProjectController {
                 .build();
         
         model.addAttribute("projectUpdate", projectUpdate);
-        model.addAttribute("project", project); // For display purposes
+        model.addAttribute("project", project); 
         loadFormData(model);
         return "projects/edit";
     }
@@ -121,12 +118,12 @@ public class ProjectController {
         
         if (bindingResult.hasErrors()) {
             Project project = projectService.getProjectById(id);
-            model.addAttribute("project", project); // For display purposes
+            model.addAttribute("project", project);
             loadFormData(model);
             return "projects/edit";
         }
         
-        projectUpdate.setId(id); // Ensure ID is set
+        projectUpdate.setId(id); 
         projectService.updateProjectFromDTO(projectUpdate);
         redirectAttributes.addFlashAttribute("success", "Project updated successfully");
         return "redirect:/projects/" + id;
@@ -144,13 +141,11 @@ public class ProjectController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public String fixProjects() {
-        // Delegate business logic to service
+       
         return projectService.performProjectDatabaseFix();
     }
     
-    /**
-     * Helper method to load form data for project creation and editing.
-     */
+
     private void loadFormData(Model model) {
         model.addAttribute("users", userService.findAll());
     }
