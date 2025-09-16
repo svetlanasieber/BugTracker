@@ -10,11 +10,14 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
+    
     User registerUser(UserRegister userRegister);
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long id);
     List<User> findAllUsers();
+    
     void changeUserRole(Long userId, String roleName);
+    
     boolean existsByEmail(String email);
     
   
