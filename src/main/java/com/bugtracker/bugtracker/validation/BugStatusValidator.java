@@ -9,7 +9,7 @@ public class BugStatusValidator implements ConstraintValidator<ValidBugStatus, S
     
     @Override
     public void initialize(ValidBugStatus constraintAnnotation) {
-        // Nothing to initialize
+    
     }
     
     @Override
