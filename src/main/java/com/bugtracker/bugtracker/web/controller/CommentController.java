@@ -25,7 +25,7 @@ public class CommentController {
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         
-        // Delegate business logic to service
+
         commentService.createCommentWithCurrentUser(bugId, content, principal.getName());
         redirectAttributes.addFlashAttribute("success", "Comment added successfully!");
         
@@ -39,7 +39,7 @@ public class CommentController {
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         
-        // Delegate business logic to service (includes authorization check)
+      
         commentService.updateCommentWithAuthorization(id, content, principal.getName());
         redirectAttributes.addFlashAttribute("success", "Comment updated successfully!");
         
@@ -52,7 +52,7 @@ public class CommentController {
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         
-        // Delegate business logic to service (includes authorization check)
+ 
         commentService.deleteCommentWithAuthorization(id, principal.getName());
         redirectAttributes.addFlashAttribute("success", "Comment deleted successfully!");
         
