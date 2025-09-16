@@ -1,6 +1,4 @@
-/* ============================================
-   Bug Tracker - Modern UI Styles
-   ============================================ */
+
 
 :root {
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -30,9 +28,7 @@
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* ============================================
-   Global Styles
-   ============================================ */
+
 
 body {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -46,9 +42,7 @@ body {
     max-width: 1200px;
 }
 
-/* ============================================
-   Enhanced Cards
-   ============================================ */
+
 
 .card {
     background: var(--card-gradient);
@@ -94,9 +88,7 @@ body {
     padding: 1.5rem;
 }
 
-/* ============================================
-   Enhanced Buttons
-   ============================================ */
+
 
 .btn {
     border-radius: var(--border-radius-md);
@@ -167,9 +159,6 @@ body {
     border-color: transparent;
 }
 
-/* ============================================
-   Enhanced Navigation
-   ============================================ */
 
 .navbar {
     background: var(--navbar-gradient) !important;
@@ -243,9 +232,7 @@ body {
     transform: translateX(5px);
 }
 
-/* ============================================
-   Enhanced Tables
-   ============================================ */
+
 
 .table {
     border-radius: var(--border-radius-lg);
@@ -281,9 +268,7 @@ body {
     border: none;
 }
 
-/* ============================================
-   Enhanced Forms
-   ============================================ */
+
 
 .form-control, .form-select {
     border: 2px solid #e2e8f0;
@@ -314,9 +299,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* ============================================
-   Enhanced Alerts
-   ============================================ */
+
 
 .alert {
     border: none;
@@ -361,9 +344,7 @@ body {
     border-left: 4px solid #17a2b8;
 }
 
-/* ============================================
-   Footer Enhancement
-   ============================================ */
+
 
 footer {
     background: var(--dark-gradient) !important;
@@ -384,9 +365,7 @@ footer::before {
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 }
 
-/* ============================================
-   Select2 Enhanced Styling
-   ============================================ */
+
 
 .select2-container--bootstrap-5 .select2-selection {
     border: 2px solid #e2e8f0 !important;
@@ -414,9 +393,7 @@ footer::before {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
 }
 
-/* ============================================
-   Animation Classes
-   ============================================ */
+
 
 .fade-in {
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -452,9 +429,6 @@ footer::before {
     }
 }
 
-/* ============================================
-   Badge Enhancements
-   ============================================ */
 
 .badge {
     border-radius: var(--border-radius-sm);
@@ -482,9 +456,7 @@ footer::before {
     background: var(--btn-danger-gradient);
 }
 
-/* ============================================
-   Responsive Enhancements
-   ============================================ */
+
 
 @media (max-width: 768px) {
     .card {
@@ -510,9 +482,6 @@ footer::before {
     }
 }
 
-/* ============================================
-   Utility Classes
-   ============================================ */
 
 .shadow-custom {
     box-shadow: var(--shadow-medium);
