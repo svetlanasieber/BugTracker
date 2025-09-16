@@ -25,11 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-/**
- * Clean REST controller following Smart Wallet architecture.
- * Uses DTOs for JSON serialization to prevent LazyInitializationException.
- * No try-catch blocks - exceptions are handled by @ControllerAdvice.
- */
+
 
 @RestController
 @RequestMapping("/api/logs")
@@ -55,10 +51,10 @@ public class LogRestController {
             @Parameter(description = "Filter by action") @RequestParam(required = false) String action,
             @Parameter(description = "Filter by entity type") @RequestParam(required = false) String entityType) {
         
-        // Create a page request with sorting by timestamp in descending order
+       
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("timestamp").descending());
         
-        // Get the logs
+     
         Page<LogEntry> logsPage;
         
         if (action != null && entityType != null) {
@@ -71,12 +67,12 @@ public class LogRestController {
             logsPage = logService.findAllLogs(pageRequest);
         }
         
-        // Convert entities to DTOs
+      
         List<LogEntryDTO> logDTOs = logsPage.getContent().stream()
                 .map(LogEntryDTO::fromEntity)
                 .collect(Collectors.toList());
         
-        // Create response data
+       
         Map<String, Object> response = new HashMap<>();
         response.put("logs", logDTOs);
         response.put("currentPage", logsPage.getNumber());
@@ -115,7 +111,7 @@ public class LogRestController {
         String username = logRequest.get("username");
         String details = logRequest.get("details");
         
-        // Validate required fields
+       
         if (action == null || entityType == null || entityId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
