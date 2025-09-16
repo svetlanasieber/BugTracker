@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Data Transfer Object for updating existing projects.
- * Used to transfer project update data from the web layer to the service layer.
- */
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -43,6 +40,6 @@ public class ProjectUpdate {
 
     private boolean isActive;
 
-    // List of user IDs to assign to the project
+ 
     private List<Long> memberIds;
 } 
