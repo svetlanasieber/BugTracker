@@ -5,10 +5,7 @@ import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-/**
- * Validation annotation for file uploads.
- * Validates file size, type, and other constraints.
- */
+
 @Documented
 @Constraint(validatedBy = FileUploadValidator.class)
 @Target({ElementType.FIELD})
