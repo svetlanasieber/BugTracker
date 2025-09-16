@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Data Transfer Object for creating new projects.
- * Used to transfer project creation data from the web layer to the service layer.
- */
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -40,6 +37,6 @@ public class ProjectAdd {
     @Builder.Default
     private boolean isActive = true;
 
-    // List of user IDs to assign to the project
+  
     private List<Long> memberIds;
 } 
