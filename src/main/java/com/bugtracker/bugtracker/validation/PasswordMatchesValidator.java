@@ -5,10 +5,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.reflect.Field;
 
-/**
- * Validator to check if password and confirmation password fields match.
- * Uses reflection to access the specified password fields in the DTO.
- */
+
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
     
     private String passwordField;
@@ -43,7 +40,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
             boolean matches = password != null && password.equals(confirmPassword);
             
             if (!matches) {
-                // Add validation error to the confirm password field
+                
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                        .addPropertyNode(confirmPasswordField)
