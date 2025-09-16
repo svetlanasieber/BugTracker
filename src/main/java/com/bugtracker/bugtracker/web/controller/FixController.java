@@ -27,33 +27,33 @@ public class FixController {
             connection.setAutoCommit(false);
             
             try (Statement statement = connection.createStatement()) {
-                // Create admin users if they don't exist
+              
                 statement.execute("INSERT IGNORE INTO users (first_name, last_name, email, password, created_at, updated_at, is_active) "
                     + "VALUES ('Admin', 'User', 'admin@bugtracker.com', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', NOW(), NOW(), TRUE)");
                 result.append("✓ Admin user created or verified<br>");
                 
-                // Create roles if they don't exist
+              
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('USER')");
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('ADMIN')");
                 result.append("✓ Roles created or verified<br>");
                 
-                // Assign admin role to admin user
+              
                 statement.execute("INSERT IGNORE INTO users_roles (user_id, role_id) "
                     + "SELECT (SELECT id FROM users WHERE email = 'admin@bugtracker.com'), (SELECT id FROM roles WHERE name = 'ADMIN')");
                 result.append("✓ Admin role assigned to admin user<br>");
                 
-                // Create a project if none exists
+              
                 statement.execute("INSERT INTO projects (name, description, is_active, created_at, updated_at) "
                     + "SELECT 'Bug Tracker Development', 'Internal project for developing the bug tracking application', TRUE, NOW(), NOW() "
                     + "WHERE NOT EXISTS (SELECT 1 FROM projects LIMIT 1)");
                 
-                // Create a second project if only one exists
+         
                 statement.execute("INSERT INTO projects (name, description, is_active, created_at, updated_at) "
                     + "SELECT 'Website Redesign', 'Project to redesign and modernize the company website', TRUE, NOW(), NOW() "
                     + "WHERE (SELECT COUNT(*) FROM projects) = 1");
                 result.append("✓ Sample projects created (if needed)<br>");
                 
-                // Link admin to projects
+               
                 statement.execute("INSERT IGNORE INTO project_members (project_id, user_id) "
                     + "SELECT p.id, u.id FROM projects p, users u "
                     + "WHERE u.email = 'admin@bugtracker.com' "
@@ -88,25 +88,25 @@ public class FixController {
             connection.setAutoCommit(false);
             
             try (Statement statement = connection.createStatement()) {
-                // Ensure ADMIN role exists (without ROLE_ prefix)
+               
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('ADMIN')");
                 
-                // Ensure USER role exists (without ROLE_ prefix)
+             
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('USER')");
                 
-                // Update any roles with ROLE_ prefix to remove it
+                
                 statement.execute("UPDATE roles SET name = 'ADMIN' WHERE name = 'ROLE_ADMIN'");
                 statement.execute("UPDATE roles SET name = 'USER' WHERE name = 'ROLE_USER'");
                 
                 result.append("✓ Roles fixed to use correct format<br>");
                 
-                // Make sure admin users exist
+              
                 statement.execute("INSERT IGNORE INTO users (first_name, last_name, email, password, created_at, updated_at, is_active) " +
                     "VALUES ('Admin', 'User', 'admin@bugtracker.com', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', NOW(), NOW(), TRUE)");
                 
                 result.append("✓ Admin user created or verified<br>");
                 
-                // Link admin users to admin role
+              
                 statement.execute("INSERT IGNORE INTO users_roles (user_id, role_id) " +
                     "SELECT u.id, r.id FROM users u, roles r " +
                     "WHERE u.email = 'admin@bugtracker.com' AND r.name = 'ADMIN'");
