@@ -72,7 +72,7 @@ public class TestController {
             response.put("isActive", admin.isActive());
             response.put("roles", admin.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
             
-            // Test password
+          
             boolean passwordMatches = passwordEncoder.matches("Admin123!", admin.getPassword());
             response.put("passwordMatches", passwordMatches);
             response.put("encodedPassword", admin.getPassword());
