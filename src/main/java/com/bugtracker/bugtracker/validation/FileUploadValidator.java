@@ -24,12 +24,12 @@ public class FileUploadValidator implements ConstraintValidator<ValidFileUpload,
     
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
-        // If file is null or empty
+     
         if (file == null || file.isEmpty()) {
-            return !required; // Valid if not required, invalid if required
+            return !required; 
         }
         
-        // Check file size
+    
         if (file.getSize() > maxSize) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
@@ -38,7 +38,7 @@ public class FileUploadValidator implements ConstraintValidator<ValidFileUpload,
             return false;
         }
         
-        // Check file type
+    
         String contentType = file.getContentType();
         if (contentType == null || !Arrays.asList(allowedTypes).contains(contentType)) {
             context.disableDefaultConstraintViolation();
