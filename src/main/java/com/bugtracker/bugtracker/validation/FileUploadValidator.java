@@ -6,9 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
-/**
- * Validator for file upload constraints including size and type validation.
- */
 public class FileUploadValidator implements ConstraintValidator<ValidFileUpload, MultipartFile> {
     
     private long maxSize;
