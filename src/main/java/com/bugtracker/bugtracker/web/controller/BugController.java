@@ -29,10 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Clean controller following Smart Wallet architecture.
- * No try-catch blocks - exceptions are handled by @ControllerAdvice.
- */
+
 @Controller
 @RequestMapping("/bugs")
 @RequiredArgsConstructor
@@ -52,7 +49,7 @@ public class BugController {
         
         List<Bug> bugs = bugService.findBugsWithFilters(projectId, status, priority);
         
-        // Add project name if filtering by project
+       
         if (projectId != null) {
             projectService.findById(projectId).ifPresent(project -> 
                 model.addAttribute("currentProject", project));
@@ -88,8 +85,7 @@ public class BugController {
             Model model) {
         
         BugAdd bugAdd = new BugAdd();
-        bugAdd.setPriority(BugPriority.MEDIUM); // Default priority
-        
+        bugAdd.setPriority(BugPriority.MEDIUM); 
         if (projectId != null) {
             bugAdd.setProjectId(projectId);
         }
@@ -130,7 +126,7 @@ public class BugController {
             return "bugs/details";
         }
         
-        bugUpdate.setId(id); // Ensure ID is set
+        bugUpdate.setId(id); 
         bugService.updateBugFromDTO(bugUpdate);
         redirectAttributes.addFlashAttribute("success", "Bug updated successfully!");
         
@@ -171,9 +167,7 @@ public class BugController {
         return "redirect:/bugs";
     }
 
-    /**
-     * Helper method to load form data for bug creation and editing.
-     */
+
     private void loadFormData(Model model) {
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("statuses", BugStatus.values());
@@ -181,9 +175,7 @@ public class BugController {
         model.addAttribute("users", userService.findAllUsers());
     }
 
-    /**
-     * Helper method to load filter data for bug listing.
-     */
+  
     private void loadFilterData(Model model) {
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("statuses", BugStatus.values());
