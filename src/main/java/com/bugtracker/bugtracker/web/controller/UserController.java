@@ -22,13 +22,12 @@ public class UserController {
 
     private final UserService userService;
 
-    // ==================== РЕГИСТРАЦИЯ ПРЕМАХНАТА ====================
-    // Регистрацията сега се прави само от админ панела
+
 
     @GetMapping("/login")
     public String showLoginForm() {
         return "auth/login";
     }
 
-    // registration-success endpoint също премахнат
+
 }
