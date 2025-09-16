@@ -21,10 +21,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Set;
 
-/**
- * Global exception handler following Smart Wallet architecture.
- * Handles all exceptions and redirects with appropriate flash messages.
- */
+
 @ControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
@@ -118,7 +115,7 @@ public class ExceptionAdvice {
     public String handleServiceErrors(RuntimeException ex, RedirectAttributes redirectAttributes) {
         log.error("Service error: {}", ex.getMessage(), ex);
         
-        // Common service errors that should redirect back
+    
         String message = ex.getMessage();
         if (message != null) {
             if (message.contains("User not found")) {
