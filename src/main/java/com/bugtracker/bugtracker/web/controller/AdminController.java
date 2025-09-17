@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-
 @Controller
 @RequestMapping("/admin")
 @AuthorizeAdmin 
@@ -47,7 +46,7 @@ public class AdminController {
         model.addAttribute("currentUser", permissionService.getCurrentUser().orElse(null));
         model.addAttribute("userRoles", permissionService.getCurrentUserRoles());
         
-   
+       
         Map<String, Long> roleBreakdown = allUsers.stream()
                 .flatMap(user -> user.getRoles().stream())
                 .collect(Collectors.groupingBy(Role::getName, Collectors.counting()));
@@ -71,7 +70,6 @@ public class AdminController {
         return "admin/users";
     }
 
-   
     @GetMapping("/users/create")
     public String createUserForm(Model model) {
         List<Role> roles = roleRepository.findAll();
@@ -79,7 +77,7 @@ public class AdminController {
         return "admin/create-user";
     }
 
-   
+
     @PostMapping("/users/create")
     public ResponseEntity<Map<String, Object>> createUser(
             @RequestParam String firstName,
@@ -93,14 +91,14 @@ public class AdminController {
         try {
             log.info("Admin creating user: {} by {}", email, permissionService.getCurrentUsername());
             
-           
+          
             if (userService.existsByEmail(email)) {
                 response.put("success", false);
                 response.put("message", "User with this email already exists");
                 return ResponseEntity.badRequest().body(response);
             }
             
-          
+         
             User newUser = User.builder()
                     .firstName(firstName)
                     .lastName(lastName)
@@ -109,7 +107,7 @@ public class AdminController {
                     .isActive(true)
                     .build();
             
-         
+          
             User savedUser = userService.createUserWithRoles(firstName, lastName, email, password, roleNames);
             
             response.put("success", true);
@@ -186,7 +184,7 @@ public class AdminController {
     public Map<String, Object> resolveBugDemo(@PathVariable Long bugId) {
         Map<String, Object> response = new HashMap<>();
         
-      
+       
         if (!permissionService.canResolveBugs()) {
             permissionService.logUnauthorizedAccess("resolve-bug-demo");
             response.put("error", "Access denied - insufficient permissions");
@@ -238,7 +236,7 @@ public class AdminController {
         return response;
     }
 
- 
+  
     @AuthorizeTechnical
     @GetMapping("/demo/technical-info")
     @ResponseBody
@@ -254,18 +252,18 @@ public class AdminController {
         return response;
     }
 
- 
+
     @GetMapping("/system-info")
     @ResponseBody
     public Map<String, Object> systemInfo() {
         Map<String, Object> info = new HashMap<>();
         
-    
+       
         info.put("currentUser", permissionService.getCurrentUsername());
         info.put("userRoles", permissionService.getCurrentUserRoles());
         info.put("isAuthenticated", permissionService.isAuthenticated());
         
-     
+        
         info.put("permissions", Map.of(
             "isAdmin", permissionService.isCurrentUserAdmin(),
             "isDeveloper", permissionService.isCurrentUserDeveloper(),
@@ -279,7 +277,7 @@ public class AdminController {
             "canManageProjects", permissionService.canManageProjects()
         ));
         
-      
+       
         info.put("systemStats", Map.of(
             "totalUsers", userService.findAllUsers().size(),
             "totalRoles", roleRepository.findAll().size()
