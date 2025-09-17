@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasAuthority('ROLE_DEVELOPER')")
 
-  public @interface AuthorizeDeveloper {
+public @interface AuthorizeDeveloper {
 } 
