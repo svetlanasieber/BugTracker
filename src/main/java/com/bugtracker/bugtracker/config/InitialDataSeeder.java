@@ -95,7 +95,7 @@ public class InitialDataSeeder implements CommandLineRunner {
         log.info("👥 Seeding development users...");
         
 
-        //test
+        //test role
         /*createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
         createUserIfNotExists("qa@bugtracker.com", "QA123!", "Jane", "Tester", "QA");
         createUserIfNotExists("pm@bugtracker.com", "PM123!", "Bob", "Manager", "PROJECT_MANAGER");
