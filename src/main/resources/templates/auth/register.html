@@ -291,7 +291,7 @@
     
     <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
-        // Toggle password visibility for individual fields
+       
         function togglePasswordVisibility(fieldId, buttonId) {
             const passwordField = document.getElementById(fieldId);
             const toggleButton = document.getElementById(buttonId);
@@ -310,23 +310,22 @@
         
 
         
-        // Password strength checker
+      
         function checkPasswordStrength(password) {
             let score = 0;
             const strengthFill = document.getElementById('strengthFill');
             const strengthText = document.getElementById('strengthText');
             
-            // Length check
+          
             if (password.length >= 8) score++;
             if (password.length >= 12) score++;
             
-            // Character variety checks
+         
             if (/[a-z]/.test(password)) score++;
             if (/[A-Z]/.test(password)) score++;
             if (/[0-9]/.test(password)) score++;
             if (/[^A-Za-z0-9]/.test(password)) score++;
-            
-            // Update UI based on score
+         
             strengthFill.className = 'strength-fill';
             if (score < 3) {
                 strengthFill.classList.add('strength-weak');
@@ -343,7 +342,7 @@
             }
         }
         
-        // Add smooth form interactions
+       
         function addFormInteractions() {
             const formInputs = document.querySelectorAll('.form-control');
             
@@ -359,22 +358,22 @@
             });
         }
         
-        // Initialize everything when DOM is loaded
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // Set up accessibility
+           
             document.getElementById('togglePassword').setAttribute('aria-label', 'Show password');
             document.getElementById('toggleConfirmPassword').setAttribute('aria-label', 'Show password');
             
-            // Add password strength checker
+         
             const passwordField = document.getElementById('password');
             passwordField.addEventListener('input', function() {
                 checkPasswordStrength(this.value);
             });
             
-            // Add form interactions
+        
             addFormInteractions();
             
-            // Add register button hover effect
+         
             const registerBtn = document.querySelector('.register-btn');
             registerBtn.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-2px) scale(1.02)';
