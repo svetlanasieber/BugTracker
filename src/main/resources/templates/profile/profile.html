@@ -641,7 +641,7 @@
             }
         }
         
-        // Toggle individual password field visibility
+     
         function togglePasswordField(fieldId, buttonId) {
             const passwordField = document.getElementById(fieldId);
             const toggleButton = document.getElementById(buttonId);
@@ -658,7 +658,7 @@
             }
         }
         
-        // Toggle all password fields in change password form
+    
         function toggleAllPasswordsChange() {
             const showAll = document.getElementById('showAllPasswordsChange').checked;
             const passwordFields = ['currentPassword', 'newPassword', 'confirmPassword'];
@@ -678,7 +678,7 @@
             });
         }
         
-        // Initialize button accessibility for change password modal
+      
         document.addEventListener('DOMContentLoaded', function() {
             const buttons = ['toggleCurrentPassword', 'toggleNewPassword', 'toggleConfirmPasswordChange'];
             buttons.forEach(buttonId => {
