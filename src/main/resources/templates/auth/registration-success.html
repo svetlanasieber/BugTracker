@@ -316,7 +316,7 @@
     
     <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
-        // Create celebration confetti effect
+
         function createCelebrationEffect() {
             const colors = ['#667eea', '#764ba2', '#28a745', '#20c997', '#ffc107', '#e83e8c'];
             
@@ -344,26 +344,26 @@
             
             document.body.appendChild(confetti);
             
-            // Remove after animation
+         
             setTimeout(() => {
                 confetti.remove();
             }, 5000);
         }
         
-        // Start celebration when page loads
+     
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait a bit for animations to start
+           
             setTimeout(() => {
                 createCelebrationEffect();
             }, 1000);
             
-            // Add some extra celebration effects
+      
             setTimeout(() => {
                 createCelebrationEffect();
             }, 3000);
         });
         
-        // Add hover effects to buttons
+     
         document.querySelectorAll('.btn-primary-custom, .btn-secondary-custom').forEach(button => {
             button.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-3px) scale(1.05)';
