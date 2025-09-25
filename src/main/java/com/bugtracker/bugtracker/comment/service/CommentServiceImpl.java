@@ -6,6 +6,8 @@ import com.bugtracker.bugtracker.user.model.User;
 import com.bugtracker.bugtracker.bug.repository.BugRepository;
 import com.bugtracker.bugtracker.comment.repository.CommentRepository;
 import com.bugtracker.bugtracker.user.repository.UserRepository;
+import com.bugtracker.bugtracker.config.FileStorageProperties;
+import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BugRepository bugRepository;
     private final UserRepository userRepository;
+    private final FileStorageProperties fileStorageProperties;
 
     @Override
     @Transactional
@@ -82,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteAllByBugId(bugId);
     }
     
-
+    // ============= NEW BUSINESS LOGIC METHODS IMPLEMENTATIONS =============
     
     @Override
     @Transactional
@@ -125,8 +133,99 @@ public class CommentServiceImpl implements CommentService {
         
         Comment comment = getComment(commentId);
         
-       
+        // Check if user is author or admin
         return comment.getAuthor().getId().equals(currentUser.getId()) || 
                currentUser.getRoles().stream().anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+    }
+    
+    @Override
+    @Transactional
+    public Comment createCommentWithScreenshot(Long bugId, String content, MultipartFile screenshot, String username) {
+        User author = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + username));
+        
+        Bug bug = bugRepository.findById(bugId)
+                .orElseThrow(() -> new IllegalArgumentException("Bug not found with id: " + bugId));
+        
+        Comment comment = Comment.builder()
+                .bug(bug)
+                .author(author)
+                .content(content)
+                .createdAt(LocalDateTime.now())
+                .build();
+        
+        // Handle screenshot upload if provided
+        if (screenshot != null && !screenshot.isEmpty()) {
+            // Validate file
+            validateScreenshot(screenshot);
+            
+            try {
+                String savedFilename = saveScreenshot(screenshot);
+                comment.setAttachmentFilename(savedFilename);
+                comment.setAttachmentOriginalName(screenshot.getOriginalFilename());
+                log.info("Screenshot attached to comment: {}", savedFilename);
+            } catch (IOException e) {
+                log.error("Error uploading screenshot: {}", e.getMessage());
+                throw new RuntimeException("Failed to upload screenshot: " + e.getMessage());
+            }
+        }
+        
+        Comment savedComment = commentRepository.save(comment);
+        log.info("Comment created for bug {} by user {} with attachment: {}", 
+                bugId, username, comment.getAttachmentFilename() != null);
+        
+        return savedComment;
+    }
+    
+    private String saveScreenshot(MultipartFile file) throws IOException {
+        // Generate unique filename
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        
+        String savedFilename = UUID.randomUUID().toString() + extension;
+        
+        // Create comments directory if it doesn't exist
+        Path uploadsDir = Paths.get(fileStorageProperties.uploadDir(), "comments");
+        if (!Files.exists(uploadsDir)) {
+            Files.createDirectories(uploadsDir);
+        }
+        
+        // Save file
+        Path targetPath = uploadsDir.resolve(savedFilename);
+        Files.copy(file.getInputStream(), targetPath);
+        
+        log.info("Screenshot saved: {} (original: {})", savedFilename, originalFilename);
+        return savedFilename;
+    }
+    
+    private void validateScreenshot(MultipartFile file) {
+        // Check file size (10MB max)
+        long maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.getSize() > maxSize) {
+            throw new RuntimeException("File size exceeds maximum allowed size of 10MB");
+        }
+        
+        // Check content type
+        String contentType = file.getContentType();
+        String[] allowedTypes = {"image/jpeg", "image/png", "image/gif", "image/webp"};
+        
+        if (contentType == null) {
+            throw new RuntimeException("Unable to determine file type");
+        }
+        
+        boolean isAllowedType = false;
+        for (String allowedType : allowedTypes) {
+            if (allowedType.equals(contentType)) {
+                isAllowedType = true;
+                break;
+            }
+        }
+        
+        if (!isAllowedType) {
+            throw new RuntimeException("File type not supported. Please upload JPEG, PNG, GIF, or WebP images");
+        }
     }
 } 
