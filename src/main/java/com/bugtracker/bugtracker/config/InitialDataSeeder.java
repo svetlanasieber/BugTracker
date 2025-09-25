@@ -6,6 +6,7 @@ import com.bugtracker.bugtracker.user.repository.RoleRepository;
 import com.bugtracker.bugtracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,12 +19,13 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@Order(1) 
+@Order(1) // Ensure this runs before other CommandLineRunners
 public class InitialDataSeeder implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Environment environment;
 
     @Override
     public void run(String... args) {
@@ -41,7 +43,7 @@ public class InitialDataSeeder implements CommandLineRunner {
             log.info("Roles already exist, ensuring all required roles are present...");
         }
         
-        
+        // All necessary roles for the Bug Tracker system
         List<String> roleNames = List.of("ADMIN", "DEVELOPER", "QA", "PROJECT_MANAGER", "USER");
         
         for (String roleName : roleNames) {
@@ -82,31 +84,40 @@ public class InitialDataSeeder implements CommandLineRunner {
             
             log.info("Production admin created: {}", adminEmail);
         } else {
-            
+            // Update password if user exists
             User existingAdmin = userRepository.findByEmail(adminEmail).get();
             existingAdmin.setPassword(passwordEncoder.encode(adminPassword));
+            
+            // Ensure roles are managed correctly to avoid TransientObjectException
+            Role adminRole = roleRepository.findByName("ADMIN")
+                    .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
+            existingAdmin.getRoles().clear();
+            existingAdmin.getRoles().add(adminRole);
+
             userRepository.save(existingAdmin);
-            log.info("Updated admin password");
-            log.info("Updated admin user: {}", adminEmail);
+            log.info("Updated admin password and ensured roles are set for: {}", adminEmail);
         }
     }
     
     private void seedDevelopmentUsers() {
-        log.info("👥 Seeding development users...");
+        log.info("Seeding development users...");
         
-
-        //test role
-        /*createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
+        // Create development users for testing
+        createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
         createUserIfNotExists("qa@bugtracker.com", "QA123!", "Jane", "Tester", "QA");
         createUserIfNotExists("pm@bugtracker.com", "PM123!", "Bob", "Manager", "PROJECT_MANAGER");
         createUserIfNotExists("user@bugtracker.com", "User123!", "Alice", "User", "USER");
         
         log.info("Development users created successfully!");
-        log.info("Development Login Credentials:");
-        log.info("Developer: developer@bugtracker.com / Dev123!");
-        log.info("QA Engineer: qa@bugtracker.com / QA123!");
-        log.info("Project Manager: pm@bugtracker.com / PM123!");
-        log.info("Basic User: user@bugtracker.com / User123!");*/
+        
+        // Only show credentials in development mode
+        if (isDevelopmentMode()) {
+            log.info("Development Login Credentials:");
+            log.info("   Developer: developer@bugtracker.com / Dev123!");
+            log.info("   QA Engineer: qa@bugtracker.com / QA123!");
+            log.info("   Project Manager: pm@bugtracker.com / PM123!");
+            log.info("   Basic User: user@bugtracker.com / User123!");
+        }
     }
     
     private void createUserIfNotExists(String email, String password, String firstName, String lastName, String roleName) {
@@ -128,5 +139,12 @@ public class InitialDataSeeder implements CommandLineRunner {
             userRepository.save(user);
             log.info("Created user: {} with role: {}", email, roleName);
         }
+    }
+    
+    private boolean isDevelopmentMode() {
+        String[] activeProfiles = environment.getActiveProfiles();
+        return activeProfiles.length == 0 || // No profile set (default to dev)
+               java.util.Arrays.asList(activeProfiles).contains("dev") ||
+               java.util.Arrays.asList(activeProfiles).contains("development");
     }
 } 
