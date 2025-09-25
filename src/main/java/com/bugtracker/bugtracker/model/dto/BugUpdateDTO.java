@@ -10,7 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Data Transfer Object for updating bug information.
+ * Used to transfer bug update data from the web layer to the service layer.
+ */
 @Data
 @Builder
 @NoArgsConstructor
