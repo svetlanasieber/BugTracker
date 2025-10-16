@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-/**
- * DTO for transferring Project data
- */
+
 @Data
 @Builder
 @NoArgsConstructor
