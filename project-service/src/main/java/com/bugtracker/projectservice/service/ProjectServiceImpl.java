@@ -44,7 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Set member IDs if provided
+   
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
@@ -71,7 +71,6 @@ public class ProjectServiceImpl implements ProjectService {
         project.setActive(request.isActive());
         project.setUpdatedAt(LocalDateTime.now());
 
-        // Update member IDs if provided
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
@@ -119,7 +118,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getProjectsForUserId(Long userId) {
-        // Get projects created by user + projects where user is member
+       
         List<Project> createdProjects = projectRepository.findByCreatedByUserId(userId);
         List<Project> memberProjects = projectRepository.findProjectsForUser(userId);
 
@@ -141,14 +140,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project proj = project.get();
         
-        // Check if user is creator
+       
         if (username.equals(proj.getCreatedByUsername())) {
             return true;
         }
 
-        // Note: In a real microservice architecture, we would need to get user ID
-        // For now, we'll assume authorization check happens in the Main App
-        return true; // Simplified for demo
+  
+        return true; 
     }
 
     @Override
