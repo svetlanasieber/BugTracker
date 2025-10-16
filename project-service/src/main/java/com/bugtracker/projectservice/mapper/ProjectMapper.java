@@ -4,9 +4,7 @@ import com.bugtracker.projectservice.dto.ProjectDto;
 import com.bugtracker.projectservice.model.Project;
 import org.springframework.stereotype.Component;
 
-/**
- * Mapper for converting between Project entity and ProjectDto
- */
+
 @Component
 public class ProjectMapper {
 
@@ -50,7 +48,7 @@ public class ProjectMapper {
                 .updatedAt(dto.getUpdatedAt())
                 .build();
 
-        // Set member IDs
+       
         if (dto.getMemberIds() != null) {
             project.setMemberIds(dto.getMemberIds());
         }
