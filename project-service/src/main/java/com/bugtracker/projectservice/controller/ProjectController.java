@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * REST Controller for Project Management Microservice
- * Provides CRUD operations for projects
- */
+
 @RestController
 @RequestMapping("/api/projects")
 @RequiredArgsConstructor
@@ -26,10 +23,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
-    /**
-     * Get all projects
-     * GET /api/projects
-     */
+
     @GetMapping
     public ResponseEntity<List<ProjectDto>> getAllProjects() {
         log.info("Fetching all projects");
@@ -37,10 +31,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-    /**
-     * Get projects for specific user
-     * GET /api/projects/user/{username}
-     */
+ 
     @GetMapping("/user/{username}")
     public ResponseEntity<List<ProjectDto>> getProjectsForUser(@PathVariable String username) {
         log.info("Fetching projects for user: {}", username);
@@ -48,10 +39,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-    /**
-     * Get projects for specific user ID
-     * GET /api/projects/user-id/{userId}
-     */
+  
     @GetMapping("/user-id/{userId}")
     public ResponseEntity<List<ProjectDto>> getProjectsForUserId(@PathVariable Long userId) {
         log.info("Fetching projects for user ID: {}", userId);
@@ -59,10 +47,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-    /**
-     * Get project by ID
-     * GET /api/projects/{id}
-     */
+  
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) {
         log.info("Fetching project with ID: {}", id);
@@ -75,10 +60,7 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Create new project
-     * POST /api/projects
-     */
+
     @PostMapping
     public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectCreateRequest request) {
         log.info("Creating new project: {}", request.getName());
@@ -92,17 +74,14 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Update existing project
-     * PUT /api/projects/{id}
-     */
+ 
     @PutMapping("/{id}")
     public ResponseEntity<ProjectDto> updateProject(@PathVariable Long id, 
                                                    @Valid @RequestBody ProjectUpdateRequest request) {
         log.info("Updating project: {}", id);
         
         try {
-            // Ensure the ID matches
+          
             request.setId(id);
             ProjectDto updatedProject = projectService.updateProject(id, request);
             return ResponseEntity.ok(updatedProject);
@@ -115,10 +94,7 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Delete project
-     * DELETE /api/projects/{id}
-     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.info("Deleting project: {}", id);
@@ -135,10 +111,6 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Add user to project
-     * POST /api/projects/{projectId}/members/{userId}
-     */
     @PostMapping("/{projectId}/members/{userId}")
     public ResponseEntity<ProjectDto> addUserToProject(@PathVariable Long projectId, 
                                                       @PathVariable Long userId) {
@@ -153,10 +125,7 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Remove user from project
-     * DELETE /api/projects/{projectId}/members/{userId}
-     */
+
     @DeleteMapping("/{projectId}/members/{userId}")
     public ResponseEntity<ProjectDto> removeUserFromProject(@PathVariable Long projectId, 
                                                            @PathVariable Long userId) {
@@ -171,10 +140,7 @@ public class ProjectController {
         }
     }
 
-    /**
-     * Search projects by keyword
-     * GET /api/projects/search?q={keyword}
-     */
+
     @GetMapping("/search")
     public ResponseEntity<List<ProjectDto>> searchProjects(@RequestParam("q") String keyword) {
         log.info("Searching projects with keyword: {}", keyword);
