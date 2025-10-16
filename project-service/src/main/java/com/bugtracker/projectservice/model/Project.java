@@ -47,7 +47,7 @@ public class Project {
     @Column(name = "created_by_username")
     private String createdByUsername;
 
-    // Store member user IDs as comma-separated string for simplicity
+    
     @Column(name = "member_user_ids", columnDefinition = "TEXT")
     private String memberUserIds;
 
@@ -57,7 +57,7 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Helper methods for member management
+  
     public Set<Long> getMemberIds() {
         if (memberUserIds == null || memberUserIds.isEmpty()) {
             return new HashSet<>();
@@ -67,7 +67,7 @@ public class Project {
             try {
                 ids.add(Long.parseLong(id.trim()));
             } catch (NumberFormatException e) {
-                // Skip invalid IDs
+                
             }
         }
         return ids;
@@ -81,7 +81,7 @@ public class Project {
         }
     }
 
-    // Custom equals and hashCode to avoid circular references
+   
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
