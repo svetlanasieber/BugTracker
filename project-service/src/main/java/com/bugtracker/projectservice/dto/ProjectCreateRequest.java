@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-/**
- * DTO for creating new projects
- */
+
 @Data
 @Builder
 @NoArgsConstructor
