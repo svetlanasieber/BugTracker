@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Global exception handler for Project Service microservice
- */
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
