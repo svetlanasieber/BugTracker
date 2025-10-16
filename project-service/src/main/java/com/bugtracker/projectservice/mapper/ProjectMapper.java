@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectMapper {
 
-    public ProjectDto toDto(Project project) {
+    public ProjectDto toDto(Project project) { 
         if (project == null) {
             return null;
         }
