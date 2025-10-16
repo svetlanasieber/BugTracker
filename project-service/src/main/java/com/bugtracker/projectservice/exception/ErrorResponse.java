@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-/**
- * Standard error response for the Project Service microservice
- */
+
 @Data
 @Builder
 @NoArgsConstructor
