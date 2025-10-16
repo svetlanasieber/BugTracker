@@ -1,8 +1,6 @@
 package com.bugtracker.projectservice.exception;
 
-/**
- * Exception thrown when a project is not found
- */
+
 public class ProjectNotFoundException extends RuntimeException {
     
     public ProjectNotFoundException(String message) {
