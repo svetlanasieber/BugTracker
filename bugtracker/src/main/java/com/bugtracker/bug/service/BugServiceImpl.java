@@ -3,14 +3,13 @@ package com.bugtracker.bug.service;
 import com.bugtracker.web.dto.BugAdd;
 import com.bugtracker.web.dto.BugUpdate;
 import com.bugtracker.bug.model.Bug;
-import com.bugtracker.model.entity.LogEntry;
 import com.bugtracker.project.model.Project;
 import com.bugtracker.user.model.User;
 import com.bugtracker.model.enums.BugPriority;
 import com.bugtracker.model.enums.BugStatus;
 import com.bugtracker.model.enums.LogLevel;
 import com.bugtracker.bug.repository.BugRepository;
-import com.bugtracker.project.repository.ProjectRepository;
+import com.bugtracker.project.service.ProjectService;
 import com.bugtracker.user.repository.UserRepository;
 import com.bugtracker.service.AuthService;
 import com.bugtracker.service.LogService;
@@ -32,7 +31,7 @@ public class BugServiceImpl implements BugService {
 
     private final BugRepository bugRepository;
     private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
+    private final ProjectService projectService;
     private final LogService logService;
     private final AuthService authService;
 
@@ -282,7 +281,7 @@ public class BugServiceImpl implements BugService {
                 .orElseThrow(() -> new RuntimeException("Reporter not found"));
         
         
-        Project project = projectRepository.findById(bugAdd.getProjectId())
+        Project project = projectService.findById(bugAdd.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         
         
@@ -340,7 +339,7 @@ public class BugServiceImpl implements BugService {
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bugUpdate.getId()));
         
         
-        Project project = projectRepository.findById(bugUpdate.getProjectId())
+        Project project = projectService.findById(bugUpdate.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         
         

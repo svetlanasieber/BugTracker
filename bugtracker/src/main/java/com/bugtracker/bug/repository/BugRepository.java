@@ -13,11 +13,12 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface BugRepository extends JpaRepository<Bug, Long> {
     
-    List<Bug> findByProject_Id(Long projectId);
+    List<Bug> findByProject_Id(UUID projectId);
     
     List<Bug> findByReporter_Id(Long reporterId);
     
