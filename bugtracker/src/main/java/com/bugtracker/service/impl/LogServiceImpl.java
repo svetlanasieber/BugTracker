@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class LogServiceImpl implements LogService {
     private final LogEntryRepository logEntryRepository;
 
     @Override
-    public LogEntry createLogEntry(String action, String entityType, Long entityId, Long userId, String details, LogLevel level) {
+    public LogEntry createLogEntry(String action, String entityType, UUID entityId, Long userId, String details, LogLevel level) {
         LogEntry logEntry = LogEntry.builder()
                 .action(action)
                 .entityType(entityType)
@@ -40,10 +41,8 @@ public class LogServiceImpl implements LogService {
     }
     
     @Override
-    public LogEntry createLogEntry(String action, String entityType, Long entityId, String username, String details) {
-        
+    public LogEntry createLogEntry(String action, String entityType, UUID entityId, String username, String details) {
         Long userId = null;
-        
         LogLevel level = LogLevel.INFO;
         
         LogEntry logEntry = LogEntry.builder()
@@ -62,7 +61,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<LogEntry> findLogsByEntityTypeAndId(String entityType, Long entityId) {
+    public List<LogEntry> findLogsByEntityTypeAndId(String entityType, UUID entityId) {
         return logEntryRepository.findByEntityTypeAndEntityIdOrderByCreatedAtDesc(entityType, entityId);
     }
 
@@ -114,7 +113,7 @@ public class LogServiceImpl implements LogService {
     }
     
     @Override
-    public LogEntry findById(Long id) {
+    public LogEntry findById(UUID id) {
         return logEntryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Log entry not found with id: " + id));
     }
