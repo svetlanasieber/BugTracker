@@ -27,7 +27,6 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -43,13 +42,13 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) 
-                        .maximumSessions(1) 
-                        .maxSessionsPreventsLogin(false) 
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(form -> form 
+                .formLogin(form -> form
                     .loginPage("/auth/login")
                     .loginProcessingUrl("/auth/login-process")
                     .defaultSuccessUrl("/", true)
@@ -59,7 +58,7 @@ public class SecurityConfig {
                 )
                 .rememberMe(remember -> remember
                     .key("bugtracker-remember-me-key")
-                    .tokenValiditySeconds(86400 * 30) 
+                    .tokenValiditySeconds(86400 * 30)
                     .userDetailsService(userDetailsService)
                     .rememberMeParameter("remember-me")
                 )
@@ -80,13 +79,11 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

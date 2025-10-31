@@ -27,20 +27,19 @@ public class InitialDataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("Starting BugTracker Initial Data Seeding...");
+        log.info("Starting BugTracker Initial Data Seeding");
         
         seedRoles();
         seedProductionUsers();
         seedDevelopmentUsers();
         
-        log.info("BugTracker Initial Data Seeding completed!");
+        log.info("BugTracker Initial Data Seeding completed");
     }
 
     private void seedRoles() {
         if (roleRepository.count() > 0) {
-            log.info("Roles already exist, ensuring all required roles are present...");
+            log.info("Roles already exist, ensuring all required roles are present");
         }
-        
         
         List<String> roleNames = List.of("ADMIN", "DEVELOPER", "QA", "PROJECT_MANAGER", "USER");
         
@@ -56,13 +55,13 @@ public class InitialDataSeeder implements CommandLineRunner {
     }
 
     private void seedProductionUsers() {
-        log.info("Seeding production users...");
+        log.info("Seeding production users");
         
         String adminEmail = "admin@bugtracker.com";
         String adminPassword = "Admin123!";
         
         if (userRepository.findByEmail(adminEmail).isEmpty()) {
-            log.info("Creating production admin user...");
+            log.info("Creating production admin user");
             
             Role adminRole = roleRepository.findByName("ADMIN")
                     .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
@@ -82,10 +81,8 @@ public class InitialDataSeeder implements CommandLineRunner {
             
             log.info("Production admin created: {}", adminEmail);
         } else {
-            
             User existingAdmin = userRepository.findByEmail(adminEmail).get();
             existingAdmin.setPassword(passwordEncoder.encode(adminPassword));
-            
             
             Role adminRole = roleRepository.findByName("ADMIN")
                     .orElseThrow(() -> new RuntimeException("ADMIN role not found"));
@@ -98,20 +95,19 @@ public class InitialDataSeeder implements CommandLineRunner {
     }
     
     private void seedDevelopmentUsers() {
-        log.info("Seeding development users...");
-        
+        log.info("Seeding development users");
         
         createUserIfNotExists("developer@bugtracker.com", "Dev123!", "John", "Developer", "DEVELOPER");
         createUserIfNotExists("qa@bugtracker.com", "QA123!", "Jane", "Tester", "QA");
         createUserIfNotExists("pm@bugtracker.com", "PM123!", "Bob", "Manager", "PROJECT_MANAGER");
         createUserIfNotExists("user@bugtracker.com", "User123!", "Alice", "User", "USER");
         
-        log.info("Development users created successfully!");
+        log.info("Development users created successfully");
         log.info("Development Login Credentials:");
-        log.info("Developer: developer@bugtracker.com / Dev123!");
-        log.info("QA Engineer: qa@bugtracker.com / QA123!");
-        log.info("Project Manager: pm@bugtracker.com / PM123!");
-        log.info(" Basic User: user@bugtracker.com / User123!");
+        log.info("   Developer: developer@bugtracker.com / Dev123!");
+        log.info("   QA Engineer: qa@bugtracker.com / QA123!");
+        log.info("   Project Manager: pm@bugtracker.com / PM123!");
+        log.info("   Basic User: user@bugtracker.com / User123!");
     }
     
     private void createUserIfNotExists(String email, String password, String firstName, String lastName, String roleName) {
