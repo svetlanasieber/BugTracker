@@ -61,7 +61,7 @@ public class AdminController {
     
     @GetMapping("/users")
     public String userManagement(Model model) {
-        log.info("👥 Admin accessing user management: {}", permissionService.getCurrentUsername());
+        log.info("Admin accessing user management: {}", permissionService.getCurrentUsername());
         
         List<User> users = userService.findAllUsers();
         List<Role> roles = roleRepository.findAll();
@@ -139,7 +139,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
         
         try {
-            log.info("🎭 Admin toggling role {} for user {} by {}", 
+            log.info("Admin toggling role {} for user {} by {}", 
                     roleName, userId, permissionService.getCurrentUsername());
             
             userService.changeUserRole(userId, roleName);
@@ -165,7 +165,7 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            log.info("🎭 Admin assigning role {} to user {} by {}", 
+            log.info("Admin assigning role {} to user {} by {}", 
                     roleName, userId, permissionService.getCurrentUsername());
             
             userService.changeUserRole(userId, roleName);
@@ -235,7 +235,7 @@ public class AdminController {
     public Map<String, Object> managementDemo() {
         Map<String, Object> response = new HashMap<>();
         
-        log.info("🏢 Management demo accessed by {}", permissionService.getCurrentUsername());
+        log.info("Management demo accessed by {}", permissionService.getCurrentUsername());
         response.put("message", "Management information accessed");
         response.put("hasManagementPermissions", permissionService.hasManagementPermissions());
         response.put("canManageProjects", permissionService.canManageProjects());
@@ -251,7 +251,7 @@ public class AdminController {
     public Map<String, Object> technicalDemo() {
         Map<String, Object> response = new HashMap<>();
         
-        log.info("⚙️ Technical demo accessed by {}", permissionService.getCurrentUsername());
+        log.info("Technical demo accessed by {}", permissionService.getCurrentUsername());
         response.put("message", "Technical information accessed");
         response.put("hasTechnicalPermissions", permissionService.hasTechnicalPermissions());
         response.put("isDeveloper", permissionService.isCurrentUserDeveloper());
