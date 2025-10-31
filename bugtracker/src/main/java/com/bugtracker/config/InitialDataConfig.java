@@ -32,7 +32,6 @@ public class InitialDataConfig {
             if (projectRepository.count() == 0) {
                 log.info("No projects found. Creating sample project...");
                 try {
-                    
                     Project sampleProject = Project.builder()
                             .name("Bug Tracker Development")
                             .description("Internal project for developing and maintaining the Bug Tracker application")
@@ -44,16 +43,20 @@ public class InitialDataConfig {
                     Project savedProject = projectRepository.save(sampleProject);
                     log.info("Created sample project with ID: {}", savedProject.getId());
                     
-                    
-                    User adminUser = userRepository.findByEmail("admin@bugtracker.com")
-                            .orElseThrow(() -> new UsernameNotFoundException("Admin user not found"));
-                    
-                    
-                    projectService.assignUserToProject(adminUser.getId(), savedProject.getId());
-                    log.info("Added admin user to sample project");
+                    try {
+                        User adminUser = userRepository.findByEmail("admin@bugtracker.com")
+                                .orElse(null);
+                        
+                        if (adminUser != null) {
+                            projectService.assignUserToProject(adminUser.getId(), savedProject.getId());
+                            log.info("Added admin user to sample project");
+                        }
+                    } catch (Exception ex) {
+                        log.warn("Could not assign admin to project: {}", ex.getMessage());
+                    }
                     
                 } catch (Exception e) {
-                    log.error("Error creating sample project: {}", e.getMessage(), e);
+                    log.error("Error creating sample project: {}", e.getMessage());
                 }
             } else {
                 log.info("Projects already exist, skipping sample project creation");

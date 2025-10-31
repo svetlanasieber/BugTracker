@@ -16,7 +16,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI bugTrackerOpenAPI() {
         Server localServer = new Server();
-        localServer.setUrl("http:
+        localServer.setUrl("http://localhost:8080");
         localServer.setDescription("Local Development Server");
 
         Contact contact = new Contact();
@@ -25,7 +25,7 @@ public class OpenApiConfig {
 
         License mitLicense = new License()
                 .name("MIT License")
-                .url("https:
+                .url("https://opensource.org/licenses/MIT");
 
         Info info = new Info()
                 .title("Bug Tracker API")

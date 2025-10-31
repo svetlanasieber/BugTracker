@@ -33,7 +33,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/authedit", "/projects/*/delete").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROJECT_MANAGER")
+                        .requestMatchers("/", "/landing", "/auth/login", "/auth/register", "/auth/registration-success").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/webjars/**", "/uploads/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/error", "/access-denied").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
