@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @FeignClient(name = "project-service", url = "http://localhost:8081/api/projects")
 public interface ProjectClient {
@@ -21,22 +22,22 @@ public interface ProjectClient {
     List<ProjectDto> getProjectsForUserId(@PathVariable("userId") Long userId);
 
     @GetMapping("/{id}")
-    ProjectDto getProjectById(@PathVariable("id") Long id);
+    ProjectDto getProjectById(@PathVariable("id") UUID id);
 
     @PostMapping
     ProjectDto createProject(@RequestBody ProjectCreateRequest request);
 
     @PutMapping("/{id}")
-    ProjectDto updateProject(@PathVariable("id") Long id, @RequestBody ProjectUpdateRequest request);
+    ProjectDto updateProject(@PathVariable("id") UUID id, @RequestBody ProjectUpdateRequest request);
 
     @DeleteMapping("/{id}")
-    void deleteProject(@PathVariable("id") Long id);
+    void deleteProject(@PathVariable("id") UUID id);
 
     @PostMapping("/{projectId}/members/{userId}")
-    ProjectDto addUserToProject(@PathVariable("projectId") Long projectId, @PathVariable("userId") Long userId);
+    ProjectDto addUserToProject(@PathVariable("projectId") UUID projectId, @PathVariable("userId") Long userId);
 
     @DeleteMapping("/{projectId}/members/{userId}")
-    ProjectDto removeUserFromProject(@PathVariable("projectId") Long projectId, @PathVariable("userId") Long userId);
+    ProjectDto removeUserFromProject(@PathVariable("projectId") UUID projectId, @PathVariable("userId") Long userId);
 
     @GetMapping("/search")
     List<ProjectDto> searchProjects(@RequestParam("q") String keyword);
