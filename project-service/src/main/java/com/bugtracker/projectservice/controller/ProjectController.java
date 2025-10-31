@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -31,7 +30,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
- 
+
     @GetMapping("/user/{username}")
     public ResponseEntity<List<ProjectDto>> getProjectsForUser(@PathVariable String username) {
         log.info("Fetching projects for user: {}", username);
@@ -39,7 +38,7 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-  
+
     @GetMapping("/user-id/{userId}")
     public ResponseEntity<List<ProjectDto>> getProjectsForUserId(@PathVariable Long userId) {
         log.info("Fetching projects for user ID: {}", userId);
@@ -47,82 +46,45 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
-  
+ 
     @GetMapping("/{id}")
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable Long id) {
         log.info("Fetching project with ID: {}", id);
-        Optional<ProjectDto> project = projectService.getProjectById(id);
-        
-        if (project.isPresent()) {
-            return ResponseEntity.ok(project.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        ProjectDto project = projectService.getProjectById(id);
+        return ResponseEntity.ok(project);
     }
 
 
     @PostMapping
     public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectCreateRequest request) {
         log.info("Creating new project: {}", request.getName());
-        
-        try {
-            ProjectDto createdProject = projectService.createProject(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
-        } catch (Exception e) {
-            log.error("Error creating project: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        ProjectDto createdProject = projectService.createProject(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProject);
     }
 
- 
+  
     @PutMapping("/{id}")
     public ResponseEntity<ProjectDto> updateProject(@PathVariable Long id, 
-                                                   @Valid @RequestBody ProjectUpdateRequest request) {
+                                                  @Valid @RequestBody ProjectUpdateRequest request) {
         log.info("Updating project: {}", id);
-        
-        try {
-          
-            request.setId(id);
-            ProjectDto updatedProject = projectService.updateProject(id, request);
-            return ResponseEntity.ok(updatedProject);
-        } catch (RuntimeException e) {
-            log.error("Error updating project {}: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            log.error("Error updating project {}: {}", id, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        ProjectDto updatedProject = projectService.updateProject(id, request);
+        return ResponseEntity.ok(updatedProject);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.info("Deleting project: {}", id);
-        
-        try {
-            projectService.deleteProject(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            log.error("Error deleting project {}: {}", id, e.getMessage());
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            log.error("Error deleting project {}: {}", id, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        projectService.deleteProject(id);
+        return ResponseEntity.noContent().build();
     }
+
 
     @PostMapping("/{projectId}/members/{userId}")
     public ResponseEntity<ProjectDto> addUserToProject(@PathVariable Long projectId, 
                                                       @PathVariable Long userId) {
         log.info("Adding user {} to project {}", userId, projectId);
-        
-        try {
-            ProjectDto updatedProject = projectService.addUserToProject(projectId, userId);
-            return ResponseEntity.ok(updatedProject);
-        } catch (RuntimeException e) {
-            log.error("Error adding user to project: {}", e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+        ProjectDto updatedProject = projectService.addUserToProject(projectId, userId);
+        return ResponseEntity.ok(updatedProject);
     }
 
 
@@ -130,16 +92,9 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> removeUserFromProject(@PathVariable Long projectId, 
                                                            @PathVariable Long userId) {
         log.info("Removing user {} from project {}", userId, projectId);
-        
-        try {
-            ProjectDto updatedProject = projectService.removeUserFromProject(projectId, userId);
-            return ResponseEntity.ok(updatedProject);
-        } catch (RuntimeException e) {
-            log.error("Error removing user from project: {}", e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
+        ProjectDto updatedProject = projectService.removeUserFromProject(projectId, userId);
+        return ResponseEntity.ok(updatedProject);
     }
-
 
     @GetMapping("/search")
     public ResponseEntity<List<ProjectDto>> searchProjects(@RequestParam("q") String keyword) {
@@ -148,4 +103,6 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 }
+
+
 
