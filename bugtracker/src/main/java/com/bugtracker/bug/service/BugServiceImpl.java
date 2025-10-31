@@ -39,18 +39,16 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug createBug(Bug bug) {
-        // Set initial values
+     
         bug.setCreatedAt(LocalDateTime.now());
         bug.setUpdatedAt(LocalDateTime.now());
-        
-        // Set NEW status if not specified
+    
         if (bug.getStatus() == null) {
             bug.setStatus(BugStatus.NEW);
         }
         
         Bug savedBug = bugRepository.save(bug);
-        
-        // Log the bug creation
+       
         logService.createLogEntry(
                 "CREATE", 
                 "Bug", 
@@ -97,26 +95,25 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug updateBug(Bug bug) {
-        // Ensure the bug exists
+     
         Bug existingBug = bugRepository.findById(bug.getId())
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bug.getId()));
         
-        // Update timestamp
-        bug.setUpdatedAt(LocalDateTime.now());
         
-        // If status changed to CLOSED, set closed date
+        bug.setUpdatedAt(LocalDateTime.now());
+      
         if (BugStatus.CLOSED.equals(bug.getStatus()) && !BugStatus.CLOSED.equals(existingBug.getStatus())) {
             bug.setClosedAt(LocalDateTime.now());
         }
         
         Bug updatedBug = bugRepository.save(bug);
         
-        // Log the update
+     
         logService.createLogEntry(
                 "UPDATE",
                 "Bug",
                 updatedBug.getId(),
-                null, // Could set to current authenticated user
+                null, 
                 "Bug updated: " + updatedBug.getTitle(),
                 LogLevel.INFO
         );
@@ -133,12 +130,12 @@ public class BugServiceImpl implements BugService {
         
         bugRepository.delete(bug);
         
-        // Log the deletion
+   
         logService.createLogEntry(
                 "DELETE",
                 "Bug",
                 id,
-                null, // Could set to current authenticated user
+                null, 
                 "Bug deleted: " + bug.getTitle(),
                 LogLevel.WARNING
         );
@@ -156,7 +153,7 @@ public class BugServiceImpl implements BugService {
         return bugRepository.countByReporter_Id(userId);
     }
     
-    // Additional methods for more complex operations
+
     
     @Override
     public Page<Bug> searchBugs(String keyword, Pageable pageable) {
@@ -182,7 +179,7 @@ public class BugServiceImpl implements BugService {
         bug.setUpdatedAt(LocalDateTime.now());
         bugRepository.save(bug);
         
-        // Log the assignment
+      
         logService.createLogEntry(
                 "ASSIGN",
                 "Bug",
@@ -203,14 +200,14 @@ public class BugServiceImpl implements BugService {
         bug.setStatus(newStatus);
         bug.setUpdatedAt(LocalDateTime.now());
         
-        // Set closed date if status changed to CLOSED
+       
         if (BugStatus.CLOSED.equals(newStatus) && !BugStatus.CLOSED.equals(oldStatus)) {
             bug.setClosedAt(LocalDateTime.now());
         }
         
         bugRepository.save(bug);
         
-        // Log the status change
+       
         logService.createLogEntry(
                 "STATUS_CHANGE",
                 "Bug",
@@ -225,7 +222,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByStatus(BugStatus status, Long userId) {
-        // Count bugs with the specified status for projects the user is a member of
+       
         return bugRepository.findAll().stream()
                 .filter(bug -> bug.getStatus() == status)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -235,7 +232,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByPriority(BugPriority priority, Long userId) {
-        // Count bugs with the specified priority for projects the user is a member of
+       
         return bugRepository.findAll().stream()
                 .filter(bug -> bug.getPriority() == priority)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -243,7 +240,7 @@ public class BugServiceImpl implements BugService {
                 .count();
     }
     
-    // Add method for BugAutoCloseScheduler
+  
     @Override
     public List<Bug> findBugsNotUpdatedSince(LocalDateTime date) {
         return bugRepository.findAll().stream()
@@ -256,14 +253,14 @@ public class BugServiceImpl implements BugService {
         List<Bug> bugs;
         
         if (projectId != null) {
-            // Filter by project
+          
             bugs = findByProjectId(projectId);
         } else {
-            // Get all bugs
+           
             bugs = findAll();
         }
         
-        // Apply additional filters if needed
+        
         if (status != null || priority != null) {
             bugs = bugs.stream()
                 .filter(bug -> status == null || bug.getStatus() == status)
