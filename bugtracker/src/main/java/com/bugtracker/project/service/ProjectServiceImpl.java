@@ -259,6 +259,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
     
     @Override
+    @Transactional
     public void assignUserToProject(Long userId, Long projectId) {
         addUserToProject(projectId, userId);
     }
