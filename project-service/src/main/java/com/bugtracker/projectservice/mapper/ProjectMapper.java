@@ -4,11 +4,10 @@ import com.bugtracker.projectservice.dto.ProjectDto;
 import com.bugtracker.projectservice.model.Project;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class ProjectMapper {
 
-    public ProjectDto toDto(Project project) { 
+    public ProjectDto toDto(Project project) {
         if (project == null) {
             return null;
         }
@@ -48,7 +47,6 @@ public class ProjectMapper {
                 .updatedAt(dto.getUpdatedAt())
                 .build();
 
-       
         if (dto.getMemberIds() != null) {
             project.setMemberIds(dto.getMemberIds());
         }
@@ -56,4 +54,3 @@ public class ProjectMapper {
         return project;
     }
 }
-
