@@ -93,7 +93,6 @@ public class User {
     @Builder.Default
     private Set<Comment> comments = new HashSet<>();
 
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
