@@ -11,11 +11,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface LogEntryRepository extends JpaRepository<LogEntry, Long> {
+public interface LogEntryRepository extends JpaRepository<LogEntry, UUID> {
     
-    List<LogEntry> findByEntityTypeAndEntityIdOrderByCreatedAtDesc(String entityType, Long entityId);
+    List<LogEntry> findByEntityTypeAndEntityIdOrderByCreatedAtDesc(String entityType, UUID entityId);
     
     List<LogEntry> findByUserIdOrderByCreatedAtDesc(Long userId);
     
