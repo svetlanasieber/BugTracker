@@ -7,15 +7,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     
-    List<Comment> findByBugId(Long bugId);
+    List<Comment> findByBugId(UUID bugId);
     
-    Page<Comment> findByBugId(Long bugId, Pageable pageable);
+    Page<Comment> findByBugId(UUID bugId, Pageable pageable);
     
     List<Comment> findByAuthorId(Long authorId);
     
-    void deleteAllByBugId(Long bugId);
+    void deleteAllByBugId(UUID bugId);
 } 

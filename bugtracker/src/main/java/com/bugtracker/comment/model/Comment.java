@@ -54,7 +54,6 @@ public class Comment {
     @Column(name = "attachment_original_name")
     private String attachmentOriginalName;
 
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
