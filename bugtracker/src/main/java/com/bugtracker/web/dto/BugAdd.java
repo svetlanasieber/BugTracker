@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,9 +32,7 @@ public class BugAdd {
     private BugPriority priority;
     
     @NotNull(message = "Project is required", groups = OnCreate.class)
-    @Positive(message = "Project ID must be positive", groups = OnCreate.class)
-    private Long projectId;
+    private UUID projectId;
     
-    @Positive(message = "Assigned user ID must be positive", groups = OnCreate.class)
     private Long assignedToId;
 } 

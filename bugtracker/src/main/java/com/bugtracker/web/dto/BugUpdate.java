@@ -10,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -17,8 +19,7 @@ import lombok.NoArgsConstructor;
 public class BugUpdate {
 
     @NotNull(message = "Bug ID is required", groups = OnUpdate.class)
-    @Positive(message = "Bug ID must be positive", groups = OnUpdate.class)
-    private Long id;
+    private UUID id;
 
     @NotBlank(message = "Title is required", groups = OnUpdate.class)
     @Size(min = 3, max = 200, message = "Title must be between 3 and 200 characters", groups = OnUpdate.class)
@@ -39,9 +40,7 @@ public class BugUpdate {
     private BugPriority priority;
 
     @NotNull(message = "Project is required", groups = OnUpdate.class)
-    @Positive(message = "Project ID must be positive", groups = OnUpdate.class)
-    private Long projectId;
+    private UUID projectId;
 
-    @Positive(message = "Assigned user ID must be positive", groups = OnUpdate.class)
     private Long assignedToId;
 } 

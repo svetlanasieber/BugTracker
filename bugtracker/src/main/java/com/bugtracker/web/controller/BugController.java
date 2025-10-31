@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/bugs")
@@ -61,7 +62,7 @@ public class BugController {
     }
 
     @GetMapping("/{id}")
-    public String viewBug(@PathVariable Long id, Model model) {
+    public String viewBug(@PathVariable UUID id, Model model) {
         Optional<Bug> bugOpt = bugService.findById(id);
         
         if (bugOpt.isEmpty()) {
@@ -115,7 +116,7 @@ public class BugController {
 
     @PostMapping("/{id}/update")
     public String updateBug(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Validated(OnUpdate.class) @ModelAttribute("bugUpdate") BugUpdate bugUpdate,
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
@@ -126,7 +127,7 @@ public class BugController {
             return "bugs/details";
         }
         
-        bugUpdate.setId(id); 
+        bugUpdate.setId(id);
         bugService.updateBugFromDTO(bugUpdate);
         redirectAttributes.addFlashAttribute("success", "Bug updated successfully!");
         
@@ -135,7 +136,7 @@ public class BugController {
 
     @PostMapping("/{id}/assign")
     public String assignBug(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestParam(required = false) Long userId,
             RedirectAttributes redirectAttributes) {
         
@@ -147,7 +148,7 @@ public class BugController {
 
     @PostMapping("/{id}/status")
     public String changeBugStatus(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @RequestParam BugStatus status,
             RedirectAttributes redirectAttributes) {
         
@@ -159,7 +160,7 @@ public class BugController {
 
     @PostMapping("/{id}/delete")
     public String deleteBug(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             RedirectAttributes redirectAttributes) {
         
         bugService.deleteBug(id);

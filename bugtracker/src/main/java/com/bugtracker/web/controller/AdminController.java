@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Controller
@@ -211,7 +212,7 @@ public class AdminController {
     @AuthorizeBugAssignment
     @PostMapping("/demo/assign-bug/{bugId}")
     @ResponseBody
-    public Map<String, Object> assignBugDemo(@PathVariable Long bugId, @RequestParam Long developerId) {
+    public Map<String, Object> assignBugDemo(@PathVariable UUID bugId, @RequestParam Long developerId) {
         Map<String, Object> response = new HashMap<>();
         
         if (!permissionService.canAssignBugs()) {
