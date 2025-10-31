@@ -7,6 +7,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "projects")
@@ -18,8 +19,9 @@ import java.util.Set;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -47,7 +49,6 @@ public class Project {
     @Column(name = "created_by_username")
     private String createdByUsername;
 
-    
     @Column(name = "member_user_ids", columnDefinition = "TEXT")
     private String memberUserIds;
 
@@ -57,7 +58,6 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-  
     public Set<Long> getMemberIds() {
         if (memberUserIds == null || memberUserIds.isEmpty()) {
             return new HashSet<>();
@@ -67,7 +67,6 @@ public class Project {
             try {
                 ids.add(Long.parseLong(id.trim()));
             } catch (NumberFormatException e) {
-                
             }
         }
         return ids;
@@ -81,7 +80,6 @@ public class Project {
         }
     }
 
-   
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -95,4 +93,3 @@ public class Project {
         return getClass().hashCode();
     }
 }
-
