@@ -3,6 +3,7 @@ package com.bugtracker.projectservice.service;
 import com.bugtracker.projectservice.dto.ProjectCreateRequest;
 import com.bugtracker.projectservice.dto.ProjectDto;
 import com.bugtracker.projectservice.dto.ProjectUpdateRequest;
+import com.bugtracker.projectservice.exception.ProjectNotFoundException;
 import com.bugtracker.projectservice.mapper.ProjectMapper;
 import com.bugtracker.projectservice.model.Project;
 import com.bugtracker.projectservice.repository.ProjectRepository;
@@ -14,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-   
+        // Set member IDs if provided
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
@@ -57,11 +58,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectDto updateProject(Long id, ProjectUpdateRequest request) {
+    public ProjectDto updateProject(UUID id, ProjectUpdateRequest request) {
         log.info("Updating project: {}", id);
 
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id));
+                .orElseThrow(() -> new ProjectNotFoundException(id));
 
         project.setName(request.getName());
         project.setDescription(request.getDescription());
@@ -71,6 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setActive(request.isActive());
         project.setUpdatedAt(LocalDateTime.now());
 
+        // Update member IDs if provided
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
@@ -83,11 +85,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public void deleteProject(Long id) {
+    public void deleteProject(UUID id) {
         log.info("Deleting project: {}", id);
 
         if (!projectRepository.existsById(id)) {
-            throw new RuntimeException("Project not found with id: " + id);
+            throw new ProjectNotFoundException(id);
         }
 
         projectRepository.deleteById(id);
@@ -95,9 +97,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Optional<ProjectDto> getProjectById(Long id) {
+    public ProjectDto getProjectById(UUID id) {
         return projectRepository.findById(id)
-                .map(projectMapper::toDto);
+                .map(projectMapper::toDto)
+                .orElseThrow(() -> new ProjectNotFoundException(id));
     }
 
     @Override
@@ -118,7 +121,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getProjectsForUserId(Long userId) {
-       
+        // Get projects created by user + projects where user is member
         List<Project> createdProjects = projectRepository.findByCreatedByUserId(userId);
         List<Project> memberProjects = projectRepository.findProjectsForUser(userId);
 
@@ -131,7 +134,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean isUserAuthorizedForProject(String username, Long projectId) {
+    public boolean isUserAuthorizedForProject(String username, UUID projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
         
         if (project.isEmpty()) {
@@ -140,22 +143,23 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project proj = project.get();
         
-       
+        // Check if user is creator
         if (username.equals(proj.getCreatedByUsername())) {
             return true;
         }
 
-  
-        return true; 
+        // Note: In a real microservice architecture, we would need to get user ID
+        // For now, we'll assume authorization check happens in the Main App
+        return true; // Simplified for demo
     }
 
     @Override
     @Transactional
-    public ProjectDto addUserToProject(Long projectId, Long userId) {
+    public ProjectDto addUserToProject(UUID projectId, Long userId) {
         log.info("Adding user {} to project {}", userId, projectId);
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
         Set<Long> memberIds = project.getMemberIds();
         memberIds.add(userId);
@@ -170,11 +174,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectDto removeUserFromProject(Long projectId, Long userId) {
+    public ProjectDto removeUserFromProject(UUID projectId, Long userId) {
         log.info("Removing user {} from project {}", userId, projectId);
 
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
 
         Set<Long> memberIds = project.getMemberIds();
         memberIds.remove(userId);
@@ -195,4 +199,6 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 }
+
+
 
