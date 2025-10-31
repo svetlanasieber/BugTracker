@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -18,8 +19,7 @@ import java.util.List;
 public class ProjectUpdate {
 
     @NotNull(message = "Project ID is required", groups = OnUpdate.class)
-    @Positive(message = "Project ID must be positive", groups = OnUpdate.class)
-    private Long id;
+    private UUID id;
 
     @NotBlank(message = "Project name is required", groups = OnUpdate.class)
     @Size(min = 3, max = 100, message = "Project name must be between 3 and 100 characters", groups = OnUpdate.class)

@@ -29,12 +29,12 @@ public class FixController {
                 
                 statement.execute("INSERT IGNORE INTO users (first_name, last_name, email, password, created_at, updated_at, is_active) "
                     + "VALUES ('Admin', 'User', 'admin@bugtracker.com', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', NOW(), NOW(), TRUE)");
-                result.append("Admin user created or verified<br>");
+                result.append("✓ Admin user created or verified<br>");
                 
                 
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('USER')");
                 statement.execute("INSERT IGNORE INTO roles (name) VALUES ('ADMIN')");
-                result.append("Roles created or verified<br>");
+                result.append("✓ Roles created or verified<br>");
                 
                 
                 statement.execute("INSERT IGNORE INTO users_roles (user_id, role_id) "
@@ -50,14 +50,14 @@ public class FixController {
                 statement.execute("INSERT INTO projects (name, description, is_active, created_at, updated_at) "
                     + "SELECT 'Website Redesign', 'Project to redesign and modernize the company website', TRUE, NOW(), NOW() "
                     + "WHERE (SELECT COUNT(*) FROM projects) = 1");
-                result.append("Sample projects created (if needed)<br>");
+                result.append("✓ Sample projects created (if needed)<br>");
                 
                 
                 statement.execute("INSERT IGNORE INTO project_members (project_id, user_id) "
                     + "SELECT p.id, u.id FROM projects p, users u "
                     + "WHERE u.email = 'admin@bugtracker.com' "
                     + "AND NOT EXISTS (SELECT 1 FROM project_members pm WHERE pm.project_id = p.id AND pm.user_id = u.id)");
-                result.append("Admin user added to projects<br>");
+                result.append("✓ Admin user added to projects<br>");
                 
                 connection.commit();
                 result.append("<br><strong>Database fix completed successfully!</strong><br>");
@@ -97,20 +97,20 @@ public class FixController {
                 statement.execute("UPDATE roles SET name = 'ADMIN' WHERE name = 'ROLE_ADMIN'");
                 statement.execute("UPDATE roles SET name = 'USER' WHERE name = 'ROLE_USER'");
                 
-                result.append("Roles fixed to use correct format<br>");
+                result.append("✓ Roles fixed to use correct format<br>");
                 
                 
                 statement.execute("INSERT IGNORE INTO users (first_name, last_name, email, password, created_at, updated_at, is_active) " +
                     "VALUES ('Admin', 'User', 'admin@bugtracker.com', '$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW', NOW(), NOW(), TRUE)");
                 
-                result.append("Admin user created or verified<br>");
+                result.append("✓ Admin user created or verified<br>");
                 
                 
                 statement.execute("INSERT IGNORE INTO users_roles (user_id, role_id) " +
                     "SELECT u.id, r.id FROM users u, roles r " +
                     "WHERE u.email = 'admin@bugtracker.com' AND r.name = 'ADMIN'");
                 
-                result.append("Admin role assigned to admin user<br>");
+                result.append("✓ Admin role assigned to admin user<br>");
                 
                 connection.commit();
                 result.append("<br><strong>Admin roles fixed successfully!</strong><br>");

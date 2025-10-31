@@ -139,7 +139,7 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
         
         try {
-            log.info("Admin toggling role {} for user {} by {}", 
+            log.info("🎭 Admin toggling role {} for user {} by {}", 
                     roleName, userId, permissionService.getCurrentUsername());
             
             userService.changeUserRole(userId, roleName);
@@ -165,7 +165,7 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            log.info("Admin assigning role {} to user {} by {}", 
+            log.info("🎭 Admin assigning role {} to user {} by {}", 
                     roleName, userId, permissionService.getCurrentUsername());
             
             userService.changeUserRole(userId, roleName);
@@ -235,7 +235,7 @@ public class AdminController {
     public Map<String, Object> managementDemo() {
         Map<String, Object> response = new HashMap<>();
         
-        log.info("Management demo accessed by {}", permissionService.getCurrentUsername());
+        log.info("🏢 Management demo accessed by {}", permissionService.getCurrentUsername());
         response.put("message", "Management information accessed");
         response.put("hasManagementPermissions", permissionService.hasManagementPermissions());
         response.put("canManageProjects", permissionService.canManageProjects());

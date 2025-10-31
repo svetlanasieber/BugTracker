@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/projects")
@@ -41,7 +42,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public String viewProject(@PathVariable Long id, Model model, Principal principal) {
+    public String viewProject(@PathVariable UUID id, Model model, Principal principal) {
         
         if (!projectService.isUserAuthorizedForProject(principal.getName(), id)) {
             return "redirect:/access-denied";
@@ -84,7 +85,7 @@ public class ProjectController {
 
     @GetMapping("/{id}/edit")
     @PreAuthorize("hasRole('ADMIN')")
-    public String showEditProjectForm(@PathVariable Long id, Model model) {
+    public String showEditProjectForm(@PathVariable UUID id, Model model) {
         Project project = projectService.getProjectById(id);
         
         
@@ -109,7 +110,7 @@ public class ProjectController {
 
     @PostMapping("/{id}/update")
     @PreAuthorize("hasRole('ADMIN')")
-    public String updateProject(@PathVariable Long id,
+    public String updateProject(@PathVariable UUID id,
                                @Validated(OnUpdate.class) @ModelAttribute("projectUpdate") ProjectUpdate projectUpdate,
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
@@ -130,7 +131,7 @@ public class ProjectController {
 
     @PostMapping("/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')")
-    public String deleteProject(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteProject(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         projectService.deleteProject(id);
         redirectAttributes.addFlashAttribute("success", "Project deleted successfully");
         return "redirect:/projects";
