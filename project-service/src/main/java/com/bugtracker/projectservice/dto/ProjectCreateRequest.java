@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -40,4 +39,3 @@ public class ProjectCreateRequest {
     private String createdByUsername;
     private Set<Long> memberIds;
 }
-
