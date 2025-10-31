@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "log_entries")
@@ -25,8 +26,9 @@ import java.time.LocalDateTime;
 public class LogEntry {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private UUID id;
 
     @Column(nullable = false)
     private String action;
@@ -34,8 +36,8 @@ public class LogEntry {
     @Column(name = "entity_type", nullable = false)
     private String entityType;
 
-    @Column(name = "entity_id", nullable = false)
-    private Long entityId;
+    @Column(name = "entity_id", columnDefinition = "VARCHAR(36)")
+    private UUID entityId;
 
     @Column(name = "user_id")
     private Long userId;
