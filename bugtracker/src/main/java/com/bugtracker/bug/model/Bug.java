@@ -84,6 +84,7 @@ public class Bug {
     @Column(name = "closed_at")
     private LocalDateTime closedAt;
 
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

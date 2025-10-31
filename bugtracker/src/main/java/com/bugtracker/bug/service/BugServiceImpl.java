@@ -39,16 +39,18 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug createBug(Bug bug) {
-     
+        
         bug.setCreatedAt(LocalDateTime.now());
         bug.setUpdatedAt(LocalDateTime.now());
-    
+        
+        
         if (bug.getStatus() == null) {
             bug.setStatus(BugStatus.NEW);
         }
         
         Bug savedBug = bugRepository.save(bug);
-       
+        
+        
         logService.createLogEntry(
                 "CREATE", 
                 "Bug", 
@@ -95,20 +97,21 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug updateBug(Bug bug) {
-     
+        
         Bug existingBug = bugRepository.findById(bug.getId())
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bug.getId()));
         
         
         bug.setUpdatedAt(LocalDateTime.now());
-      
+        
+        
         if (BugStatus.CLOSED.equals(bug.getStatus()) && !BugStatus.CLOSED.equals(existingBug.getStatus())) {
             bug.setClosedAt(LocalDateTime.now());
         }
         
         Bug updatedBug = bugRepository.save(bug);
         
-     
+        
         logService.createLogEntry(
                 "UPDATE",
                 "Bug",
@@ -130,7 +133,7 @@ public class BugServiceImpl implements BugService {
         
         bugRepository.delete(bug);
         
-   
+        
         logService.createLogEntry(
                 "DELETE",
                 "Bug",
@@ -153,7 +156,7 @@ public class BugServiceImpl implements BugService {
         return bugRepository.countByReporter_Id(userId);
     }
     
-
+    
     
     @Override
     public Page<Bug> searchBugs(String keyword, Pageable pageable) {
@@ -179,7 +182,7 @@ public class BugServiceImpl implements BugService {
         bug.setUpdatedAt(LocalDateTime.now());
         bugRepository.save(bug);
         
-      
+        
         logService.createLogEntry(
                 "ASSIGN",
                 "Bug",
@@ -200,14 +203,14 @@ public class BugServiceImpl implements BugService {
         bug.setStatus(newStatus);
         bug.setUpdatedAt(LocalDateTime.now());
         
-       
+        
         if (BugStatus.CLOSED.equals(newStatus) && !BugStatus.CLOSED.equals(oldStatus)) {
             bug.setClosedAt(LocalDateTime.now());
         }
         
         bugRepository.save(bug);
         
-       
+        
         logService.createLogEntry(
                 "STATUS_CHANGE",
                 "Bug",
@@ -222,7 +225,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByStatus(BugStatus status, Long userId) {
-       
+        
         return bugRepository.findAll().stream()
                 .filter(bug -> bug.getStatus() == status)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -232,7 +235,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByPriority(BugPriority priority, Long userId) {
-       
+        
         return bugRepository.findAll().stream()
                 .filter(bug -> bug.getPriority() == priority)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -240,7 +243,7 @@ public class BugServiceImpl implements BugService {
                 .count();
     }
     
-  
+    
     @Override
     public List<Bug> findBugsNotUpdatedSince(LocalDateTime date) {
         return bugRepository.findAll().stream()
@@ -253,10 +256,10 @@ public class BugServiceImpl implements BugService {
         List<Bug> bugs;
         
         if (projectId != null) {
-          
+            
             bugs = findByProjectId(projectId);
         } else {
-           
+            
             bugs = findAll();
         }
         
@@ -274,22 +277,22 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug createBugFromDTO(BugAdd bugAdd, String reporterUsername) {
-        // Get reporter by username
+        
         User reporter = userRepository.findByEmail(reporterUsername)
                 .orElseThrow(() -> new RuntimeException("Reporter not found"));
         
-        // Get project
+        
         Project project = projectRepository.findById(bugAdd.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         
-        // Get assigned user if provided
+        
         User assignedTo = null;
         if (bugAdd.getAssignedToId() != null) {
             assignedTo = userRepository.findById(bugAdd.getAssignedToId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
         }
         
-        // Create bug entity
+        
         Bug bug = Bug.builder()
                 .title(bugAdd.getTitle())
                 .description(bugAdd.getDescription())
@@ -309,11 +312,11 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug prepareUpdateBug(Long id, Bug updatedBug) {
-        // Ensure the bug exists
+        
         Bug existingBug = findById(id)
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + id));
         
-        // Preserve fields that shouldn't be changed
+        
         updatedBug.setId(id);
         updatedBug.setReporter(existingBug.getReporter());
         updatedBug.setCreatedAt(existingBug.getCreatedAt());
@@ -332,22 +335,22 @@ public class BugServiceImpl implements BugService {
     @Override
     @Transactional
     public Bug updateBugFromDTO(BugUpdate bugUpdate) {
-        // Find existing bug
+        
         Bug existingBug = findById(bugUpdate.getId())
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bugUpdate.getId()));
         
-        // Get project
+        
         Project project = projectRepository.findById(bugUpdate.getProjectId())
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         
-        // Get assigned user if provided
+        
         User assignedTo = null;
         if (bugUpdate.getAssignedToId() != null) {
             assignedTo = userRepository.findById(bugUpdate.getAssignedToId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
         }
         
-        // Update bug fields
+        
         Bug updatedBug = Bug.builder()
                 .id(existingBug.getId())
                 .title(bugUpdate.getTitle())
@@ -357,7 +360,7 @@ public class BugServiceImpl implements BugService {
                 .priority(bugUpdate.getPriority())
                 .project(project)
                 .assignedTo(assignedTo)
-                // Preserve original fields
+                
                 .reporter(existingBug.getReporter())
                 .createdAt(existingBug.getCreatedAt())
                 .updatedAt(LocalDateTime.now())
@@ -365,7 +368,7 @@ public class BugServiceImpl implements BugService {
                 .comments(existingBug.getComments())
                 .build();
         
-        // If status changed to CLOSED, set closed date
+        
         if (BugStatus.CLOSED.equals(bugUpdate.getStatus()) && 
             !BugStatus.CLOSED.equals(existingBug.getStatus())) {
             updatedBug.setClosedAt(LocalDateTime.now());
