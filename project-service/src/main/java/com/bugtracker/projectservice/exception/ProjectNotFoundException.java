@@ -1,5 +1,6 @@
 package com.bugtracker.projectservice.exception;
 
+import java.util.UUID;
 
 public class ProjectNotFoundException extends RuntimeException {
     
@@ -11,8 +12,7 @@ public class ProjectNotFoundException extends RuntimeException {
         super(message, cause);
     }
     
-    public ProjectNotFoundException(Long id) {
+    public ProjectNotFoundException(UUID id) {
         super("Project not found with id: " + id);
     }
 }
-

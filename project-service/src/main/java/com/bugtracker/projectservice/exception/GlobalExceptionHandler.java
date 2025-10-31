@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -82,4 +81,3 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }
-

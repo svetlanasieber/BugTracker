@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,4 +20,3 @@ public class ErrorResponse {
     private String path;
     private Map<String, String> validationErrors;
 }
-
