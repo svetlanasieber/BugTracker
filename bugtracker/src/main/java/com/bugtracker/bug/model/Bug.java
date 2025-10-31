@@ -27,6 +27,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "bugs")
@@ -38,8 +39,9 @@ import java.util.Set;
 public class Bug {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    private UUID id;
 
     @Column(nullable = false)
     private String title;
@@ -84,7 +86,6 @@ public class Bug {
     @Column(name = "closed_at")
     private LocalDateTime closedAt;
 
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

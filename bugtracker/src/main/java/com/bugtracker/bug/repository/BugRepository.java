@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface BugRepository extends JpaRepository<Bug, Long> {
+public interface BugRepository extends JpaRepository<Bug, UUID> {
     
     List<Bug> findByProject_Id(UUID projectId);
     

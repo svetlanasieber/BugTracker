@@ -11,84 +11,31 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface BugService {
     
     Bug createBug(Bug bug);
-    
-    
-    Optional<Bug> findById(Long id);
-    
-    
+    Optional<Bug> findById(UUID id);
     List<Bug> findAll();
-    
-    
-    List<Bug> findByProjectId(Long projectId);
-    
-    
+    List<Bug> findByProjectId(UUID projectId);
     List<Bug> findByReporterId(Long reporterId);
-    
-    
     List<Bug> findByAssignedToId(Long assignedToId);
-    
-    
     List<Bug> findRecentBugsByUser(Long userId, int limit);
-    
-    
     Bug updateBug(Bug bug);
-    
-    
-    void deleteBug(Long id);
-    
-    
+    void deleteBug(UUID id);
     long countAssignedBugs(Long userId);
-    
-    
     long countReportedBugs(Long userId);
-    
-    
-    
-    
-    void assignBug(Long bugId, Long userId);
-    
-    
-    void changeBugStatus(Long bugId, BugStatus status);
-    
-    
+    void assignBug(UUID bugId, Long userId);
+    void changeBugStatus(UUID bugId, BugStatus status);
     Page<Bug> searchBugs(String keyword, Pageable pageable);
-    
-    
-    
-    
     long countBugsByStatus(BugStatus status, Long userId);
-    
-    
     long countBugsByPriority(BugPriority priority, Long userId);
-    
-    
-    
-    
     List<Bug> findBugsNotUpdatedSince(LocalDateTime date);
-    
-    
-    
-    
-    List<Bug> findBugsWithFilters(Long projectId, BugStatus status, BugPriority priority);
-    
-    
+    List<Bug> findBugsWithFilters(UUID projectId, BugStatus status, BugPriority priority);
     Bug createBugFromDTO(BugAdd bugAdd, String reporterUsername);
-    
-    
-    Bug prepareUpdateBug(Long id, Bug updatedBug);
-    
-    
-    
-    
-    String assignBugWithMessage(Long bugId, Long userId);
-    
-    
+    Bug prepareUpdateBug(UUID id, Bug updatedBug);
+    String assignBugWithMessage(UUID bugId, Long userId);
     Bug updateBugFromDTO(BugUpdate bugUpdate);
-    
-    
     Bug createBugFromDTOWithCurrentUser(BugAdd bugAdd);
 } 

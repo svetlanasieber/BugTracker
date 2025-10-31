@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +65,7 @@ public class BugServiceImpl implements BugService {
     }
 
     @Override
-    public Optional<Bug> findById(Long id) {
+    public Optional<Bug> findById(UUID id) {
         return bugRepository.findById(id);
     }
 
@@ -74,7 +75,7 @@ public class BugServiceImpl implements BugService {
     }
 
     @Override
-    public List<Bug> findByProjectId(Long projectId) {
+    public List<Bug> findByProjectId(UUID projectId) {
         return bugRepository.findByProject_Id(projectId);
     }
 
@@ -164,7 +165,7 @@ public class BugServiceImpl implements BugService {
     
     @Override
     @Transactional
-    public void assignBug(Long bugId, Long userId) {
+    public void assignBug(UUID bugId, Long userId) {
         Bug bug = bugRepository.findById(bugId)
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bugId));
         
@@ -194,7 +195,7 @@ public class BugServiceImpl implements BugService {
     
     @Override
     @Transactional
-    public void changeBugStatus(Long bugId, BugStatus newStatus) {
+    public void changeBugStatus(UUID bugId, BugStatus newStatus) {
         Bug bug = bugRepository.findById(bugId)
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + bugId));
         
@@ -251,11 +252,10 @@ public class BugServiceImpl implements BugService {
     }
     
     @Override
-    public List<Bug> findBugsWithFilters(Long projectId, BugStatus status, BugPriority priority) {
+    public List<Bug> findBugsWithFilters(UUID projectId, BugStatus status, BugPriority priority) {
         List<Bug> bugs;
         
         if (projectId != null) {
-            
             bugs = findByProjectId(projectId);
         } else {
             
@@ -310,8 +310,7 @@ public class BugServiceImpl implements BugService {
     
     @Override
     @Transactional
-    public Bug prepareUpdateBug(Long id, Bug updatedBug) {
-        
+    public Bug prepareUpdateBug(UUID id, Bug updatedBug) {
         Bug existingBug = findById(id)
                 .orElseThrow(() -> new RuntimeException("Bug not found with id: " + id));
         
@@ -326,7 +325,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     @Transactional
-    public String assignBugWithMessage(Long bugId, Long userId) {
+    public String assignBugWithMessage(UUID bugId, Long userId) {
         assignBug(bugId, userId);
         return userId == null ? "Bug unassigned successfully!" : "Bug assigned successfully!";
     }
