@@ -12,35 +12,27 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    
     List<Notification> findByRecipient(String recipient);
 
-    
     List<Notification> findByStatus(NotificationStatus status);
 
-    
     List<Notification> findByType(NotificationType type);
 
-    
     List<Notification> findByUserId(Long userId);
 
-    
-    List<Notification> findByBugId(Long bugId);
+    List<Notification> findByBugId(UUID bugId);
 
-    
     List<Notification> findByCreatedAtAfter(LocalDateTime date);
 
-    
     Page<Notification> findByStatusOrderByCreatedAtDesc(NotificationStatus status, Pageable pageable);
 
-    
     long countByStatus(NotificationStatus status);
 
-    
     @Query("SELECT n FROM Notification n WHERE n.userId = :userId ORDER BY n.createdAt DESC")
     List<Notification> findRecentNotificationsByUser(@Param("userId") Long userId, Pageable pageable);
 } 
