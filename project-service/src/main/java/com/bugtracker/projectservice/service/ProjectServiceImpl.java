@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Set member IDs if provided
+       
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
