@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @PreAuthorize("hasAuthority('ROLE_DEVELOPER') or hasAuthority('ROLE_QA')")
+  
 public @interface AuthorizeTechnical {
 } 
