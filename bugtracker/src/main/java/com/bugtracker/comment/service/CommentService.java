@@ -23,9 +23,6 @@ public interface CommentService {
     
     void deleteAllCommentsForBug(Long bugId);
     
-    
-    
-    
     Comment createCommentWithCurrentUser(Long bugId, String content, String username);
     
     
