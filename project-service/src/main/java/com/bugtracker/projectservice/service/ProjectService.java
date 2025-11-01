@@ -10,26 +10,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProjectService {
-    
     ProjectDto createProject(ProjectCreateRequest request);
-    
     ProjectDto updateProject(UUID id, ProjectUpdateRequest request);
-    
     void deleteProject(UUID id);
-    
     ProjectDto getProjectById(UUID id);
-    
     List<ProjectDto> getAllProjects();
-    
     List<ProjectDto> getProjectsForUser(String username);
-    
     List<ProjectDto> getProjectsForUserId(Long userId);
-    
     boolean isUserAuthorizedForProject(String username, UUID projectId);
-    
     ProjectDto addUserToProject(UUID projectId, Long userId);
-    
     ProjectDto removeUserFromProject(UUID projectId, Long userId);
-    
     List<ProjectDto> searchProjects(String keyword);
 }

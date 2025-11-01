@@ -46,7 +46,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-       
+
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
         }
@@ -72,6 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
         project.setEndDate(request.getEndDate());
         project.setActive(request.isActive());
         project.setUpdatedAt(LocalDateTime.now());
+
 
         if (request.getMemberIds() != null) {
             project.setMemberIds(request.getMemberIds());
@@ -121,7 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getProjectsForUserId(Long userId) {
-        
+
         List<Project> createdProjects = projectRepository.findByCreatedByUserId(userId);
         List<Project> memberProjects = projectRepository.findProjectsForUser(userId);
 
@@ -136,19 +137,19 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isUserAuthorizedForProject(String username, UUID projectId) {
         Optional<Project> project = projectRepository.findById(projectId);
-        
         if (project.isEmpty()) {
             return false;
         }
 
         Project proj = project.get();
-        
-     
+
         if (username.equals(proj.getCreatedByUsername())) {
             return true;
         }
 
-        return true; 
+
+
+        return true;
     }
 
     @Override
