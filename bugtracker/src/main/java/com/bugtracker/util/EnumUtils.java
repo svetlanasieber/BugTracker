@@ -11,7 +11,6 @@ public class EnumUtils {
         
     }
 
-    
     public static boolean canTransitionTo(BugStatus currentStatus, BugStatus targetStatus) {
         return currentStatus.canTransitionTo(targetStatus);
     }
@@ -21,13 +20,13 @@ public class EnumUtils {
         return priority.getRecommendedResolutionTimeInHours();
     }
     
-    
     public static String getLogLevelCssClass(LogLevel level) {
         return level.getCssClass();
     }
     
-    
+
     public static String getProjectTypeDisplayName(ProjectType type) {
         return type.getDisplayName();
+        
     }
 } 
