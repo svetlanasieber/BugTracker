@@ -20,26 +20,20 @@ public interface UserService {
     
    
     User findByUsername(String username);
-    
 
     List<User> findAll();
-    
-  
+
     User updateUser(User user);
-    
 
     User updateUserProfile(String username, ProfileEdit profileEdit);
     boolean changeUserPassword(String username, PasswordChange passwordChange);
     User getCurrentUserWithStats(String username);
-    
 
     String resetAdminUser();
 
     Map<String, Object> getSystemDebugInfo();
-    
 
     boolean isUserAdmin(String username);
-    
 
     User createUserWithRoles(String firstName, String lastName, String email, String password, List<String> roleNames);
 } 
