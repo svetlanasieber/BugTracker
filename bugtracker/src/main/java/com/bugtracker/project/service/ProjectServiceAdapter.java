@@ -116,8 +116,7 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project updateProject(UUID id, String name, String description) {
         log.info("Updating simple project via microservice: {}", id);
-        
-        // First get the existing project to preserve other fields
+
         ProjectDto existing = projectClient.getProjectById(id);
         
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
@@ -233,8 +232,7 @@ public class ProjectServiceAdapter implements ProjectService {
         log.info("Checking authorization for user {} on project {}", username, projectId);
         try {
             ProjectDto project = projectClient.getProjectById(projectId);
-            
-            // Check if user is a member
+
             if (project.getMemberIds() != null) {
                 User user = userRepository.findByUsername(username)
                         .orElse(null);
@@ -243,8 +241,7 @@ public class ProjectServiceAdapter implements ProjectService {
                     return true;
                 }
             }
-            
-            // Check if user is admin
+
             User user = userRepository.findByUsername(username).orElse(null);
             if (user != null && user.getRoles().stream()
                     .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()))) {
@@ -339,15 +336,12 @@ public class ProjectServiceAdapter implements ProjectService {
         return convertToEntity(dto);
     }
 
-    /**
-     * Convert ProjectDto from microservice to Project entity for web layer
-     */
+
     private Project convertToEntity(ProjectDto dto) {
         if (dto == null) {
             return null;
         }
 
-        // Fetch user entities for members
         Set<User> members = new HashSet<>();
         if (dto.getMemberIds() != null && !dto.getMemberIds().isEmpty()) {
             members = dto.getMemberIds().stream()
@@ -356,7 +350,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     .collect(Collectors.toSet());
         }
 
-        // Fetch bugs from local database (bugs are not managed by the microservice)
         Set<Bug> bugs = new HashSet<>();
         if (dto.getId() != null) {
             List<Bug> projectBugs = bugRepository.findByProject_Id(dto.getId());
