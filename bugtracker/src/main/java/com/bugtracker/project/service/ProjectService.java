@@ -35,29 +35,21 @@ public interface ProjectService {
     List<Project> getProjectsByUserId(Long userId);
     void assignUserToProject(Long userId, UUID projectId);
     void removeAllUsersFromProject(UUID projectId);
-    
-    
-    
-    
+
     List<Project> getProjectsForUser(String username);
     
     
     boolean isUserAuthorizedForProject(String username, UUID projectId);
-    
-    
+  
     Project createProjectWithUsers(String name, String description, List<Long> userIds);
-    
-    
+
     Project updateProjectWithUsers(UUID projectId, String name, String description, List<Long> userIds);
-    
-    
+
     String performProjectDatabaseFix();
-    
-    
-    
-    
+ 
     Project createProjectFromDTO(com.bugtracker.web.dto.ProjectAdd projectAdd);
-    
-    
+
     Project updateProjectFromDTO(com.bugtracker.web.dto.ProjectUpdate projectUpdate);
+
+    
 } 
