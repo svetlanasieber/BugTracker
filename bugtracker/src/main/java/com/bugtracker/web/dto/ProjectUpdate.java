@@ -39,6 +39,5 @@ public class ProjectUpdate {
 
     private boolean isActive;
 
-    
     private List<Long> memberIds;
 } 

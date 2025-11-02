@@ -42,58 +42,45 @@ public class BugController {
 
     @GetMapping
     public String listBugs(
-            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) UUID projectId,
             @RequestParam(required = false) BugStatus status,
             @RequestParam(required = false) BugPriority priority,
             Model model) {
-        
         List<Bug> bugs = bugService.findBugsWithFilters(projectId, status, priority);
-        
-        
         if (projectId != null) {
             projectService.findById(projectId).ifPresent(project -> 
                 model.addAttribute("currentProject", project));
         }
-        
         model.addAttribute("bugs", bugs);
         loadFilterData(model);
-        
         return "bugs/list";
     }
 
     @GetMapping("/{id}")
     public String viewBug(@PathVariable UUID id, Model model) {
         Optional<Bug> bugOpt = bugService.findById(id);
-        
         if (bugOpt.isEmpty()) {
             return "redirect:/bugs?error=Bug+not+found";
         }
-        
         Bug bug = bugOpt.get();
         List<Comment> comments = commentService.getCommentsByBugId(id);
-        
         model.addAttribute("bug", bug);
         model.addAttribute("comments", comments);
         loadFormData(model);
-        
         return "bugs/details";
     }
 
     @GetMapping("/create")
     public String showCreateForm(
-            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) UUID projectId,
             Model model) {
-        
         BugAdd bugAdd = new BugAdd();
-        bugAdd.setPriority(BugPriority.MEDIUM); 
-        
+        bugAdd.setPriority(BugPriority.MEDIUM);
         if (projectId != null) {
             bugAdd.setProjectId(projectId);
         }
-        
         model.addAttribute("bugAdd", bugAdd);
         loadFormData(model);
-        
         return "bugs/create";
     }
 
@@ -103,12 +90,10 @@ public class BugController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
         if (bindingResult.hasErrors()) {
             loadFormData(model);
             return "bugs/create";
         }
-        
         Bug savedBug = bugService.createBugFromDTOWithCurrentUser(bugAdd);
         redirectAttributes.addFlashAttribute("success", "Bug created successfully!");
         return "redirect:/bugs/" + savedBug.getId();
@@ -121,16 +106,13 @@ public class BugController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes,
             Model model) {
-        
         if (bindingResult.hasErrors()) {
             loadFormData(model);
             return "bugs/details";
         }
-        
         bugUpdate.setId(id);
         bugService.updateBugFromDTO(bugUpdate);
         redirectAttributes.addFlashAttribute("success", "Bug updated successfully!");
-        
         return "redirect:/bugs/" + id;
     }
 
@@ -139,10 +121,8 @@ public class BugController {
             @PathVariable UUID id,
             @RequestParam(required = false) Long userId,
             RedirectAttributes redirectAttributes) {
-        
         String message = bugService.assignBugWithMessage(id, userId);
         redirectAttributes.addFlashAttribute("success", message);
-        
         return "redirect:/bugs/" + id;
     }
 
@@ -151,10 +131,8 @@ public class BugController {
             @PathVariable UUID id,
             @RequestParam BugStatus status,
             RedirectAttributes redirectAttributes) {
-        
         bugService.changeBugStatus(id, status);
         redirectAttributes.addFlashAttribute("success", "Bug status updated successfully!");
-        
         return "redirect:/bugs/" + id;
     }
 
@@ -162,13 +140,11 @@ public class BugController {
     public String deleteBug(
             @PathVariable UUID id,
             RedirectAttributes redirectAttributes) {
-        
         bugService.deleteBug(id);
         redirectAttributes.addFlashAttribute("success", "Bug deleted successfully!");
         return "redirect:/bugs";
     }
 
-    
     private void loadFormData(Model model) {
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("statuses", BugStatus.values());
@@ -176,7 +152,6 @@ public class BugController {
         model.addAttribute("users", userService.findAllUsers());
     }
 
-    
     private void loadFilterData(Model model) {
         model.addAttribute("projects", projectService.findAll());
         model.addAttribute("statuses", BugStatus.values());

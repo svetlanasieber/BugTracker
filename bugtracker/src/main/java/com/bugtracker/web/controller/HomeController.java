@@ -29,63 +29,41 @@ public class HomeController {
     @GetMapping("/")
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
-        
         if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
             User user = userService.findByUsername(auth.getName());
             model.addAttribute("user", user);
-            
-            
             model.addAttribute("totalProjects", projectService.countUserProjects(user.getId()));
             model.addAttribute("assignedBugs", bugService.countAssignedBugs(user.getId()));
             model.addAttribute("reportedBugs", bugService.countReportedBugs(user.getId()));
-            
-            
             List<Bug> recentBugs = bugService.findRecentBugsByUser(user.getId(), 5);
             model.addAttribute("recentBugs", recentBugs);
-            
-            
             Map<BugStatus, Long> bugStatusCounts = calculateBugStatusCounts(user.getId());
             model.addAttribute("bugStatusCounts", bugStatusCounts);
-            
-            
             Map<BugPriority, Long> bugPriorityCounts = calculateBugPriorityCounts(user.getId());
             model.addAttribute("bugPriorityCounts", bugPriorityCounts);
-            
             return "dashboard";
         }
-        
-        
         return "landing";
     }
 
     @GetMapping("/landing")
     public String landing() {
-        
         return "landing";
     }
-    
     private Map<BugStatus, Long> calculateBugStatusCounts(Long userId) {
         Map<BugStatus, Long> statusCounts = new HashMap<>();
-        
-        
         for (BugStatus status : BugStatus.values()) {
             long count = bugService.countBugsByStatus(status, userId);
             statusCounts.put(status, count);
         }
-        
         return statusCounts;
     }
-    
     private Map<BugPriority, Long> calculateBugPriorityCounts(Long userId) {
         Map<BugPriority, Long> priorityCounts = new HashMap<>();
-        
-        
         for (BugPriority priority : BugPriority.values()) {
             long count = bugService.countBugsByPriority(priority, userId);
             priorityCounts.put(priority, count);
         }
-        
         return priorityCounts;
     }
 } 

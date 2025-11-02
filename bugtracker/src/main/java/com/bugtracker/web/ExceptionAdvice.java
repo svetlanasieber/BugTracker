@@ -77,7 +77,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleValidationErrors(Exception ex, RedirectAttributes redirectAttributes) {
         StringBuilder errorMessage = new StringBuilder("Validation failed: ");
-        
         if (ex instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException validEx = (MethodArgumentNotValidException) ex;
             for (FieldError error : validEx.getBindingResult().getFieldErrors()) {
@@ -89,7 +88,6 @@ public class ExceptionAdvice {
                 errorMessage.append(error.getDefaultMessage()).append("; ");
             }
         }
-        
         log.warn("Validation error: {}", errorMessage.toString());
         redirectAttributes.addFlashAttribute("error", errorMessage.toString());
         return "redirect:/";
@@ -103,7 +101,6 @@ public class ExceptionAdvice {
         for (ConstraintViolation<?> violation : violations) {
             errorMessage.append(violation.getMessage()).append("; ");
         }
-        
         log.warn("Constraint violation: {}", errorMessage.toString());
         redirectAttributes.addFlashAttribute("error", errorMessage.toString());
         return "redirect:/";
@@ -113,8 +110,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleServiceErrors(RuntimeException ex, RedirectAttributes redirectAttributes) {
         log.error("Service error: {}", ex.getMessage(), ex);
-        
-        
         String message = ex.getMessage();
         if (message != null) {
             if (message.contains("User not found")) {
@@ -128,7 +123,6 @@ public class ExceptionAdvice {
                 return "redirect:/bugs";
             }
         }
-        
         redirectAttributes.addFlashAttribute("error", "An error occurred while processing your request.");
         return "redirect:/";
     }

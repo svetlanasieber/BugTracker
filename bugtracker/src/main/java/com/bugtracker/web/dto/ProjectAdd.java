@@ -36,6 +36,5 @@ public class ProjectAdd {
     @Builder.Default
     private boolean isActive = true;
 
-    
     private List<Long> memberIds;
 } 

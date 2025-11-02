@@ -37,7 +37,6 @@ public class ApiProjectController {
     public ResponseEntity<ProjectDto> updateProject(
             @PathVariable UUID id,
             @Valid @RequestBody ProjectUpdateRequest request) {
-        
         ProjectDto updatedProject = projectApiService.updateProject(id, request);
         return ResponseEntity.ok(updatedProject);
     }

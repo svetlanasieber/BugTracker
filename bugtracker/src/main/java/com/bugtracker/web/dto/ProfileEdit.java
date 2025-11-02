@@ -26,7 +26,6 @@ public class ProfileEdit {
     @Size(min = 2, max = 50, message = "Last name must be between 2 and 50 characters", groups = OnUpdate.class)
     @Pattern(regexp = "^[a-zA-ZÀ-ÿ\\s'-]+$", message = "Last name can only contain letters, spaces, apostrophes and hyphens", groups = OnUpdate.class)
     private String lastName;
-    
     @ValidFileUpload(
         maxSize = 5242880, 
         allowedTypes = {"image/jpeg", "image/png", "image/gif"},

@@ -48,13 +48,8 @@ public class LogRestController {
             @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
             @Parameter(description = "Filter by action") @RequestParam(required = false) String action,
             @Parameter(description = "Filter by entity type") @RequestParam(required = false) String entityType) {
-        
-        
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("timestamp").descending());
-        
-        
         Page<LogEntry> logsPage;
-        
         if (action != null && entityType != null) {
             logsPage = logService.findByActionAndEntityType(action, entityType, pageRequest);
         } else if (action != null) {
@@ -64,19 +59,14 @@ public class LogRestController {
         } else {
             logsPage = logService.findAllLogs(pageRequest);
         }
-        
-        
         List<LogEntryDTO> logDTOs = logsPage.getContent().stream()
                 .map(LogEntryDTO::fromEntity)
                 .collect(Collectors.toList());
-        
-        
         Map<String, Object> response = new HashMap<>();
         response.put("logs", logDTOs);
         response.put("currentPage", logsPage.getNumber());
         response.put("totalItems", logsPage.getTotalElements());
         response.put("totalPages", logsPage.getTotalPages());
-        
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -108,12 +98,9 @@ public class LogRestController {
         String entityId = logRequest.get("entityId");
         String username = logRequest.get("username");
         String details = logRequest.get("details");
-        
-        
         if (action == null || entityType == null || entityId == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
         LogEntry logEntry = logService.createLogEntry(
                 action,
                 entityType,
@@ -121,7 +108,6 @@ public class LogRestController {
                 username,
                 details
         );
-        
         LogEntryDTO logDTO = LogEntryDTO.fromEntity(logEntry);
         return new ResponseEntity<>(logDTO, HttpStatus.CREATED);
     }

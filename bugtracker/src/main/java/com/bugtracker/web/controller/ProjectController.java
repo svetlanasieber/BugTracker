@@ -31,30 +31,23 @@ public class ProjectController {
 
     @GetMapping
     public String listProjects(Model model, Principal principal) {
-        
         List<Project> projects = projectService.getProjectsForUser(principal.getName());
         boolean isAdmin = userService.isUserAdmin(principal.getName());
-        
         model.addAttribute("projects", projects);
         model.addAttribute("isAdmin", isAdmin);
-        
         return "projects/list";
     }
 
     @GetMapping("/{id}")
     public String viewProject(@PathVariable UUID id, Model model, Principal principal) {
-        
         if (!projectService.isUserAuthorizedForProject(principal.getName(), id)) {
             return "redirect:/access-denied";
         }
-        
         Project project = projectService.getProjectById(id);
-        
         model.addAttribute("project", project);
         model.addAttribute("bugs", project.getBugs());
         model.addAttribute("users", project.getMembers());
         model.addAttribute("allUsers", userService.findAll());
-        
         return "projects/view";
     }
 
@@ -72,12 +65,10 @@ public class ProjectController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
-        
         if (bindingResult.hasErrors()) {
             loadFormData(model);
             return "projects/create";
         }
-        
         Project project = projectService.createProjectFromDTO(projectAdd);
         redirectAttributes.addFlashAttribute("success", "Project created successfully");
         return "redirect:/projects/" + project.getId();
@@ -87,8 +78,6 @@ public class ProjectController {
     @PreAuthorize("hasRole('ADMIN')")
     public String showEditProjectForm(@PathVariable UUID id, Model model) {
         Project project = projectService.getProjectById(id);
-        
-        
         ProjectUpdate projectUpdate = ProjectUpdate.builder()
                 .id(project.getId())
                 .name(project.getName())
@@ -101,7 +90,6 @@ public class ProjectController {
                         .map(User::getId)
                         .toList())
                 .build();
-        
         model.addAttribute("projectUpdate", projectUpdate);
         model.addAttribute("project", project); 
         loadFormData(model);
@@ -115,14 +103,12 @@ public class ProjectController {
                                BindingResult bindingResult,
                                RedirectAttributes redirectAttributes,
                                Model model) {
-        
         if (bindingResult.hasErrors()) {
             Project project = projectService.getProjectById(id);
             model.addAttribute("project", project); 
             loadFormData(model);
             return "projects/edit";
         }
-        
         projectUpdate.setId(id); 
         projectService.updateProjectFromDTO(projectUpdate);
         redirectAttributes.addFlashAttribute("success", "Project updated successfully");
@@ -136,16 +122,12 @@ public class ProjectController {
         redirectAttributes.addFlashAttribute("success", "Project deleted successfully");
         return "redirect:/projects";
     }
-    
     @GetMapping("/fix-projects")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseBody
     public String fixProjects() {
-        
         return projectService.performProjectDatabaseFix();
     }
-    
-    
     private void loadFormData(Model model) {
         model.addAttribute("users", userService.findAll());
     }

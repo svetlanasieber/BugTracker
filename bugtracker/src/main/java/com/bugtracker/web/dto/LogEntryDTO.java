@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -14,16 +15,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LogEntryDTO {
 
-    private Long id;
+    private UUID id;
     private String action;
     private String entityType;
-    private Long entityId;
+    private UUID entityId;
     private Long userId;
     private String details;
     private LogLevel level;
     private LocalDateTime createdAt;
 
-    
     public static LogEntryDTO fromEntity(com.bugtracker.model.entity.LogEntry logEntry) {
         return LogEntryDTO.builder()
                 .id(logEntry.getId())

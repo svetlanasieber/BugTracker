@@ -25,15 +25,12 @@ public class CommentController {
                                @RequestParam(value = "screenshot", required = false) MultipartFile screenshot,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
-        
         try {
-            
             commentService.createCommentWithScreenshot(bugId, content, screenshot, principal.getName());
             redirectAttributes.addFlashAttribute("success", "Comment added successfully!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error adding comment: " + e.getMessage());
         }
-        
         return "redirect:/bugs/" + bugId;
     }
 
@@ -43,11 +40,8 @@ public class CommentController {
                                @RequestParam Long bugId,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
-        
-        
         commentService.updateCommentWithAuthorization(id, content, principal.getName());
         redirectAttributes.addFlashAttribute("success", "Comment updated successfully!");
-        
         return "redirect:/bugs/" + bugId;
     }
 
@@ -56,11 +50,8 @@ public class CommentController {
                                @RequestParam Long bugId,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
-        
-        
         commentService.deleteCommentWithAuthorization(id, principal.getName());
         redirectAttributes.addFlashAttribute("success", "Comment deleted successfully!");
-        
         return "redirect:/bugs/" + bugId;
     }
 } 

@@ -29,13 +29,10 @@ public class TestController {
     @ResponseBody
     public Map<String, Object> getAllUsers() {
         Map<String, Object> response = new HashMap<>();
-        
         List<User> users = userRepository.findAll();
         List<Role> roles = roleRepository.findAll();
-        
         response.put("totalUsers", users.size());
         response.put("totalRoles", roles.size());
-        
         response.put("users", users.stream().map(user -> {
             Map<String, Object> userInfo = new HashMap<>();
             userInfo.put("id", user.getId());
@@ -47,14 +44,12 @@ public class TestController {
             userInfo.put("hasPassword", user.getPassword() != null && !user.getPassword().isEmpty());
             return userInfo;
         }).collect(Collectors.toList()));
-        
         response.put("roles", roles.stream().map(role -> {
             Map<String, Object> roleInfo = new HashMap<>();
             roleInfo.put("id", role.getId());
             roleInfo.put("name", role.getName());
             return roleInfo;
         }).collect(Collectors.toList()));
-        
         return response;
     }
 
@@ -62,26 +57,20 @@ public class TestController {
     @ResponseBody
     public Map<String, Object> checkAdmin() {
         Map<String, Object> response = new HashMap<>();
-        
         var adminOpt = userRepository.findByEmail("admin@bugtracker.com");
-        
         if (adminOpt.isPresent()) {
             User admin = adminOpt.get();
             response.put("found", true);
             response.put("email", admin.getEmail());
             response.put("isActive", admin.isActive());
             response.put("roles", admin.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
-            
-            
             boolean passwordMatches = passwordEncoder.matches("Admin123!", admin.getPassword());
             response.put("passwordMatches", passwordMatches);
             response.put("encodedPassword", admin.getPassword());
-            
         } else {
             response.put("found", false);
             response.put("message", "Admin user not found");
         }
-        
         return response;
     }
 } 

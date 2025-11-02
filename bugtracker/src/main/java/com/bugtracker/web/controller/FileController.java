@@ -26,14 +26,11 @@ public class FileController {
     @GetMapping("/comments/{filename:.+}")
     public ResponseEntity<Resource> serveCommentScreenshot(@PathVariable String filename) throws IOException {
         Resource resource = fileService.loadCommentScreenshot(filename);
-        
         if (resource == null) {
             return ResponseEntity.notFound().build();
         }
-        
         Path filePath = fileService.getFilePath("comments", filename);
         String contentType = fileService.getContentType(filePath);
-        
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
@@ -43,14 +40,11 @@ public class FileController {
     @GetMapping("/profiles/{filename:.+}")
     public ResponseEntity<Resource> serveProfileImage(@PathVariable String filename) throws IOException {
         Resource resource = fileService.loadProfileImage(filename);
-        
         if (resource == null) {
             return ResponseEntity.notFound().build();
         }
-        
         Path filePath = fileService.getFilePath("profiles", filename);
         String contentType = fileService.getContentType(filePath);
-        
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
