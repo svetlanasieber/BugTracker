@@ -33,7 +33,6 @@ public class NotificationController {
     public ResponseEntity<Page<NotificationResponse>> getAllNotifications(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        
         log.info("Retrieving notifications - page: {}, size: {}", page, size);
         Page<NotificationResponse> notifications = notificationService.getAllNotifications(page, size);
         return ResponseEntity.ok(notifications);

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
@@ -65,7 +65,6 @@ public class NotificationService {
 
             notification.setStatus(NotificationStatus.SENT);
             notification.setSentAt(LocalDateTime.now());
-            
         } catch (Exception e) {
             log.error("Failed to send notification {}: {}", notification.getId(), e.getMessage());
             notification.setStatus(NotificationStatus.FAILED);
@@ -96,7 +95,7 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
-    public List<NotificationResponse> getNotificationsByBug(Long bugId) {
+    public List<NotificationResponse> getNotificationsByBug(UUID bugId) {
         List<Notification> notifications = notificationRepository.findByBugId(bugId);
         return notifications.stream()
                 .map(this::convertToResponse)
@@ -124,7 +123,6 @@ public class NotificationService {
                 notification.getRecipient(), notification.getSubject(), notification.getMessage());
             return;
         }
-        
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(notification.getRecipient());
         message.setSubject(notification.getSubject());
@@ -138,7 +136,6 @@ public class NotificationService {
     private void sendSmsNotification(Notification notification) {
         log.info("SMS notification sent to {}: {}", 
                 notification.getRecipient(), notification.getMessage());
-        
         if (Math.random() < 0.1) {
             throw new RuntimeException("SMS service temporarily unavailable");
         }
@@ -174,4 +171,3 @@ public class NotificationService {
         private long pending;
     }
 }
- 
