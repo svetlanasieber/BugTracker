@@ -14,23 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BugAddDTO {
-    
     @NotBlank(message = "Title is required")
     @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
-    
     @NotBlank(message = "Description is required")
     @Size(min = 10, message = "Description must be at least 10 characters")
     private String description;
-    
     @Size(min = 10, message = "Steps to reproduce must be at least 10 characters")
     private String stepsToReproduce;
-    
     @NotNull(message = "Priority is required")
     private BugPriority priority;
-    
     @NotNull(message = "Project is required")
     private Long projectId;
-    
     private Long assignedToId;
 }
