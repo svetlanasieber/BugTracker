@@ -65,6 +65,13 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("error", "Database operation failed");
         return "redirect:/";
     }
+    @ExceptionHandler(feign.FeignException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public String handleFeignException(feign.FeignException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", "Project Service is unavailable. Please ensure the service is running on port 8081.");
+        return "redirect:/projects";
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleRuntimeException(RuntimeException ex, RedirectAttributes redirectAttributes) {

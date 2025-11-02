@@ -16,15 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Bug Repository with N+1 Query Optimization
- * 
- * Uses @EntityGraph to eagerly fetch associations and prevent N+1 queries
- */
 @Repository
 public interface BugRepository extends JpaRepository<Bug, UUID> {
     
-    // Optimized queries with @EntityGraph to fetch reporter and assignedTo eagerly
     @EntityGraph(attributePaths = {"reporter", "assignedTo", "project"})
     List<Bug> findByProject_Id(UUID projectId);
     
@@ -46,11 +40,9 @@ public interface BugRepository extends JpaRepository<Bug, UUID> {
     @EntityGraph(attributePaths = {"reporter", "assignedTo", "project"})
     List<Bug> findByUpdatedAtBeforeAndStatusNot(LocalDateTime date, BugStatus status);
     
-    // Count queries don't need EntityGraph (they don't fetch entities)
     Long countByAssignedTo_Id(Long userId);
     Long countByReporter_Id(Long userId);
     
-    // Recent bugs with optimized fetching
     @Query("SELECT b FROM Bug b " +
            "LEFT JOIN FETCH b.reporter " +
            "LEFT JOIN FETCH b.assignedTo " +
@@ -63,7 +55,6 @@ public interface BugRepository extends JpaRepository<Bug, UUID> {
         return findRecentBugsByUserId(userId, Pageable.ofSize(limit));
     }
     
-    // Search with optimized fetching
     @Query("SELECT b FROM Bug b " +
            "LEFT JOIN FETCH b.reporter " +
            "LEFT JOIN FETCH b.assignedTo " +
@@ -72,12 +63,10 @@ public interface BugRepository extends JpaRepository<Bug, UUID> {
            "LOWER(b.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Bug> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
     
-    // Optimized findAll for listing pages
     @EntityGraph(attributePaths = {"reporter", "assignedTo", "project"})
     @Query("SELECT b FROM Bug b")
     List<Bug> findAllWithAssociations();
     
-    // Find by ID with all associations (for details page)
     @EntityGraph(attributePaths = {"reporter", "assignedTo", "project"})
     @Query("SELECT b FROM Bug b WHERE b.id = :id")
     Optional<Bug> findByIdWithAssociations(@Param("id") UUID id);

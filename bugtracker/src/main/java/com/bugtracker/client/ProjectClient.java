@@ -3,13 +3,18 @@ package com.bugtracker.client;
 import com.bugtracker.client.dto.ProjectCreateRequest;
 import com.bugtracker.client.dto.ProjectDto;
 import com.bugtracker.client.dto.ProjectUpdateRequest;
+import com.bugtracker.config.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@FeignClient(name = "project-service", url = "http://localhost:8081/api/projects")
+@FeignClient(
+    name = "project-service", 
+    url = "${project.service.url:http://localhost:8081/api/projects}",
+    configuration = FeignConfig.class
+)
 public interface ProjectClient {
 
     @GetMapping

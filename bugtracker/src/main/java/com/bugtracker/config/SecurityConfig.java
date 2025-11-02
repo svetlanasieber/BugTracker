@@ -35,8 +35,10 @@ public class SecurityConfig {
                 .securityMatcher("/api/**")
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+                        // Public authentication endpoints (no token required)
+                        .requestMatchers("/api/v1/auth/**", "/api/auth/**").permitAll()
+                        // All other API endpoints require authentication
+                        .requestMatchers("/api/v1/**", "/api/**").authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -84,6 +86,29 @@ public class SecurityConfig {
                     .logoutSuccessUrl("/landing?logout")
                     .deleteCookies("JSESSIONID", "remember-me")
                     .permitAll()
+                )
+                .headers(headers -> headers
+                    .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                    .contentTypeOptions(contentTypeOptions -> contentTypeOptions.disable())
+                    .xssProtection(xss -> xss.disable())
+                    .contentSecurityPolicy(csp -> csp
+                        .policyDirectives(
+                            "default-src 'self'; " +
+                            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; " +
+                            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; " +
+                            "font-src 'self' https://fonts.gstatic.com; " +
+                            "img-src 'self' data: https:; " +
+                            "frame-ancestors 'self'; " +
+                            "base-uri 'self'; " +
+                            "form-action 'self'"
+                        )
+                    )
+                    .referrerPolicy(referrer -> referrer
+                        .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                    )
+                    .permissionsPolicy(permissions -> permissions
+                        .policy("geolocation=(), microphone=(), camera=()")
+                    )
                 );
 
         return http.build();
