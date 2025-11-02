@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -53,7 +54,7 @@ public class NotificationController {
     }
 
     @GetMapping("/bug/{bugId}")
-    public ResponseEntity<List<NotificationResponse>> getNotificationsByBug(@PathVariable Long bugId) {
+    public ResponseEntity<List<NotificationResponse>> getNotificationsByBug(@PathVariable UUID bugId) {
         log.info("Retrieving notifications for bug: {}", bugId);
         List<NotificationResponse> notifications = notificationService.getNotificationsByBug(bugId);
         return ResponseEntity.ok(notifications);

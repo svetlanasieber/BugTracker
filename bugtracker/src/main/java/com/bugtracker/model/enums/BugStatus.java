@@ -7,8 +7,8 @@ import java.util.Set;
 
 public enum BugStatus {
 
+    OPEN,
     NEW,
-
     IN_PROGRESS,
     TESTING,
     RESOLVED,
@@ -18,6 +18,7 @@ public enum BugStatus {
         Set<BugStatus> allowedTransitions;
 
         switch (this) {
+            case OPEN:
             case NEW:
                 allowedTransitions = new HashSet<>(Arrays.asList(IN_PROGRESS, CLOSED));
                 break;
