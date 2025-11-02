@@ -36,13 +36,13 @@ class BugRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Create role
+       
         Role role = Role.builder()
                 .name("DEVELOPER")
                 .build();
         entityManager.persist(role);
 
-        // Create user
+       
         testUser = User.builder()
                 .email("developer@bugtracker.com")
                 .firstName("Dev")
@@ -55,7 +55,7 @@ class BugRepositoryTest {
                 .build();
         entityManager.persist(testUser);
 
-        // Create project
+      
         testProject = Project.builder()
                 .id(UUID.randomUUID())
                 .name("Test Project")
