@@ -28,15 +28,82 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-
     @Bean
     @Order(1)
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api
+                .securityMatcher("/api/**")
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
 
     @Bean
     @Order(2)
     public SecurityFilterChain uiSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("
+                .securityMatcher("/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/", "/landing", "/auth/login", "/auth/register", "/auth/registration-success").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/webjars/**", "/uploads/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/error", "/access-denied").permitAll()
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                )
+                .authenticationProvider(authenticationProvider())
+                .formLogin(form -> form
+                    .loginPage("/auth/login")
+                    .loginProcessingUrl("/auth/login-process")
+                    .defaultSuccessUrl("/", true)
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                    .permitAll()
+                )
+                .rememberMe(remember -> remember
+                    .key("bugtracker-remember-me-key")
+                    .tokenValiditySeconds(86400 * 30)
+                    .userDetailsService(userDetailsService)
+                    .rememberMeParameter("remember-me")
+                )
+                .logout(logout -> logout
+                    .logoutSuccessUrl("/landing?logout")
+                    .deleteCookies("JSESSIONID", "remember-me")
+                    .permitAll()
+                );
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+}
