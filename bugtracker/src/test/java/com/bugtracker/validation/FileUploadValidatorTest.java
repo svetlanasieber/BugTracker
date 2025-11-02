@@ -31,7 +31,7 @@ class FileUploadValidatorTest {
     void setUp() {
         validator = new FileUploadValidator();
         
-        // Setup default mock behavior
+      
         when(validFileUpload.maxSize()).thenReturn(10485760L); // 10MB
         when(validFileUpload.allowedTypes()).thenReturn(new String[]{"image/jpeg", "image/png"});
         when(validFileUpload.required()).thenReturn(false);
