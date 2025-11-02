@@ -41,7 +41,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Create test user
+    
         Role adminRole = Role.builder()
                 .id(1L)
                 .name("ADMIN")
@@ -56,7 +56,7 @@ class AuthServiceTest {
                 .isActive(true)
                 .build();
 
-        // Setup authentication
+       
         authentication = new UsernamePasswordAuthenticationToken(
                 "test@bugtracker.com",
                 "password",
