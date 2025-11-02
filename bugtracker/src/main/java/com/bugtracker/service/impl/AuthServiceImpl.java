@@ -19,11 +19,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String getCurrentUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getName())) {
             throw new RuntimeException("No authenticated user found");
         }
-        
         String username = auth.getName();
         log.debug("Current authenticated user: {}", username);
         return username;
@@ -32,10 +30,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long getCurrentUserId() {
         String username = getCurrentUsername();
-        
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found for username: " + username));
-        
         log.debug("Current user ID: {} for username: {}", user.getId(), username);
         return user.getId();
     }
@@ -44,17 +40,13 @@ public class AuthServiceImpl implements AuthService {
     public boolean isCurrentUserAdmin() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            
             if (auth == null || !auth.isAuthenticated()) {
                 return false;
             }
-            
             boolean isAdmin = auth.getAuthorities().stream()
                     .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-            
             log.debug("User {} has admin role: {}", auth.getName(), isAdmin);
             return isAdmin;
-            
         } catch (Exception e) {
             log.warn("Error checking admin role: {}", e.getMessage());
             return false;

@@ -34,17 +34,14 @@ public class LogServiceImpl implements LogService {
                 .level(level)
                 .createdAt(LocalDateTime.now())
                 .build();
-        
         LogEntry savedEntry = logEntryRepository.save(logEntry);
         log.debug("Created log entry with ID: {}", savedEntry.getId());
         return savedEntry;
     }
-    
     @Override
     public LogEntry createLogEntry(String action, String entityType, UUID entityId, String username, String details) {
         Long userId = null;
         LogLevel level = LogLevel.INFO;
-        
         LogEntry logEntry = LogEntry.builder()
                 .action(action)
                 .entityType(entityType)
@@ -54,7 +51,6 @@ public class LogServiceImpl implements LogService {
                 .level(level)
                 .createdAt(LocalDateTime.now())
                 .build();
-        
         LogEntry savedEntry = logEntryRepository.save(logEntry);
         log.debug("Created log entry with ID: {} (from REST API)", savedEntry.getId());
         return savedEntry;
@@ -71,63 +67,47 @@ public class LogServiceImpl implements LogService {
                 PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "createdAt"))
         ).getContent();
     }
-    
-    
-    
     public List<LogEntry> findLogsByUserId(Long userId) {
         return logEntryRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
-    
     public List<LogEntry> findLogsByLevel(LogLevel level) {
         return logEntryRepository.findByLevelOrderByCreatedAtDesc(level);
     }
-    
     public List<LogEntry> findLogsByAction(String action) {
         return logEntryRepository.findByActionOrderByCreatedAtDesc(action);
     }
-    
     public List<LogEntry> findLogsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return logEntryRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(startDate, endDate);
     }
-    
-    
-    
     @Override
     public Page<LogEntry> findByActionAndEntityType(String action, String entityType, Pageable pageable) {
         return logEntryRepository.findByActionAndEntityType(action, entityType, pageable);
     }
-    
     @Override
     public Page<LogEntry> findByAction(String action, Pageable pageable) {
         return logEntryRepository.findByAction(action, pageable);
     }
-    
     @Override
     public Page<LogEntry> findByEntityType(String entityType, Pageable pageable) {
         return logEntryRepository.findByEntityType(entityType, pageable);
     }
-    
     @Override
     public Page<LogEntry> findAllLogs(Pageable pageable) {
         return logEntryRepository.findAll(pageable);
     }
-    
     @Override
     public LogEntry findById(UUID id) {
         return logEntryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Log entry not found with id: " + id));
     }
-    
     @Override
     public List<String> findDistinctActions() {
         return logEntryRepository.findDistinctActions();
     }
-    
     @Override
     public List<String> findDistinctEntityTypes() {
         return logEntryRepository.findDistinctEntityTypes();
     }
-    
     @Override
     public List<LogEntry> searchLogs(String query) {
         return logEntryRepository.searchLogs(query);

@@ -27,7 +27,6 @@ public class ProjectApiService {
         Long currentUserId = authService.getCurrentUserId();
         request.setCreatedByUserId(currentUserId);
         request.setCreatedByUsername(username);
-        
         return projectClient.createProject(request);
     }
 
@@ -39,4 +38,8 @@ public class ProjectApiService {
         projectClient.deleteProject(id);
     }
 }
+
+
+
+
 

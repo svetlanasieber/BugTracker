@@ -25,42 +25,30 @@ public class DatabaseFixUtil {
 
     public void executeSqlScript(String resourcePath) {
         try {
-            
             ClassPathResource resource = new ClassPathResource(resourcePath);
             List<String> sqlStatements = new ArrayList<>();
-            
             try (BufferedReader reader = new BufferedReader(
                     new InputStreamReader(resource.getInputStream()))) {
-                
                 StringBuilder sqlStatement = new StringBuilder();
                 String line;
-                
                 while ((line = reader.readLine()) != null) {
-                    
                     if (line.trim().isEmpty() || line.trim().startsWith("--")) {
                         continue;
                     }
-                    
                     sqlStatement.append(line).append(" ");
-                    
-                    
                     if (line.trim().endsWith(";")) {
                         sqlStatements.add(sqlStatement.toString());
                         sqlStatement = new StringBuilder();
                     }
                 }
             }
-            
-            
             try (Connection connection = dataSource.getConnection()) {
                 connection.setAutoCommit(false);
-                
                 try (Statement statement = connection.createStatement()) {
                     for (String sql : sqlStatements) {
                         logger.info("Executing SQL: {}", sql);
                         statement.execute(sql);
                     }
-                    
                     connection.commit();
                     logger.info("SQL script executed successfully: {}", resourcePath);
                 } catch (Exception e) {

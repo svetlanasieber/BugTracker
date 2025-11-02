@@ -20,10 +20,8 @@ public class NotificationClientService {
     @Value("${notification.service.url:http://localhost:8082}")
     private String notificationServiceUrl;
 
-    
     public void sendBugAssignmentNotification(String userEmail, Long bugId, String bugTitle, Long userId) {
         log.info("Sending bug assignment notification to {} for bug {}", userEmail, bugId);
-        
         NotificationRequest request = NotificationRequest.builder()
                 .type("EMAIL")
                 .recipient(userEmail)
@@ -36,10 +34,8 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    
     public void sendBugStatusUpdateNotification(String userEmail, Long bugId, String bugTitle, String newStatus, Long userId) {
         log.info("Sending bug status update notification to {} for bug {}", userEmail, bugId);
-        
         NotificationRequest request = NotificationRequest.builder()
                 .type("EMAIL")
                 .recipient(userEmail)
@@ -52,10 +48,8 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    
     public void sendNewCommentNotification(String userEmail, Long bugId, String bugTitle, String commenterName, Long userId) {
         log.info("Sending new comment notification to {} for bug {}", userEmail, bugId);
-        
         NotificationRequest request = NotificationRequest.builder()
                 .type("EMAIL")
                 .recipient(userEmail)
@@ -68,10 +62,8 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    
     public void sendUrgentBugSmsNotification(String phoneNumber, Long bugId, String bugTitle, Long userId) {
         log.info("Sending urgent bug SMS notification to {} for bug {}", phoneNumber, bugId);
-        
         NotificationRequest request = NotificationRequest.builder()
                 .type("SMS")
                 .recipient(phoneNumber)
@@ -84,32 +76,24 @@ public class NotificationClientService {
         sendNotification(request);
     }
 
-    
     private void sendNotification(NotificationRequest request) {
         try {
             String url = notificationServiceUrl + "/api/notifications";
-            
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            
             HttpEntity<NotificationRequest> entity = new HttpEntity<>(request, headers);
-            
             ResponseEntity<NotificationResponse> response = restTemplate.postForEntity(
                     url, entity, NotificationResponse.class);
-            
             if (response.getStatusCode().is2xxSuccessful()) {
                 log.info("Notification sent successfully: {}", response.getBody());
             } else {
                 log.warn("Failed to send notification. Status: {}", response.getStatusCode());
             }
-            
         } catch (Exception e) {
             log.error("Error sending notification to microservice: {}", e.getMessage(), e);
-            
         }
     }
 
-    
     @lombok.Data
     @lombok.Builder
     @lombok.NoArgsConstructor
@@ -123,7 +107,6 @@ public class NotificationClientService {
         private Long userId;
     }
 
-    
     @lombok.Data
     @lombok.Builder
     @lombok.NoArgsConstructor

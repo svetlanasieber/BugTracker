@@ -22,37 +22,29 @@ public class FileService {
 
     public Resource loadCommentScreenshot(String filename) throws IOException {
         Path filePath = Paths.get(fileStorageProperties.uploadDir(), "comments", filename);
-        
         if (!Files.exists(filePath)) {
             log.warn("Comment screenshot not found: {}", filename);
             return null;
         }
-        
         Resource resource = new UrlResource(filePath.toUri());
-        
         if (!resource.exists() || !resource.isReadable()) {
             log.warn("Comment screenshot not readable: {}", filename);
             return null;
         }
-        
         return resource;
     }
 
     public Resource loadProfileImage(String filename) throws IOException {
         Path filePath = Paths.get(fileStorageProperties.uploadDir(), "profiles", filename);
-        
         if (!Files.exists(filePath)) {
             log.warn("Profile image not found: {}", filename);
             return null;
         }
-        
         Resource resource = new UrlResource(filePath.toUri());
-        
         if (!resource.exists() || !resource.isReadable()) {
             log.warn("Profile image not readable: {}", filename);
             return null;
         }
-        
         return resource;
     }
 
@@ -65,4 +57,8 @@ public class FileService {
         return Paths.get(fileStorageProperties.uploadDir(), folder, filename);
     }
 }
+
+
+
+
 

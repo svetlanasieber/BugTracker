@@ -17,12 +17,9 @@ public interface UserService {
     List<User> findAllUsers();
     void changeUserRole(Long userId, String roleName);
     boolean existsByEmail(String email);
-    
-   
     User findByUsername(String username);
 
     List<User> findAll();
-
     User updateUser(User user);
 
     User updateUserProfile(String username, ProfileEdit profileEdit);
