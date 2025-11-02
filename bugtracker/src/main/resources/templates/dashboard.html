@@ -182,7 +182,7 @@
     <!-- Chart Script -->
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
-            // Bug Status Chart
+      
             const statusCtx = document.getElementById('bugStatusChart').getContext('2d');
             const statusData = {
                 labels: ['NEW', 'IN_PROGRESS', 'TESTING', 'RESOLVED', 'CLOSED'],
@@ -196,11 +196,11 @@
                         [[${bugStatusCounts != null && bugStatusCounts['CLOSED'] != null ? bugStatusCounts['CLOSED'] : 0}]]
                     ],
                     backgroundColor: [
-                        '#dc3545', // Danger - NEW
-                        '#ffc107', // Warning - IN_PROGRESS
-                        '#0dcaf0', // Info - TESTING
-                        '#198754', // Success - RESOLVED
-                        '#6c757d'  // Secondary - CLOSED
+                        '#dc3545', 
+                        '#ffc107',
+                        '#0dcaf0', 
+                        '#198754',
+                        '#6c757d'
                     ]
                 }]
             };
@@ -216,8 +216,7 @@
                     }
                 }
             });
-            
-            // Bug Priority Chart
+
             const priorityCtx = document.getElementById('bugPriorityChart').getContext('2d');
             const priorityData = {
                 labels: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
@@ -230,10 +229,10 @@
                         [[${bugPriorityCounts != null && bugPriorityCounts['CRITICAL'] != null ? bugPriorityCounts['CRITICAL'] : 0}]]
                     ],
                     backgroundColor: [
-                        '#6c757d', // Secondary - LOW
-                        '#0dcaf0', // Info - MEDIUM
-                        '#ffc107', // Warning - HIGH
-                        '#dc3545'  // Danger - CRITICAL
+                        '#6c757d', 
+                        '#0dcaf0', 
+                        '#ffc107',
+                        '#dc3545'
                     ]
                 }]
             };
