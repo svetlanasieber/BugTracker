@@ -48,7 +48,6 @@ public class Bug {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
-    
     @Lob
     @Column(columnDefinition = "TEXT")
     private String stepsToReproduce;

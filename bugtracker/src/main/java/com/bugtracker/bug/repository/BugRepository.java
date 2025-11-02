@@ -17,41 +17,20 @@ import java.util.UUID;
 
 @Repository
 public interface BugRepository extends JpaRepository<Bug, UUID> {
-    
     List<Bug> findByProject_Id(UUID projectId);
-    
     List<Bug> findByReporter_Id(Long reporterId);
-    
     List<Bug> findByAssignedTo_Id(Long assignedToId);
-    
-    
     Optional<Bug> findByTitle(String title);
-    
-    
     List<Bug> findByStatus(BugStatus status);
-    
-    
     List<Bug> findByPriority(BugPriority priority);
-    
-    
     List<Bug> findByUpdatedAtBeforeAndStatusNot(LocalDateTime date, BugStatus status);
-    
-    
     Long countByAssignedTo_Id(Long userId);
-    
-    
     Long countByReporter_Id(Long userId);
-    
-    
     @Query("SELECT b FROM Bug b WHERE b.assignedTo.id = :userId OR b.reporter.id = :userId ORDER BY b.updatedAt DESC")
     List<Bug> findRecentBugsByUserId(@Param("userId") Long userId, Pageable pageable);
-    
-    
     default List<Bug> findRecentBugsByUser(Long userId, int limit) {
         return findRecentBugsByUserId(userId, Pageable.ofSize(limit));
     }
-    
-    
     @Query("SELECT b FROM Bug b WHERE " +
            "LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
            "LOWER(b.description) LIKE LOWER(CONCAT('%', :keyword, '%'))")
