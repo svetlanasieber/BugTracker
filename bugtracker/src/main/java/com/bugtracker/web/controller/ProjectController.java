@@ -9,6 +9,7 @@ import com.bugtracker.user.service.UserService;
 import com.bugtracker.validation.groups.OnCreate;
 import com.bugtracker.validation.groups.OnUpdate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/projects")
 @RequiredArgsConstructor
+@Slf4j
 public class ProjectController {
 
     private final ProjectService projectService;
@@ -54,7 +56,10 @@ public class ProjectController {
     @GetMapping("/new")
     @PreAuthorize("hasRole('ADMIN')")
     public String showCreateProjectForm(Model model) {
-        model.addAttribute("projectAdd", new ProjectAdd());
+        ProjectAdd projectAdd = new ProjectAdd();
+        // Set default values
+        projectAdd.setActive(true);
+        model.addAttribute("projectAdd", projectAdd);
         loadFormData(model);
         return "projects/create";
     }
@@ -69,9 +74,17 @@ public class ProjectController {
             loadFormData(model);
             return "projects/create";
         }
-        Project project = projectService.createProjectFromDTO(projectAdd);
-        redirectAttributes.addFlashAttribute("success", "Project created successfully");
-        return "redirect:/projects/" + project.getId();
+        
+        try {
+            Project project = projectService.createProjectFromDTO(projectAdd);
+            redirectAttributes.addFlashAttribute("success", "Project created successfully");
+            return "redirect:/projects/" + project.getId();
+        } catch (Exception e) {
+            log.error("Error creating project: {}", e.getMessage(), e);
+            model.addAttribute("error", "Failed to create project: " + e.getMessage());
+            loadFormData(model);
+            return "projects/create";
+        }
     }
 
     @GetMapping("/{id}/edit")
