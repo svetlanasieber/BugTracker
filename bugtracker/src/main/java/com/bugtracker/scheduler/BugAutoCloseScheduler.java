@@ -13,19 +13,14 @@ public class BugAutoCloseScheduler {
 
     private final BugService bugService;
     private final LogService logService;
-    
     public BugAutoCloseScheduler(BugService bugService, LogService logService) {
         this.bugService = bugService;
         this.logService = logService;
     }
-    
-    
     public void autoCloseStaleBugs() {
         System.out.println("Starting scheduled task: Auto-closing stale bugs");
-        
         try {
             List<Bug> staleBugs = bugService.findBugsNotUpdatedSince(LocalDateTime.now().minusDays(30));
-            
             for (Bug bug : staleBugs) {
                 if (bug.getStatus() != BugStatus.CLOSED && bug.getStatus() != BugStatus.RESOLVED) {
                     System.out.println("Auto-closing stale bug: " + bug.getId());
@@ -40,7 +35,6 @@ public class BugAutoCloseScheduler {
                     );
                 }
             }
-            
             System.out.println("Completed auto-closing " + staleBugs.size() + " stale bugs");
         } catch (Exception e) {
             System.err.println("Error during auto-close of stale bugs: " + e.getMessage());

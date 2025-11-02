@@ -34,7 +34,6 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project createProject(Project project) {
         log.info("Creating project via microservice: {}", project.getName());
-        
         ProjectCreateRequest request = ProjectCreateRequest.builder()
                 .name(project.getName())
                 .description(project.getDescription())
@@ -46,7 +45,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     project.getMembers().stream().map(User::getId).collect(Collectors.toSet()) : 
                     new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.createProject(request);
         return convertToEntity(dto);
     }
@@ -54,14 +52,12 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project createProject(String name, String description) {
         log.info("Creating simple project via microservice: {}", name);
-        
         ProjectCreateRequest request = ProjectCreateRequest.builder()
                 .name(name)
                 .description(description)
                 .isActive(true)
                 .memberIds(new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.createProject(request);
         return convertToEntity(dto);
     }
@@ -96,7 +92,6 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project updateProject(Project project) {
         log.info("Updating project via microservice: {}", project.getId());
-        
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
                 .name(project.getName())
                 .description(project.getDescription())
@@ -108,7 +103,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     project.getMembers().stream().map(User::getId).collect(Collectors.toSet()) : 
                     new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.updateProject(project.getId(), request);
         return convertToEntity(dto);
     }
@@ -118,7 +112,6 @@ public class ProjectServiceAdapter implements ProjectService {
         log.info("Updating simple project via microservice: {}", id);
 
         ProjectDto existing = projectClient.getProjectById(id);
-        
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
                 .name(name)
                 .description(description)
@@ -128,7 +121,6 @@ public class ProjectServiceAdapter implements ProjectService {
                 .isActive(existing.isActive())
                 .memberIds(existing.getMemberIds())
                 .build();
-        
         ProjectDto dto = projectClient.updateProject(id, request);
         return convertToEntity(dto);
     }
@@ -160,9 +152,7 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project changeProjectStatus(UUID projectId, boolean isActive) {
         log.info("Changing project {} status to: {}", projectId, isActive);
-        
         ProjectDto existing = projectClient.getProjectById(projectId);
-        
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
                 .name(existing.getName())
                 .description(existing.getDescription())
@@ -172,7 +162,6 @@ public class ProjectServiceAdapter implements ProjectService {
                 .isActive(isActive)
                 .memberIds(existing.getMemberIds())
                 .build();
-        
         ProjectDto dto = projectClient.updateProject(projectId, request);
         return convertToEntity(dto);
     }
@@ -210,7 +199,6 @@ public class ProjectServiceAdapter implements ProjectService {
     public void removeAllUsersFromProject(UUID projectId) {
         log.info("Removing all users from project: {}", projectId);
         ProjectDto project = projectClient.getProjectById(projectId);
-        
         if (project.getMemberIds() != null) {
             for (Long userId : project.getMemberIds()) {
                 projectClient.removeUserFromProject(projectId, userId);
@@ -236,7 +224,6 @@ public class ProjectServiceAdapter implements ProjectService {
             if (project.getMemberIds() != null) {
                 User user = userRepository.findByUsername(username)
                         .orElse(null);
-                
                 if (user != null && project.getMemberIds().contains(user.getId())) {
                     return true;
                 }
@@ -247,7 +234,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()))) {
                 return true;
             }
-            
             return false;
         } catch (Exception e) {
             log.error("Error checking authorization", e);
@@ -258,14 +244,12 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project createProjectWithUsers(String name, String description, List<Long> userIds) {
         log.info("Creating project with users: {}", name);
-        
         ProjectCreateRequest request = ProjectCreateRequest.builder()
                 .name(name)
                 .description(description)
                 .isActive(true)
                 .memberIds(userIds != null ? new HashSet<>(userIds) : new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.createProject(request);
         return convertToEntity(dto);
     }
@@ -273,9 +257,7 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project updateProjectWithUsers(UUID projectId, String name, String description, List<Long> userIds) {
         log.info("Updating project with users: {}", projectId);
-        
         ProjectDto existing = projectClient.getProjectById(projectId);
-        
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
                 .name(name)
                 .description(description)
@@ -285,7 +267,6 @@ public class ProjectServiceAdapter implements ProjectService {
                 .isActive(existing.isActive())
                 .memberIds(userIds != null ? new HashSet<>(userIds) : new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.updateProject(projectId, request);
         return convertToEntity(dto);
     }
@@ -299,7 +280,6 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project createProjectFromDTO(ProjectAdd projectAdd) {
         log.info("Creating project from DTO: {}", projectAdd.getName());
-        
         ProjectCreateRequest request = ProjectCreateRequest.builder()
                 .name(projectAdd.getName())
                 .description(projectAdd.getDescription())
@@ -311,7 +291,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     new HashSet<>(projectAdd.getMemberIds()) : 
                     new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.createProject(request);
         return convertToEntity(dto);
     }
@@ -319,7 +298,6 @@ public class ProjectServiceAdapter implements ProjectService {
     @Override
     public Project updateProjectFromDTO(ProjectUpdate projectUpdate) {
         log.info("Updating project from DTO: {}", projectUpdate.getId());
-        
         ProjectUpdateRequest request = ProjectUpdateRequest.builder()
                 .name(projectUpdate.getName())
                 .description(projectUpdate.getDescription())
@@ -331,7 +309,6 @@ public class ProjectServiceAdapter implements ProjectService {
                     new HashSet<>(projectUpdate.getMemberIds()) : 
                     new HashSet<>())
                 .build();
-        
         ProjectDto dto = projectClient.updateProject(projectUpdate.getId(), request);
         return convertToEntity(dto);
     }
@@ -342,6 +319,7 @@ public class ProjectServiceAdapter implements ProjectService {
             return null;
         }
 
+
         Set<User> members = new HashSet<>();
         if (dto.getMemberIds() != null && !dto.getMemberIds().isEmpty()) {
             members = dto.getMemberIds().stream()
@@ -349,6 +327,7 @@ public class ProjectServiceAdapter implements ProjectService {
                     .filter(user -> user != null)
                     .collect(Collectors.toSet());
         }
+
 
         Set<Bug> bugs = new HashSet<>();
         if (dto.getId() != null) {

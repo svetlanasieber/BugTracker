@@ -80,7 +80,6 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
