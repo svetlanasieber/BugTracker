@@ -41,8 +41,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
         return roles.stream()
                 .map(role -> {
-                    
-                    
                     String roleName = role.getName();
                     if (!roleName.startsWith("ROLE_")) {
                         roleName = "ROLE_" + roleName;

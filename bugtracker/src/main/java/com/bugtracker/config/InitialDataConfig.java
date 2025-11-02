@@ -24,10 +24,8 @@ public class InitialDataConfig {
     public CommandLineRunner initialProjectSetup() {
         return args -> {
             log.info("Checking for existing projects via microservice...");
-            
             try {
                 List<Project> allProjects = projectService.getAllProjects();
-                
                 if (allProjects.isEmpty()) {
                     log.info("No projects found. Creating sample project via microservice...");
                     try {
@@ -36,11 +34,9 @@ public class InitialDataConfig {
                             "Internal project for developing and maintaining the Bug Tracker application"
                         );
                         log.info("Created sample project with ID: {}", sampleProject.getId());
-                        
                         try {
                             User adminUser = userRepository.findByEmail("admin@bugtracker.com")
                                     .orElse(null);
-                            
                             if (adminUser != null) {
                                 projectService.assignUserToProject(adminUser.getId(), sampleProject.getId());
                                 log.info("Added admin user to sample project");
@@ -48,7 +44,6 @@ public class InitialDataConfig {
                         } catch (Exception ex) {
                             log.warn("Could not assign admin to project: {}", ex.getMessage());
                         }
-                        
                     } catch (Exception e) {
                         log.error("Error creating sample project: {}", e.getMessage());
                     }

@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
     FileStorageProperties.class,
     JwtProperties.class
 })
-    
 public class PropertiesConfig {
 }
 

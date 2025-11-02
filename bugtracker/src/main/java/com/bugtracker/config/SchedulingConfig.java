@@ -12,24 +12,19 @@ import org.springframework.util.ErrorHandler;
 @EnableScheduling
 @Slf4j
 public class SchedulingConfig {
-    
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        
         scheduler.setPoolSize(5);
         scheduler.setThreadNamePrefix("bugtracker-scheduled-");
         scheduler.setAwaitTerminationSeconds(30);
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
         scheduler.setErrorHandler(new LoggingErrorHandler());
         scheduler.initialize();
-        
         log.info("TaskScheduler initialized with pool size: 5");
         return scheduler;
     }
-    
     public static class LoggingErrorHandler implements ErrorHandler {
-        
         @Override
         public void handleError(@org.springframework.lang.NonNull Throwable t) {
             log.error("Error in scheduled task: {}", t.getMessage(), t);
