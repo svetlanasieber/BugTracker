@@ -23,3 +23,6 @@ CREATE TABLE IF NOT EXISTS projects (
 COMMENT='Projects table for microservice with UUID primary key';
 
 
+
+
+
