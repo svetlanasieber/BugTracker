@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/comments")
@@ -20,7 +21,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/create")
-    public String createComment(@RequestParam Long bugId,
+    public String createComment(@RequestParam UUID bugId,
                                @RequestParam String content,
                                @RequestParam(value = "screenshot", required = false) MultipartFile screenshot,
                                Principal principal,
@@ -37,7 +38,7 @@ public class CommentController {
     @PostMapping("/{id}/update")
     public String updateComment(@PathVariable Long id,
                                @RequestParam String content,
-                               @RequestParam Long bugId,
+                               @RequestParam UUID bugId,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         commentService.updateCommentWithAuthorization(id, content, principal.getName());
@@ -47,7 +48,7 @@ public class CommentController {
 
     @PostMapping("/{id}/delete")
     public String deleteComment(@PathVariable Long id,
-                               @RequestParam Long bugId,
+                               @RequestParam UUID bugId,
                                Principal principal,
                                RedirectAttributes redirectAttributes) {
         commentService.deleteCommentWithAuthorization(id, principal.getName());

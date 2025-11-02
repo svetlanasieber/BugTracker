@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -78,7 +79,7 @@ public class LogRestController {
         @ApiResponse(responseCode = "404", description = "Log not found")
     })
     public ResponseEntity<LogEntryDTO> getLogById(
-            @Parameter(description = "Log entry ID") @PathVariable Long id) {
+            @Parameter(description = "Log entry ID") @PathVariable UUID id) {
         LogEntry logEntry = logService.findById(id);
         LogEntryDTO logDTO = LogEntryDTO.fromEntity(logEntry);
         return new ResponseEntity<>(logDTO, HttpStatus.OK);
@@ -104,7 +105,7 @@ public class LogRestController {
         LogEntry logEntry = logService.createLogEntry(
                 action,
                 entityType,
-                Long.parseLong(entityId),
+                UUID.fromString(entityId),
                 username,
                 details
         );
