@@ -51,11 +51,14 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+    
     @Column(name = "username", unique = true)
     private String username;
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "team")
     private TeamRole team;
+    
     @Column(name = "profile_image")
     private String profileImage;
 
@@ -77,12 +80,15 @@ public class User {
     @Column(name = "is_active")
     @Builder.Default
     private boolean isActive = true;
+    
     @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Bug> assignedBugs = new HashSet<>();
+    
     @OneToMany(mappedBy = "reporter", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Bug> reportedBugs = new HashSet<>();
+    
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Comment> comments = new HashSet<>();
@@ -99,4 +105,5 @@ public class User {
     public int hashCode() {
         return getClass().hashCode();
     }
+
 } 
