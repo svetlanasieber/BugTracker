@@ -13,7 +13,6 @@ public @interface ValidFileUpload {
     String message() default "Invalid file upload";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-    
     long maxSize() default 10485760; 
     String[] allowedTypes() default {"image/jpeg", "image/png", "image/gif"};
     boolean required() default false;

@@ -7,26 +7,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 
 public class FileUploadValidator implements ConstraintValidator<ValidFileUpload, MultipartFile> {
-    
     private long maxSize;
     private String[] allowedTypes;
     private boolean required;
-    
     @Override
     public void initialize(ValidFileUpload constraintAnnotation) {
         this.maxSize = constraintAnnotation.maxSize();
         this.allowedTypes = constraintAnnotation.allowedTypes();
         this.required = constraintAnnotation.required();
     }
-    
     @Override
     public boolean isValid(MultipartFile file, ConstraintValidatorContext context) {
-        
         if (file == null || file.isEmpty()) {
             return !required; 
         }
-        
-        
         if (file.getSize() > maxSize) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
@@ -34,8 +28,6 @@ public class FileUploadValidator implements ConstraintValidator<ValidFileUpload,
                 .addConstraintViolation();
             return false;
         }
-        
-        
         String contentType = file.getContentType();
         if (contentType == null || !Arrays.asList(allowedTypes).contains(contentType)) {
             context.disableDefaultConstraintViolation();
@@ -44,7 +36,6 @@ public class FileUploadValidator implements ConstraintValidator<ValidFileUpload,
                 .addConstraintViolation();
             return false;
         }
-        
         return true;
     }
 } 

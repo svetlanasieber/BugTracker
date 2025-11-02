@@ -13,6 +13,5 @@ public @interface UniqueEmail {
     String message() default "Email address is already registered";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-    
     long excludeUserId() default -1;
 } 
