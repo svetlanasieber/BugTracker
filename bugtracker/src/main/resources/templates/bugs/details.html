@@ -414,7 +414,7 @@
 
     <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
-   
+        // Screenshot preview functionality
         function previewScreenshot(input) {
             const preview = document.getElementById('screenshotPreview');
             const previewImage = document.getElementById('previewImage');
@@ -433,7 +433,7 @@
             }
         }
         
-
+        // Remove screenshot
         function removeScreenshot() {
             const input = document.getElementById('screenshot');
             const preview = document.getElementById('screenshotPreview');
@@ -442,7 +442,7 @@
             preview.style.display = 'none';
         }
         
-       
+        // Open image in modal
         function openImageModal(imageSrc, imageAlt) {
             const modal = new bootstrap.Modal(document.getElementById('imageModal'));
             const modalImage = document.getElementById('modalImage');
@@ -455,10 +455,10 @@
             modal.show();
         }
         
-   
+        // File size validation
         document.getElementById('screenshot').addEventListener('change', function() {
             const file = this.files[0];
-            const maxSize = 10 * 1024 * 1024; 
+            const maxSize = 10 * 1024 * 1024; // 10MB
             
             if (file && file.size > maxSize) {
                 alert('File size must be less than 10MB. Please choose a smaller file.');
@@ -467,7 +467,7 @@
                 return;
             }
             
- 
+            // Check file type
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
             if (file && !allowedTypes.includes(file.type)) {
                 alert('Please select a valid image file (JPEG, PNG, GIF, WebP).');

@@ -124,14 +124,15 @@
                             <div class="mb-3">
                                 <label for="projectType" class="form-label">Project Type <span class="text-danger">*</span></label>
                                 <select id="projectType" th:field="*{projectType}" class="form-select" required>
-                                    <option value="">Select Project Type</option>
+                                    <option value="" disabled selected>-- Select Project Type --</option>
                                     <option th:each="type : ${T(com.bugtracker.model.enums.ProjectType).values()}" 
                                             th:value="${type}" 
-                                            th:text="${type.displayName}">
+                                            th:text="${type.getDisplayName()}">
                                         Project Type
                                     </option>
                                 </select>
                                 <div class="text-danger" th:if="${#fields.hasErrors('projectType')}" th:errors="*{projectType}"></div>
+                                <div class="invalid-feedback">Please select a project type.</div>
                                 <div class="form-text">Choose the type that best describes your project.</div>
                             </div>
                             

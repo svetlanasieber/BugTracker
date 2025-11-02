@@ -118,7 +118,7 @@
                                     <option value="">Select Project Type</option>
                                     <option th:each="type : ${T(com.bugtracker.model.enums.ProjectType).values()}" 
                                             th:value="${type}" 
-                                            th:text="${type.displayName}">
+                                            th:text="${type.getDisplayName()}">
                                         Project Type
                                     </option>
                                 </select>

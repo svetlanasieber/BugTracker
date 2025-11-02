@@ -367,7 +367,7 @@
     
     <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
     <script>
-       
+        // Toggle password visibility
         function togglePasswordVisibility(fieldId, buttonId) {
             const passwordField = document.getElementById(fieldId);
             const toggleButton = document.getElementById(buttonId);
@@ -383,7 +383,8 @@
                 toggleButton.setAttribute('aria-label', 'Show password');
             }
         }
-
+        
+        // Toggle password from checkbox
         function togglePasswordFromCheckbox() {
             const showPassword = document.getElementById('showPassword').checked;
             const passwordField = document.getElementById('password');
@@ -397,7 +398,8 @@
                 passwordIcon.className = 'bi bi-eye';
             }
         }
-
+        
+        // Initialize button accessibility
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('togglePassword').setAttribute('aria-label', 'Show password');
         });
