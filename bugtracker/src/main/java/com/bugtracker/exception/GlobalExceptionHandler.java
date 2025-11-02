@@ -41,35 +41,30 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("error", "Data integrity error: The operation conflicts with existing data");
         return "redirect:/";
     }
-    
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleIllegalArgumentException(IllegalArgumentException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", "Invalid request: " + ex.getMessage());
         return "redirect:/";
     }
-    
     @ExceptionHandler(NumberFormatException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleNumberFormatException(NumberFormatException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", "Invalid number format in request");
         return "redirect:/";
     }
-    
     @ExceptionHandler(JpaSystemException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleJpaSystemException(JpaSystemException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", "Database error occurred");
         return "redirect:/";
     }
-    
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleSQLException(SQLException ex, RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("error", "Database operation failed");
         return "redirect:/";
     }
-    
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleRuntimeException(RuntimeException ex, RedirectAttributes redirectAttributes) {
