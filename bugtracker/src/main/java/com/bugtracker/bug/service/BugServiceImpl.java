@@ -59,13 +59,13 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public Optional<Bug> findById(UUID id) {
-        // Use optimized query with associations for details page
+      
         return bugRepository.findByIdWithAssociations(id);
     }
 
     @Override
     public List<Bug> findAll() {
-        // Use optimized query with associations for list pages
+        
         return bugRepository.findAllWithAssociations();
     }
 
@@ -191,7 +191,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByStatus(BugStatus status, Long userId) {
-        // Use optimized findAllWithAssociations to prevent N+1
+       
         return bugRepository.findAllWithAssociations().stream()
                 .filter(bug -> bug.getStatus() == status)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -201,7 +201,7 @@ public class BugServiceImpl implements BugService {
 
     @Override
     public long countBugsByPriority(BugPriority priority, Long userId) {
-        // Use optimized findAllWithAssociations to prevent N+1
+      
         return bugRepository.findAllWithAssociations().stream()
                 .filter(bug -> bug.getPriority() == priority)
                 .filter(bug -> bug.getProject().getMembers().stream()
@@ -210,7 +210,7 @@ public class BugServiceImpl implements BugService {
     }
     @Override
     public List<Bug> findBugsNotUpdatedSince(LocalDateTime date) {
-        // Use optimized findAllWithAssociations to prevent N+1
+       
         return bugRepository.findAllWithAssociations().stream()
                 .filter(bug -> bug.getUpdatedAt() != null && bug.getUpdatedAt().isBefore(date))
                 .toList();
