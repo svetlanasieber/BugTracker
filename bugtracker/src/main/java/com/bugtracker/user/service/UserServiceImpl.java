@@ -169,11 +169,13 @@ public class UserServiceImpl implements UserService {
         log.info("Password changed successfully for user: {}", username);
         return true;
     }
+    
     @Override
     public User getCurrentUserWithStats(String username) {
         User currentUser = findByUsername(username);
         return currentUser;
     }
+    
     private String saveProfileImage(MultipartFile profileImage) throws IOException {
         Path profilesPath = Paths.get(fileStorageProperties.uploadDir(), "profiles");
         if (!Files.exists(profilesPath)) {
@@ -191,6 +193,7 @@ public class UserServiceImpl implements UserService {
         Files.copy(profileImage.getInputStream(), filePath);
         return "/uploads/profiles/" + uniqueFileName;
     }
+    
     private String getFileExtension(String filename) {
         if (filename == null || filename.lastIndexOf(".") == -1) {
             return "";
@@ -264,6 +267,7 @@ public class UserServiceImpl implements UserService {
         }
         return debugInfo;
     }
+    
     @Override
     public boolean isUserAdmin(String username) {
         try {
@@ -275,6 +279,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+    
     @Override
     @Transactional
     public User createUserWithRoles(String firstName, String lastName, String email, String password, List<String> roleNames) {
@@ -308,4 +313,5 @@ public class UserServiceImpl implements UserService {
                 savedUser.getRoles().stream().map(Role::getName).collect(java.util.stream.Collectors.toList()));
         return savedUser;
     }
+
 } 
