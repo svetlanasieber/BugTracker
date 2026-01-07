@@ -1,6 +1,7 @@
 package com.bugtracker.projectservice.enums;
 
 public enum ProjectType {
+    
     WEB_APPLICATION("Web Application"),
     MOBILE_APPLICATION("Mobile Application"),
     DESKTOP_APPLICATION("Desktop Application"),
@@ -23,6 +24,7 @@ public enum ProjectType {
         return displayName;
     }
 }
+
 
 
 
