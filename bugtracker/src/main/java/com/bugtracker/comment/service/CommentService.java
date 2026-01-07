@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CommentService {
+    
     Comment createComment(UUID bugId, Long authorId, String content);
     Comment getComment(Long commentId);
     List<Comment> getCommentsByBugId(UUID bugId);
@@ -21,4 +22,5 @@ public interface CommentService {
     void deleteCommentWithAuthorization(Long commentId, String username);
     boolean isUserAuthorizedToModifyComment(Long commentId, String username);
     Comment createCommentWithScreenshot(UUID bugId, String content, MultipartFile screenshot, String username);
+
 } 
