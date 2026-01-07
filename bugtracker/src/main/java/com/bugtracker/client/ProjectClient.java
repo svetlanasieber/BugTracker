@@ -15,6 +15,7 @@ import java.util.UUID;
     url = "${project.service.url:http://localhost:8081/api/projects}",
     configuration = FeignConfig.class
 )
+    
 public interface ProjectClient {
 
     @GetMapping
