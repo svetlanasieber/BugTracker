@@ -26,8 +26,11 @@ import java.util.List;
 public class BugSchedulingService {
     private final BugRepository bugRepository;
     private final LogService logService;
+    
     @Value("${app.scheduling.bug-cleanup.days-threshold:30}")
+    
     private int daysThreshold;
+    
     @Scheduled(cron = "${app.scheduling.bug-cleanup.cron:0 0 0 * * ?}")
     @Transactional
     public void closeInactiveBugs() {
@@ -71,4 +74,5 @@ public class BugSchedulingService {
             log.error("Bug cleanup task failed with error: {}", e.getMessage(), e);
         }
     }
+
 }
